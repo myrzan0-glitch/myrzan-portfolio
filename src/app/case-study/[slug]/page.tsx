@@ -5,18 +5,18 @@ import { ArrowLeft } from "lucide-react"
 import { NotionContent } from "@/components/notion-block-renderer"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
-import { caseStudies } from "@/data/case-studies"
+import { caseStudies, caseStudyMap } from "@/data/case-studies"
+import { getBlocksRecursively, getPage } from "@/lib/notion"
 
 export const revalidate = 3600
 
 async function getCaseStudy(slug: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-  const res = await fetch(`${baseUrl}/api/case-study/${slug}`, {
-    next: { revalidate: 3600 }
-  })
+  const pageId = caseStudyMap[slug]
+  if (!pageId) return null
 
-  if (!res.ok) return null
-  return res.json()
+  const page = await getPage(pageId)
+  const blocks = await getBlocksRecursively(pageId)
+  return { page, blocks }
 }
 
 export default async function CaseStudyPage({
