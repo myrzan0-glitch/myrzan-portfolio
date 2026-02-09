@@ -32,9 +32,10 @@ export default async function CaseStudyPage({
   }
 
   const { page, blocks } = data
+  const pageObject = page as any
   const title =
-    page?.properties?.title?.title?.[0]?.plain_text ||
-    page?.properties?.Name?.title?.[0]?.plain_text ||
+    pageObject?.properties?.title?.title?.[0]?.plain_text ||
+    pageObject?.properties?.Name?.title?.[0]?.plain_text ||
     "Case Study"
 
   return (
