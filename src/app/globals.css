@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 25% 98%;
+    --foreground: 240 10% 6%;
+    --card: 30 25% 98%;
+    --card-foreground: 240 10% 6%;
+    --popover: 30 25% 98%;
+    --popover-foreground: 240 10% 6%;
+    --primary: 240 10% 6%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 20% 94%;
+    --secondary-foreground: 240 10% 6%;
+    --muted: 30 20% 92%;
+    --muted-foreground: 240 5% 35%;
+    --accent: 84 90% 55%;
+    --accent-foreground: 240 10% 6%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 5% 86%;
+    --input: 240 5% 86%;
+    --ring: 84 90% 55%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 240 12% 6%;
+    --foreground: 0 0% 98%;
+    --card: 240 12% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 12% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 10% 6%;
+    --secondary: 240 10% 14%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 10% 14%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 84 90% 55%;
+    --accent-foreground: 240 10% 6%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 10% 18%;
+    --input: 240 10% 18%;
+    --ring: 84 90% 55%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body), ui-sans-serif, system-ui;
+    transition: background-color 250ms ease, color 250ms ease;
+    background-image:
+      radial-gradient(1200px circle at 10% -10%, hsl(84 90% 55% / 0.12), transparent 55%),
+      radial-gradient(900px circle at 90% 10%, hsl(14 80% 62% / 0.12), transparent 50%),
+      linear-gradient(180deg, hsl(30 25% 99%) 0%, hsl(30 25% 97%) 100%);
+    background-attachment: fixed;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(1000px circle at 10% -10%, hsl(84 90% 55% / 0.15), transparent 55%),
+      radial-gradient(900px circle at 90% 10%, hsl(14 80% 62% / 0.1), transparent 50%),
+      linear-gradient(180deg, hsl(240 12% 6%) 0%, hsl(240 12% 7%) 100%);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+}
+
+@layer components {
+  .section-title {
+    @apply text-3xl sm:text-4xl md:text-5xl font-semibold;
+  }
+
+  .eyebrow {
+    @apply text-xs uppercase tracking-[0.3em] text-muted-foreground;
+  }
+
+  .metric-chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-border/70 bg-secondary/80 px-3 py-1 text-xs uppercase tracking-[0.3em];
+  }
+
+  .glass-panel {
+    @apply rounded-3xl border border-border/70 bg-card/70 p-6 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.5)];
+  }
+
+  .skip-link {
+    @apply absolute left-4 top-4 z-50 -translate-y-16 rounded-full bg-foreground px-4 py-2 text-xs font-semibold uppercase tracking-widest text-background shadow-md transition-transform focus:translate-y-0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
