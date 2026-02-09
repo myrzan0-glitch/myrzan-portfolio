@@ -79,10 +79,10 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main id="main" className="mx-auto flex max-w-6xl flex-col px-6">
+      <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 sm:px-6">
         <section
           id="hero"
-          className="relative flex min-h-[90vh] flex-col justify-center gap-10 py-16"
+          className="relative flex min-h-[90vh] flex-col justify-center gap-8 py-10 sm:py-16"
         >
          {/* <div className="absolute right-6 top-32 hidden h-16 w-16 rounded-full border border-border/50 md:block" aria-hidden /> */}
 
@@ -93,6 +93,13 @@ export default function HomePage() {
               <span className="metric-chip">✺ +37% pageview growth ✺</span>
             </div>
           </FadeIn> */}
+
+          <FadeIn delay={0.4}>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4" />
+              London, UK 
+            </div>
+          </FadeIn> 
 
           <FadeIn delay={0.1}>
             <h1 className="text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl">
@@ -110,6 +117,7 @@ export default function HomePage() {
             </p>
           </FadeIn>
 
+          
           <FadeIn delay={0.3}>
             <div className="flex flex-wrap items-center gap-4">
               <Button asChild size="lg" className="rounded-full">
@@ -145,7 +153,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   className="flex h-11 items-center gap-2 rounded-full border border-border/60 px-4 hover:border-foreground"
-                  href="mailto:izimbetov.myrzan@gmail.com"
+                  href="mailto:myrzan29@gmail.com"
                   aria-label="Send email"
                 >
                   <Mail className="h-4 w-4" />
@@ -155,17 +163,12 @@ export default function HomePage() {
             </div>
           </FadeIn>
 
-          <FadeIn delay={0.4}>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4" />
-              London, UK — feel free to drop a line
-            </div>
-          </FadeIn>
+          
         </section>
 
         <Separator className="my-6" />
 
-        <section id="projects" className="py-16">
+        <section id="projects" className="py-10 sm:py-16">
           <FadeIn>
             <p className="eyebrow">Featured work</p>
             <h2 className="section-title mt-4">Impact-led case studies</h2>
@@ -175,7 +178,7 @@ export default function HomePage() {
             </p>
           </FadeIn>
 
-          <Stagger className="mt-10 grid gap-6 md:grid-cols-2">
+          <Stagger className="mt-6 grid gap-5 md:mt-10 md:grid-cols-2">
             {caseStudies.map((project) => (
               <StaggerItem key={project.title}>
                 <Card className="group h-full overflow-hidden border border-border/70 bg-card/80 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-foreground/50">
@@ -244,7 +247,7 @@ export default function HomePage() {
 
         <Separator className="my-6" />
 
-        <section id="experience" className="py-16">
+        <section id="experience" className="py-10 sm:py-16">
           <FadeIn>
             <p className="eyebrow">Experience</p>
             <h2 className="section-title mt-4">Trajectory across scale</h2>
@@ -295,24 +298,24 @@ export default function HomePage() {
 
         <Separator className="my-6" />
 
-        <section id="contact" className="py-16">
+        <section id="contact" className="py-10 sm:py-16">
           <FadeIn>
             <p className="eyebrow">Let's connect</p>
             <h2 className="section-title mt-4">Ready to build the next product?</h2>
           </FadeIn>
 
           <FadeIn delay={0.1}>
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-6 grid gap-4 md:mt-10 md:grid-cols-3">
               <Card className="glass-panel">
-                <CardHeader>
+                <CardHeader className="p-0 sm:p-0">
                   <CardTitle>Email</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
+                <CardContent className="p-0 pt-0 sm:p-0 sm:pt-0">
+                  <p className="inline-flex min-h-11 w-full items-center justify-between gap-2 text-sm text-muted-foreground">
                     Ideas worth writing.
                   </p>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="p-0 pt-0 sm:p-0 sm:pt-0">
                   <Link
                     href="mailto:myrzan29@gmail.com"
                     className="inline-flex min-h-11 w-full items-center justify-between gap-2 text-sm font-semibold"
@@ -325,15 +328,15 @@ export default function HomePage() {
               </Card>
 
               <Card className="glass-panel">
-                <CardHeader>
+                <CardHeader className="p-0 sm:p-0">
                   <CardTitle>LinkedIn</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
+                <CardContent className="p-0 pt-0 sm:p-0 sm:pt-0">
+                  <p className="inline-flex min-h-11 w-full items-center justify-between gap-2 text-sm text-muted-foreground">
                     Follow the work.
                   </p>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="p-0 pt-0 sm:p-0 sm:pt-0">
                   <Link
                     href="https://www.linkedin.com/in/myrzanio/"
                     target="_blank"
@@ -348,15 +351,15 @@ export default function HomePage() {
               </Card>
 
               <Card className="glass-panel">
-                <CardHeader>
+                <CardHeader className="p-0 sm:p-0">
                   <CardTitle>Telegram</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
+                <CardContent className="p-0 pt-0 sm:p-0 sm:pt-0">
+                  <p className="inline-flex min-h-11 w-full items-center justify-between gap-2 text-sm text-muted-foreground">
                     Salam, Myrzan!
                   </p>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="p-0 pt-0 sm:p-0 sm:pt-0">
                   <Link
                     href="https://t.me/myrzanio"
                     target="_blank"
