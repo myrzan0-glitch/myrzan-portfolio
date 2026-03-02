@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import * as React from "react"
 
 type RichText = {
@@ -21,6 +22,19 @@ type Block = {
   has_children?: boolean
   children?: Block[]
   [key: string]: any
+}
+
+function getPlainText(richText: RichText[] = []) {
+  return richText.map((text) => text.plain_text).join("")
+}
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
 }
 
 function renderRichText(richText: RichText[]) {
@@ -132,7 +146,10 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
 
     case "heading_2":
       return (
-        <h2 className="mb-4 mt-10 text-3xl font-bold">
+        <h2
+          id={slugify(getPlainText(block.heading_2.rich_text))}
+          className="mb-4 mt-10 scroll-mt-28 text-3xl font-bold"
+        >
           {renderRichText(block.heading_2.rich_text)}
         </h2>
       )
@@ -220,6 +237,20 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
 
     case "divider":
       return <hr className="my-8 border-border" />
+
+    case "child_page":
+      return (
+        <Link
+          href={`/selected-work/${block.id}`}
+          className="my-5 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/[0.03] px-5 py-4 no-underline text-white shadow-[0_0_0_rgba(0,0,0,0)] transition duration-300 hover:no-underline hover:border-white/20 hover:shadow-[0_18px_40px_-24px_rgba(255,255,255,0.18)]"
+          style={{ textDecoration: "none" }}
+        >
+          <span className="truncate text-xl font-semibold leading-tight text-current">
+            {block.pageMeta?.title || block.child_page.title}
+          </span>
+          <span className="shrink-0 text-base text-white/65">-&gt;</span>
+        </Link>
+      )
 
     default:
       return null
