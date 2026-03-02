@@ -14,9 +14,13 @@ async function getCaseStudy(slug: string) {
   const pageId = caseStudyMap[slug]
   if (!pageId) return null
 
-  const page = await getPage(pageId)
-  const blocks = await getBlocksRecursively(pageId)
-  return { page, blocks }
+  try {
+    const page = await getPage(pageId)
+    const blocks = await getBlocksRecursively(pageId)
+    return { page, blocks }
+  } catch {
+    return null
+  }
 }
 
 export default async function CaseStudyPage({

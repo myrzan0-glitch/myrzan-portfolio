@@ -1,16 +1,16 @@
 import type { Metadata } from "next"
-import { Fraunces, IBM_Plex_Sans } from "next/font/google"
+import { Inter } from "next/font/google"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 
-const display = Fraunces({
+const display = Inter({
   subsets: ["latin"],
   variable: "--font-display"
 })
 
-const body = IBM_Plex_Sans({
+const body = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-body"
