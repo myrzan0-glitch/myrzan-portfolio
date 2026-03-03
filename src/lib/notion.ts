@@ -47,12 +47,48 @@ export async function getBlocksRecursively(blockId: string): Promise<any[]> {
               page?.properties?.Name?.title?.[0]?.plain_text ||
               page?.properties?.name?.title?.[0]?.plain_text ||
               block.child_page?.title ||
-              "Untitled"
+              "Untitled",
+            cover:
+              page?.cover?.type === "file"
+                ? page.cover.file.url
+                : page?.cover?.type === "external"
+                  ? page.cover.external.url
+                  : null
           }
         } catch {
           block.pageMeta = {
             icon: null,
-            title: block.child_page?.title || "Untitled"
+            title: block.child_page?.title || "Untitled",
+            cover: null
+          }
+        }
+      }
+
+      if (block.type === "link_to_page" && block.link_to_page?.type === "page_id") {
+        try {
+          const pageId = block.link_to_page.page_id
+          const page: any = await getPage(pageId)
+          block.pageMeta = {
+            icon: page?.icon ?? null,
+            pageId,
+            title:
+              page?.properties?.title?.title?.[0]?.plain_text ||
+              page?.properties?.Name?.title?.[0]?.plain_text ||
+              page?.properties?.name?.title?.[0]?.plain_text ||
+              "Untitled",
+            cover:
+              page?.cover?.type === "file"
+                ? page.cover.file.url
+                : page?.cover?.type === "external"
+                  ? page.cover.external.url
+                  : null
+          }
+        } catch {
+          block.pageMeta = {
+            icon: null,
+            pageId: block.link_to_page.page_id,
+            title: "Untitled",
+            cover: null
           }
         }
       }
