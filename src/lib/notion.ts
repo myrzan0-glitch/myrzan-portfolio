@@ -30,6 +30,13 @@ export async function getPageContent(pageId: string) {
   return blocks.results
 }
 
+// Get content blocks from the Selected Work page itself
+export async function getSelectedWorkContent(pageId: string): Promise<any[]> {
+  return getPageContent(pageId)
+}
+
+// Fetches only the top-level child_page / link_to_page items from a container page,
+// plus their metadata (cover, title). No recursion — avoids rate limit spikes.
 export async function getSelectedWorkItems(pageId: string): Promise<any[]> {
   const blocks = await withRetries(() =>
     notion.blocks.children.list({ block_id: pageId, page_size: 100 })
@@ -88,23 +95,15 @@ export async function getBlocksRecursively(blockId: string): Promise<any[]> {
               page?.properties?.Name?.title?.[0]?.plain_text ||
               page?.properties?.name?.title?.[0]?.plain_text ||
               block.child_page?.title ||
-              "Untitled",
-            cover:
-              page?.cover?.type === "file"
-                ? page.cover.file.url
-                : page?.cover?.type === "external"
-                  ? page.cover.external.url
-                  : null
+              "Untitled"
           }
         } catch {
           block.pageMeta = {
             icon: null,
-            title: block.child_page?.title || "Untitled",
-            cover: null
+            title: block.child_page?.title || "Untitled"
           }
         }
       }
-
 
       if (block.has_children) {
         block.children = await getBlocksRecursively(block.id)
