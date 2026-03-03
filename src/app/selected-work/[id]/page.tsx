@@ -88,7 +88,7 @@ export default async function SelectedWorkDetailPage({
         </Button>
 
         <header className="mb-10">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="text-[2rem] font-semibold tracking-tight">
             {title}
           </h1>
           {headingSections.length > 0 ? (
@@ -115,7 +115,7 @@ export default async function SelectedWorkDetailPage({
 
         <section className="mt-16 pt-10 sm:mt-20">
           <p className="text-sm text-white/55">Contact</p>
-          <p className="mt-3 max-w-3xl text-[2.1rem] font-medium tracking-tight text-white sm:text-[3rem] sm:leading-[4rem]">
+          <p className="mt-3 max-w-3xl text-[2rem] font-medium tracking-tight text-white leading-[2.35rem]">
             Say hi
             <br />
             <Link

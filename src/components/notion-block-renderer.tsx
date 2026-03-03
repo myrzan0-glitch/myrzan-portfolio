@@ -139,7 +139,7 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
 
     case "heading_1":
       return (
-        <h1 className="mb-6 mt-10 text-4xl font-bold">
+        <h1 className="mb-6 mt-10 text-[2rem] font-bold">
           {renderRichText(block.heading_1.rich_text)}
         </h1>
       )

@@ -87,7 +87,7 @@
 
 @layer components {
   .section-title {
-    @apply text-3xl sm:text-4xl md:text-5xl font-semibold;
+    @apply text-[2rem] font-semibold;
   }
 
   .eyebrow {
