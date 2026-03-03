@@ -3,8 +3,8 @@ import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 
 import { NotionContent } from "@/components/notion-block-renderer"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
-import { FadeIn, Stagger, StaggerItem } from "@/components/motion"
-import { getSelectedWorkItems, getSelectedWorkContent } from "@/lib/notion"
+import { FadeIn } from "@/components/motion"
+import { getSelectedWorkContent } from "@/lib/notion"
 
 const experience = [
   {
@@ -48,14 +48,6 @@ const selectedWorkPageId = "31725685-1722-8035-ac20-cd8311aec051"
 
 export const revalidate = 3600
 
-async function getNotionProjects() {
-  try {
-    return await getSelectedWorkItems(selectedWorkPageId)
-  } catch {
-    return []
-  }
-}
-
 async function getNotionContent() {
   try {
     return await getSelectedWorkContent(selectedWorkPageId)
@@ -65,7 +57,6 @@ async function getNotionContent() {
 }
 
 export default async function HomePage() {
-  const notionProjects = await getNotionProjects()
   const notionContent = await getNotionContent()
 
   return (
@@ -236,46 +227,6 @@ export default async function HomePage() {
                 <NotionContent blocks={notionContent} />
               </div>
             </FadeIn>
-          )}
-
-          {notionProjects.length > 0 && (
-            <Stagger className="mt-8 divide-y divide-white/10">
-              {notionProjects.map((block: any, index: number) => (
-                <StaggerItem key={block.id}>
-                  <article className="grid gap-5 py-5 md:grid-cols-[10rem_minmax(0,1fr)_14rem] md:items-center">
-                    <div className="text-sm text-white/55">
-                      <p>{String(index + 1).padStart(2, "0")}</p>
-                    </div>
-
-                    <div className="min-w-0">
-                      <Link
-                        href={`/selected-work/${block.pageMeta?.pageId ?? block.id}`}
-                        className="group inline-flex items-center gap-2 text-xl leading-tight tracking-tight sm:text-2xl"
-                      >
-                        <span>{block.pageMeta?.title || block.child_page?.title}</span>
-                        <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
-                      </Link>
-                    </div>
-
-                    {block.pageMeta?.cover ? (
-                      <Link
-                        href={`/selected-work/${block.pageMeta?.pageId ?? block.id}`}
-                        className="block overflow-hidden rounded-2xl border border-white/10"
-                        aria-hidden
-                        tabIndex={-1}
-                      >
-                        <div
-                          className="h-28 bg-cover bg-center opacity-90 transition duration-500 hover:scale-[1.03] hover:opacity-100 md:h-24"
-                          style={{ backgroundImage: `url(${block.pageMeta.cover})` }}
-                        />
-                      </Link>
-                    ) : (
-                      <div />
-                    )}
-                  </article>
-                </StaggerItem>
-              ))}
-            </Stagger>
           )}
         </section>
 
