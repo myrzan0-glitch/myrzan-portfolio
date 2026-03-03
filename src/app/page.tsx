@@ -58,9 +58,7 @@ async function getSelectedWorkBlocks() {
 
 export default async function HomePage() {
   const selectedWorkBlocks = await getSelectedWorkBlocks()
-  const notionProjects = selectedWorkBlocks?.filter(
-    (b: any) => b.type === "child_page" || b.type === "link_to_page"
-  ) ?? []
+  const notionProjects = selectedWorkBlocks?.filter((b: any) => b.type === "child_page") ?? []
 
   return (
     <div className="relative min-h-screen bg-black text-white">
