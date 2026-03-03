@@ -4,7 +4,6 @@ import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion"
 import { caseStudies } from "@/data/case-studies"
-import { getSelectedWorkItems } from "@/lib/notion"
 
 const experience = [
   {
@@ -44,21 +43,7 @@ const principles = [
   "Keep systems scalable and simple"
 ]
 
-const selectedWorkPageId = "31725685-1722-8035-ac20-cd8311aec051"
-
-export const revalidate = 3600
-
-async function getNotionProjects() {
-  try {
-    return await getSelectedWorkItems(selectedWorkPageId)
-  } catch {
-    return []
-  }
-}
-
 export default async function HomePage() {
-  const notionProjects = await getNotionProjects()
-
   return (
     <div className="relative min-h-screen bg-black text-white">
       <Link
@@ -222,70 +207,51 @@ export default async function HomePage() {
           </FadeIn>
 
           <Stagger className="mt-8 divide-y divide-white/10">
-            {(notionProjects.length > 0 ? notionProjects : caseStudies).map((item: any, index: number) => {
-              const isNotion = notionProjects.length > 0
-              const href = isNotion
-                ? `/selected-work/${item.pageMeta?.pageId ?? item.id}`
-                : `/case-study/${item.slug}`
-              const title = isNotion
-                ? (item.pageMeta?.title || item.child_page?.title)
-                : item.title
-              const thumbnail = isNotion ? item.pageMeta?.cover : item.thumbnail
+            {caseStudies.map((item, index) => (
+              <StaggerItem key={item.slug}>
+                <article className="grid gap-5 py-5 md:grid-cols-[10rem_minmax(0,1fr)_14rem] md:items-center">
+                  <div className="text-sm text-white/55">
+                    <p>{String(index + 1).padStart(2, "0")}</p>
+                    <p className="mt-1">{item.company}</p>
+                  </div>
 
-              return (
-                <StaggerItem key={isNotion ? item.id : item.slug}>
-                  <article className="grid gap-5 py-5 md:grid-cols-[10rem_minmax(0,1fr)_14rem] md:items-center">
-                    <div className="text-sm text-white/55">
-                      <p>{String(index + 1).padStart(2, "0")}</p>
-                      {!isNotion && <p className="mt-1">{item.company}</p>}
+                  <div className="min-w-0">
+                    <Link
+                      href={`/case-study/${item.slug}`}
+                      className="group inline-flex items-center gap-2 text-xl leading-tight tracking-tight sm:text-2xl"
+                    >
+                      <span>{item.title}</span>
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
+                    </Link>
+                    <p className="mt-2 max-w-2xl text-sm leading-7 text-white/65 sm:text-base">
+                      {item.description}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {[...item.metrics, ...item.tags].slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full border border-white/15 px-2.5 py-1 text-xs text-white/55"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
+                  </div>
 
-                    <div className="min-w-0">
-                      <Link
-                        href={href}
-                        className="group inline-flex items-center gap-2 text-xl leading-tight tracking-tight sm:text-2xl"
-                      >
-                        <span>{title}</span>
-                        <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
-                      </Link>
-                      {!isNotion && (
-                        <>
-                          <p className="mt-2 max-w-2xl text-sm leading-7 text-white/65 sm:text-base">
-                            {item.description}
-                          </p>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {[...(item.metrics ?? []), ...item.tags].slice(0, 3).map((tag: string) => (
-                              <span
-                                key={`${item.slug}-${tag}`}
-                                className="rounded-full border border-white/15 px-2.5 py-1 text-xs text-white/55"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    {thumbnail ? (
-                      <Link
-                        href={href}
-                        className="block overflow-hidden rounded-2xl border border-white/10"
-                        aria-hidden
-                        tabIndex={-1}
-                      >
-                        <div
-                          className="h-28 bg-cover bg-center opacity-90 transition duration-500 hover:scale-[1.03] hover:opacity-100 md:h-24"
-                          style={{ backgroundImage: `url(${thumbnail})` }}
-                        />
-                      </Link>
-                    ) : (
-                      <div />
-                    )}
-                  </article>
-                </StaggerItem>
-              )
-            })}
+                  <Link
+                    href={`/case-study/${item.slug}`}
+                    className="block overflow-hidden rounded-2xl border border-white/10"
+                    aria-hidden
+                    tabIndex={-1}
+                  >
+                    <div
+                      className="h-28 bg-cover bg-center opacity-90 transition duration-500 hover:scale-[1.03] hover:opacity-100 md:h-24"
+                      style={{ backgroundImage: `url(${item.thumbnail})` }}
+                    />
+                  </Link>
+                </article>
+              </StaggerItem>
+            ))}
           </Stagger>
         </section>
 
