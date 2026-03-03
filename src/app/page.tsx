@@ -57,7 +57,9 @@ async function getSelectedWorkBlocks() {
 
 export default async function HomePage() {
   const selectedWorkBlocks = await getSelectedWorkBlocks()
-  const notionProjects = selectedWorkBlocks?.filter((b: any) => b.type === "child_page") ?? []
+  const notionProjects = selectedWorkBlocks?.filter(
+    (b: any) => b.type === "child_page" || b.type === "link_to_page"
+  ) ?? []
 
   return (
     <div className="relative min-h-screen bg-black text-white">
@@ -232,17 +234,17 @@ export default async function HomePage() {
 
                     <div className="min-w-0">
                       <Link
-                        href={`/selected-work/${block.id}`}
+                        href={`/selected-work/${block.pageMeta?.pageId ?? block.id}`}
                         className="group inline-flex items-center gap-2 text-xl leading-tight tracking-tight sm:text-2xl"
                       >
-                        <span>{block.pageMeta?.title || block.child_page.title}</span>
+                        <span>{block.pageMeta?.title || block.child_page?.title}</span>
                         <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
                       </Link>
                     </div>
 
                     {block.pageMeta?.cover ? (
                       <Link
-                        href={`/selected-work/${block.id}`}
+                        href={`/selected-work/${block.pageMeta?.pageId ?? block.id}`}
                         className="block overflow-hidden rounded-2xl border border-white/10"
                         aria-hidden
                         tabIndex={-1}
