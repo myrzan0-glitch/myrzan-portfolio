@@ -4,7 +4,7 @@ import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 import { NotionContent } from "@/components/notion-block-renderer"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion"
-import { getSelectedWorkItems } from "@/lib/notion"
+import { getSelectedWorkItems, getSelectedWorkContent } from "@/lib/notion"
 
 const experience = [
   {
@@ -56,8 +56,17 @@ async function getNotionProjects() {
   }
 }
 
+async function getNotionContent() {
+  try {
+    return await getSelectedWorkContent(selectedWorkPageId)
+  } catch {
+    return []
+  }
+}
+
 export default async function HomePage() {
   const notionProjects = await getNotionProjects()
+  const notionContent = await getNotionContent()
 
   return (
     <div className="relative min-h-screen bg-black text-white">
@@ -221,6 +230,14 @@ export default async function HomePage() {
             </div>
           </FadeIn>
 
+          {notionContent.length > 0 && (
+            <FadeIn delay={0.05}>
+              <div className="mt-8 space-y-8">
+                <NotionContent blocks={notionContent} />
+              </div>
+            </FadeIn>
+          )}
+
           {notionProjects.length > 0 && (
             <Stagger className="mt-8 divide-y divide-white/10">
               {notionProjects.map((block: any, index: number) => (
@@ -238,11 +255,6 @@ export default async function HomePage() {
                         <span>{block.pageMeta?.title || block.child_page?.title}</span>
                         <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
                       </Link>
-                      {block.pageMeta?.blocks && block.pageMeta.blocks.length > 0 && (
-                        <div className="mt-2 space-y-3 text-sm text-white/65">
-                          <NotionContent blocks={block.pageMeta.blocks.slice(0, 2)} />
-                        </div>
-                      )}
                     </div>
 
                     {block.pageMeta?.cover ? (
