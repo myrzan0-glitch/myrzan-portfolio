@@ -30,6 +30,49 @@ export async function getPageContent(pageId: string) {
   return blocks.results
 }
 
+// Fetches only the top-level child_page / link_to_page items from a container page,
+// plus their cover image and title. No recursion — avoids rate limit spikes.
+export async function getSelectedWorkItems(pageId: string): Promise<any[]> {
+  const blocks = await withRetries(() =>
+    notion.blocks.children.list({ block_id: pageId, page_size: 100 })
+  )
+
+  const items = (blocks.results as any[]).filter(
+    (b) => b.type === "child_page" || (b.type === "link_to_page" && b.link_to_page?.type === "page_id")
+  )
+
+  return Promise.all(
+    items.map(async (block: any) => {
+      const targetId = block.type === "child_page" ? block.id : block.link_to_page.page_id
+      try {
+        const page: any = await getPage(targetId)
+        block.pageMeta = {
+          pageId: targetId,
+          title:
+            page?.properties?.title?.title?.[0]?.plain_text ||
+            page?.properties?.Name?.title?.[0]?.plain_text ||
+            page?.properties?.name?.title?.[0]?.plain_text ||
+            block.child_page?.title ||
+            "Untitled",
+          cover:
+            page?.cover?.type === "file"
+              ? page.cover.file.url
+              : page?.cover?.type === "external"
+                ? page.cover.external.url
+                : null
+        }
+      } catch {
+        block.pageMeta = {
+          pageId: targetId,
+          title: block.child_page?.title || "Untitled",
+          cover: null
+        }
+      }
+      return block
+    })
+  )
+}
+
 export async function getBlocksRecursively(blockId: string): Promise<any[]> {
   const blocks = await withRetries(() =>
     notion.blocks.children.list({ block_id: blockId, page_size: 100 })
