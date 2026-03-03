@@ -4,7 +4,7 @@ import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion"
 import { caseStudies } from "@/data/case-studies"
-import { getBlocksRecursively } from "@/lib/notion"
+import { getSelectedWorkItems } from "@/lib/notion"
 
 const experience = [
   {
@@ -48,17 +48,16 @@ const selectedWorkPageId = "31725685-1722-8035-ac20-cd8311aec051"
 
 export const revalidate = 3600
 
-async function getSelectedWorkBlocks() {
+async function getNotionProjects() {
   try {
-    return await getBlocksRecursively(selectedWorkPageId)
+    return await getSelectedWorkItems(selectedWorkPageId)
   } catch {
-    return null
+    return []
   }
 }
 
 export default async function HomePage() {
-  const selectedWorkBlocks = await getSelectedWorkBlocks()
-  const notionProjects = selectedWorkBlocks?.filter((b: any) => b.type === "child_page") ?? []
+  const notionProjects = await getNotionProjects()
 
   return (
     <div className="relative min-h-screen bg-black text-white">
