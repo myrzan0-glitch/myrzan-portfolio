@@ -17,7 +17,7 @@ const body = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Myrzan Izimbetov | Product Designer | +$4M MRR Impact",
+  title: "Myrzan Izimbetov | Product Designer | Design Engineer | Portfolio",
   description:
     "Results-driven Product Designer focused on UX and UI. +$4M in MRR impact and +37% pageview growth across mobile, desktop, and web platforms.",
   openGraph: {
