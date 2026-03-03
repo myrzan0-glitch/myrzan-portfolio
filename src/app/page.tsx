@@ -234,7 +234,7 @@ export default async function HomePage() {
           <FadeIn>
             <div className="max-w-3xl">
               <p className="text-sm text-white/55">Contact</p>
-              <p className="mt-3 text-2xl font-medium leading-[2.35rem] tracking-tight text-white sm:text-[2rem]">
+              <p className="mt-3 text-xl font-medium leading-[2.35rem] tracking-tight text-white sm:text-[2rem]">
                 Say hi
                 <br />
                 <Link
