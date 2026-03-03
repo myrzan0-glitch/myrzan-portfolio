@@ -1,9 +1,8 @@
 import Link from "next/link"
 import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 
-import { NotionContent } from "@/components/notion-block-renderer"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
-import { FadeIn } from "@/components/motion"
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion"
 import { getBlocksRecursively } from "@/lib/notion"
 
 const experience = [
@@ -58,6 +57,7 @@ async function getSelectedWorkBlocks() {
 
 export default async function HomePage() {
   const selectedWorkBlocks = await getSelectedWorkBlocks()
+  const notionProjects = selectedWorkBlocks?.filter((b: any) => b.type === "child_page") ?? []
 
   return (
     <div className="relative min-h-screen bg-black text-white">
@@ -221,10 +221,44 @@ export default async function HomePage() {
             </div>
           </FadeIn>
 
-          {selectedWorkBlocks && selectedWorkBlocks.length > 0 && (
-            <div className="mt-3 max-w-4xl [&_.prose]:max-w-none [&_.prose]:text-white/85 [&_.prose_p]:text-base [&_.prose_p]:leading-7 [&_.prose_p]:text-white/90 sm:[&_.prose_p]:text-lg sm:[&_.prose_p]:leading-8 [&_.prose_a]:text-white [&_.prose_a]:no-underline hover:[&_.prose_a]:underline [&_.prose_blockquote]:border-white/20 [&_.prose_code]:bg-white/10 [&_.prose_h1]:text-[2rem] [&_.prose_h1]:leading-[2.35rem] sm:[&_.prose_h1]:text-4xl sm:[&_.prose_h1]:leading-tight [&_.prose_h2]:text-[1.55rem] [&_.prose_h2]:leading-8 sm:[&_.prose_h2]:text-3xl sm:[&_.prose_h2]:leading-tight [&_.prose_h3]:text-[1.2rem] [&_.prose_h3]:leading-7 sm:[&_.prose_h3]:text-2xl">
-              <NotionContent blocks={selectedWorkBlocks} />
-            </div>
+          {notionProjects.length > 0 && (
+            <Stagger className="mt-8 divide-y divide-white/10">
+              {notionProjects.map((block: any, index: number) => (
+                <StaggerItem key={block.id}>
+                  <article className="grid gap-5 py-5 md:grid-cols-[10rem_minmax(0,1fr)_14rem] md:items-center">
+                    <div className="text-sm text-white/55">
+                      <p>{String(index + 1).padStart(2, "0")}</p>
+                    </div>
+
+                    <div className="min-w-0">
+                      <Link
+                        href={`/selected-work/${block.id}`}
+                        className="group inline-flex items-center gap-2 text-xl leading-tight tracking-tight sm:text-2xl"
+                      >
+                        <span>{block.pageMeta?.title || block.child_page.title}</span>
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
+                      </Link>
+                    </div>
+
+                    {block.pageMeta?.cover ? (
+                      <Link
+                        href={`/selected-work/${block.id}`}
+                        className="block overflow-hidden rounded-2xl border border-white/10"
+                        aria-hidden
+                        tabIndex={-1}
+                      >
+                        <div
+                          className="h-28 bg-cover bg-center opacity-90 transition duration-500 hover:scale-[1.03] hover:opacity-100 md:h-24"
+                          style={{ backgroundImage: `url(${block.pageMeta.cover})` }}
+                        />
+                      </Link>
+                    ) : (
+                      <div />
+                    )}
+                  </article>
+                </StaggerItem>
+              ))}
+            </Stagger>
           )}
         </section>
 
