@@ -76,7 +76,7 @@ export default async function HomePage() {
               <h1 className="max-w-[14ch] text-[2rem] font-medium leading-[2.35rem] tracking-tight text-white sm:max-w-none">
                 Hello, I&apos;m Myrzan
               </h1>
-              <p className="mt-5 max-w-[18ch] text-lg leading-7 text-white/86 sm:mt-6 sm:max-w-5xl">
+              <p className="mt-5 text-lg leading-7 text-white/86 sm:mt-6 sm:max-w-5xl">
                 A product designer with 6+ years of experience building high-traffic apps and
                 simplifying complex systems into elegant user journeys. Currently designing at{" "}
                 <Link
