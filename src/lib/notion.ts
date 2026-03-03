@@ -31,7 +31,7 @@ export async function getPageContent(pageId: string) {
 }
 
 // Fetches only the top-level child_page / link_to_page items from a container page,
-// plus their cover image and title. No recursion — avoids rate limit spikes.
+// plus their metadata (cover, title) and first few content blocks for preview.
 export async function getSelectedWorkItems(pageId: string): Promise<any[]> {
   const blocks = await withRetries(() =>
     notion.blocks.children.list({ block_id: pageId, page_size: 100 })
@@ -46,6 +46,8 @@ export async function getSelectedWorkItems(pageId: string): Promise<any[]> {
       const targetId = block.type === "child_page" ? block.id : block.link_to_page.page_id
       try {
         const page: any = await getPage(targetId)
+        const contentBlocks = await getPageContent(targetId)
+
         block.pageMeta = {
           pageId: targetId,
           title:
@@ -59,13 +61,15 @@ export async function getSelectedWorkItems(pageId: string): Promise<any[]> {
               ? page.cover.file.url
               : page?.cover?.type === "external"
                 ? page.cover.external.url
-                : null
+                : null,
+          blocks: contentBlocks || []
         }
       } catch {
         block.pageMeta = {
           pageId: targetId,
           title: block.child_page?.title || "Untitled",
-          cover: null
+          cover: null,
+          blocks: []
         }
       }
       return block

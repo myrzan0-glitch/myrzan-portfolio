@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 
+import { NotionContent } from "@/components/notion-block-renderer"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion"
 import { getSelectedWorkItems } from "@/lib/notion"
@@ -237,6 +238,11 @@ export default async function HomePage() {
                         <span>{block.pageMeta?.title || block.child_page?.title}</span>
                         <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
                       </Link>
+                      {block.pageMeta?.blocks && block.pageMeta.blocks.length > 0 && (
+                        <div className="mt-2 space-y-3 text-sm text-white/65">
+                          <NotionContent blocks={block.pageMeta.blocks.slice(0, 2)} />
+                        </div>
+                      )}
                     </div>
 
                     {block.pageMeta?.cover ? (
