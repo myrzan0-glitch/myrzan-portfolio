@@ -23,12 +23,6 @@ function verifySignature(rawBody: string, header: string, secret: string): boole
 }
 
 export async function POST(request: NextRequest) {
-  const secret = process.env.NOTION_WEBHOOK_SECRET
-  if (!secret) {
-    console.error("[notion-webhook] NOTION_WEBHOOK_SECRET is not set")
-    return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 })
-  }
-
   const rawBody = await request.text()
 
   let payload: Record<string, unknown>
@@ -38,9 +32,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
   }
 
-  // Notion URL verification challenge — echo back the token, no signature needed
+  // Notion URL verification challenge — echo back the token, no secret needed
   if (typeof payload.verification_token === "string") {
     return NextResponse.json({ verification_token: payload.verification_token }, { status: 200 })
+  }
+
+  const secret = process.env.NOTION_WEBHOOK_SECRET
+  if (!secret) {
+    console.error("[notion-webhook] NOTION_WEBHOOK_SECRET is not set")
+    return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 })
   }
 
   const signature = request.headers.get("x-notion-signature") ?? ""
