@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
 
   // Notion URL verification challenge — echo back the token, no secret needed
   if (typeof payload.verification_token === "string") {
+    console.log("[notion-webhook] verification_token:", payload.verification_token)
     return NextResponse.json({ verification_token: payload.verification_token }, { status: 200 })
   }
 
