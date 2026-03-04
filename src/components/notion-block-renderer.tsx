@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import * as React from "react"
 
@@ -205,27 +204,16 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
         )
       }
 
-      const isNotion = imageUrl.includes("notion") || imageUrl.includes("amazonaws.com")
-
       return (
         <figure className="my-8">
-          {isNotion ? (
-            // Notion image URLs are signed and can reject proxying; use plain img.
-            <img
-              src={imageUrl}
-              alt={caption || "Case study image"}
-              className="h-auto w-full rounded-lg"
-              loading="lazy"
-            />
-          ) : (
-            <Image
-              src={imageUrl}
-              alt={caption || "Case study image"}
-              width={1200}
-              height={800}
-              className="h-auto w-full rounded-lg"
-            />
-          )}
+          {/* Use plain img: Notion URLs are signed/can't be proxied, and external
+              URLs may be from unregistered domains — works for all formats incl. WebP */}
+          <img
+            src={imageUrl}
+            alt={caption || "Case study image"}
+            className="h-auto w-full rounded-lg"
+            loading="lazy"
+          />
           {caption ? (
             <figcaption className="mt-2 text-sm text-muted-foreground">
               {caption}
