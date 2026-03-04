@@ -31,16 +31,21 @@ export async function POST(request: NextRequest) {
 
   const rawBody = await request.text()
 
-  const signature = request.headers.get("x-notion-signature") ?? ""
-  if (!verifySignature(rawBody, signature, secret)) {
-    return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
-  }
-
   let payload: Record<string, unknown>
   try {
     payload = JSON.parse(rawBody)
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
+  }
+
+  // Notion URL verification challenge — echo back the token, no signature needed
+  if (typeof payload.verification_token === "string") {
+    return NextResponse.json({ verification_token: payload.verification_token }, { status: 200 })
+  }
+
+  const signature = request.headers.get("x-notion-signature") ?? ""
+  if (!verifySignature(rawBody, signature, secret)) {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
   }
 
   // Extract page ID — Notion puts it at entity.id
