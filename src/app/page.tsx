@@ -4,7 +4,7 @@ import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 import { NotionContent } from "@/components/notion-block-renderer"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
 import { FadeIn } from "@/components/motion"
-import { getBlocksRecursively } from "@/lib/notion"
+import { getSelectedWorkContent } from "@/lib/notion"
 
 const experience = [
   {
@@ -48,16 +48,16 @@ const selectedWorkPageId = "31725685-1722-8035-ac20-cd8311aec051"
 
 export const revalidate = 3600
 
-async function getSelectedWorkBlocks() {
+async function getNotionContent() {
   try {
-    return await getBlocksRecursively(selectedWorkPageId)
+    return await getSelectedWorkContent(selectedWorkPageId)
   } catch {
-    return null
+    return []
   }
 }
 
 export default async function HomePage() {
-  const selectedWorkBlocks = await getSelectedWorkBlocks()
+  const notionContent = await getNotionContent()
 
   return (
     <div className="relative min-h-screen bg-black text-white">
@@ -221,10 +221,12 @@ export default async function HomePage() {
             </div>
           </FadeIn>
 
-          {selectedWorkBlocks && selectedWorkBlocks.length > 0 && (
-            <div className="mt-3 max-w-4xl [&_.prose]:max-w-none [&_.prose]:text-white/85 [&_.prose_p]:text-base [&_.prose_p]:leading-7 [&_.prose_p]:text-white/90 sm:[&_.prose_p]:text-lg sm:[&_.prose_p]:leading-8 [&_.prose_a]:text-white [&_.prose_a]:no-underline hover:[&_.prose_a]:underline [&_.prose_blockquote]:border-white/20 [&_.prose_code]:bg-white/10 [&_.prose_h1]:text-[2rem] [&_.prose_h1]:leading-[2.35rem] sm:[&_.prose_h1]:text-4xl sm:[&_.prose_h1]:leading-tight [&_.prose_h2]:text-[1.55rem] [&_.prose_h2]:leading-8 sm:[&_.prose_h2]:text-3xl sm:[&_.prose_h2]:leading-tight [&_.prose_h3]:text-[1.2rem] [&_.prose_h3]:leading-7 sm:[&_.prose_h3]:text-2xl">
-              <NotionContent blocks={selectedWorkBlocks} />
-            </div>
+          {notionContent.length > 0 && (
+            <FadeIn delay={0.05}>
+              <div className="mt-8 space-y-8">
+                <NotionContent blocks={notionContent} />
+              </div>
+            </FadeIn>
           )}
         </section>
 
@@ -232,7 +234,7 @@ export default async function HomePage() {
           <FadeIn>
             <div className="max-w-3xl">
               <p className="text-sm text-white/55">Contact</p>
-              <p className="mt-3 text-[1.55rem] font-medium leading-[2rem] tracking-tight text-white sm:text-[2.35rem] sm:leading-[3rem] md:text-[3rem] md:leading-[4rem]">
+              <p className="mt-3 text-[2rem] font-medium leading-[2.35rem] tracking-tight text-white">
                 Say hi
                 <br />
                 <Link

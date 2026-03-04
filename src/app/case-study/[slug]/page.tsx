@@ -59,7 +59,7 @@ export default async function CaseStudyPage({
       <main className="mx-auto max-w-4xl px-6 py-16">
         <header className="mb-12">
           <p className="eyebrow">Case study</p>
-          <h1 className="mt-4 text-4xl font-semibold sm:text-5xl">{title}</h1>
+          <h1 className="mt-4 text-[2rem] font-semibold">{title}</h1>
         </header>
 
         <article>
