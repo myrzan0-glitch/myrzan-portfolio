@@ -62,37 +62,19 @@ export default async function HomePage() {
 
   return (
     <div className="relative min-h-screen bg-black text-white">
-      {/* Name + Avatar — scrolls with content */}
-      <div className="absolute left-5 top-5 z-40 flex flex-col sm:left-8 sm:top-6">
-        <Link
-          href="#main"
-          className="flex h-[46px] items-center text-sm tracking-tight text-white/90 transition hover:text-white"
-        >
-          Myrzan Izimbetov
-        </Link>
-        <div className="group relative mt-1 hidden h-60 w-60 cursor-default overflow-hidden rounded-2xl sm:block">
-          <Image
-            src="/avatar-default.webp"
-            alt="Myrzan Izimbetov"
-            fill
-            className="object-cover transition-opacity duration-300 group-hover:opacity-0"
-            priority
-          />
-          <Image
-            src="/avatar-hover.webp"
-            alt=""
-            fill
-            className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          />
-        </div>
-      </div>
-
+      <Link
+        href="#main"
+        className="absolute left-5 top-5 z-40 flex h-[46px] items-center text-sm tracking-tight text-white/90 transition hover:text-white sm:left-8 sm:top-6"
+      >
+        Myrzan Izimbetov
+      </Link>
       <FloatingSectionNav />
 
       <main id="main" className="mx-auto max-w-7xl px-6 pb-40 pt-20 sm:px-8 sm:pt-24 md:pb-24 md:pt-28">
         <section id="intro">
           <FadeIn>
-            <div className="py-[4.75rem] sm:py-16 md:py-20">
+            <div className="flex items-start justify-between py-[4.75rem] sm:py-16 md:py-20">
+              <div>
               <h1 className="max-w-[14ch] text-[2rem] font-medium leading-[2.35rem] tracking-tight text-white sm:max-w-none">
                 Hello, I&apos;m Myrzan
               </h1>
@@ -134,6 +116,24 @@ export default async function HomePage() {
                   <ArrowUpRight className="relative -top-[1px] h-[0.42em] w-[0.42em] shrink-0 text-white/85" />
                 </Link>
               </p>
+              </div>
+
+              {/* Avatar — desktop only */}
+              <div className="group relative hidden h-60 w-60 shrink-0 cursor-default overflow-hidden rounded-2xl sm:block">
+                <Image
+                  src="/avatar-default.webp"
+                  alt="Myrzan Izimbetov"
+                  fill
+                  className="object-cover transition-opacity duration-300 group-hover:opacity-0"
+                  priority
+                />
+                <Image
+                  src="/avatar-hover.webp"
+                  alt=""
+                  fill
+                  className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
+              </div>
             </div>
           </FadeIn>
         </section>
