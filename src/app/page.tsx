@@ -72,14 +72,14 @@ export default async function HomePage() {
         </Link>
         <div className="group relative mt-1 hidden h-60 w-60 cursor-default overflow-hidden rounded-2xl sm:block">
           <Image
-            src="/avatar-default.jpg"
+            src="/avatar-default.webp"
             alt="Myrzan Izimbetov"
             fill
             className="object-cover transition-opacity duration-300 group-hover:opacity-0"
             priority
           />
           <Image
-            src="/avatar-hover.jpg"
+            src="/avatar-hover.webp"
             alt=""
             fill
             className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
