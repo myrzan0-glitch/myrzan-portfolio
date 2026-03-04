@@ -73,7 +73,7 @@ export default async function HomePage() {
       <main id="main" className="mx-auto max-w-7xl px-6 pb-40 pt-20 sm:px-8 sm:pt-24 md:pb-24 md:pt-28">
         <section id="intro">
           <FadeIn>
-            <div className="flex items-start justify-between gap-6 py-[4.75rem] sm:py-16 md:py-20">
+            <div className="flex items-start justify-between gap-12 py-[4.75rem] sm:py-16 md:py-20">
               <div>
               <h1 className="max-w-[14ch] text-[2rem] font-medium leading-[2.35rem] tracking-tight text-white sm:max-w-none">
                 Hello, I&apos;m Myrzan
