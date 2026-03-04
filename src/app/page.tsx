@@ -62,29 +62,34 @@ export default async function HomePage() {
 
   return (
     <div className="relative min-h-screen bg-black text-white">
+      {/* Name + Avatar — scrolls with content */}
+      <div className="absolute left-5 top-5 z-40 flex flex-col sm:left-8 sm:top-6">
+        <Link
+          href="#main"
+          className="flex h-[46px] items-center text-sm tracking-tight text-white/90 transition hover:text-white"
+        >
+          Myrzan Izimbetov
+        </Link>
+        <div className="group relative mt-1 hidden h-60 w-60 cursor-default overflow-hidden rounded-2xl sm:block">
+          <Image
+            src="/avatar-default.jpg"
+            alt="Myrzan Izimbetov"
+            fill
+            className="object-cover transition-opacity duration-300 group-hover:opacity-0"
+            priority
+          />
+          <Image
+            src="/avatar-hover.jpg"
+            alt=""
+            fill
+            className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          />
+        </div>
+      </div>
+
       <FloatingSectionNav />
 
-      <main id="main" className="mx-auto max-w-7xl px-6 pb-40 pt-6 sm:px-8 sm:pt-8 md:pb-24 md:pt-10">
-        {/* Avatar — desktop only, scrolls with content */}
-        <div className="hidden sm:block mb-10">
-          <div className="group relative h-60 w-60 cursor-default overflow-hidden rounded-2xl">
-            <Image
-              src="/avatar-default.jpg"
-              alt="Myrzan Izimbetov"
-              fill
-              className="object-cover transition-opacity duration-300 group-hover:opacity-0"
-              priority
-            />
-            <Image
-              src="/avatar-hover.jpg"
-              alt=""
-              fill
-              className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            />
-          </div>
-          <p className="mt-3 text-sm tracking-tight text-white/90">Myrzan Izimbetov</p>
-        </div>
-
+      <main id="main" className="mx-auto max-w-7xl px-6 pb-40 pt-20 sm:px-8 sm:pt-24 md:pb-24 md:pt-28">
         <section id="intro">
           <FadeIn>
             <div className="py-[4.75rem] sm:py-16 md:py-20">
