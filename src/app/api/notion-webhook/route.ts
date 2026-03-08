@@ -39,14 +39,13 @@ export async function POST(request: NextRequest) {
   }
 
   const secret = process.env.NOTION_WEBHOOK_SECRET
-  if (!secret) {
-    console.error("[notion-webhook] NOTION_WEBHOOK_SECRET is not set")
-    return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 })
-  }
-
-  const signature = request.headers.get("x-notion-signature") ?? ""
-  if (!verifySignature(rawBody, signature, secret)) {
-    return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
+  if (secret) {
+    const signature = request.headers.get("x-notion-signature") ?? ""
+    if (!verifySignature(rawBody, signature, secret)) {
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
+    }
+  } else {
+    console.warn("[notion-webhook] NOTION_WEBHOOK_SECRET is not set — skipping signature verification")
   }
 
   // Extract page ID — Notion puts it at entity.id
