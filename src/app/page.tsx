@@ -5,7 +5,7 @@ import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 import { NotionContent } from "@/components/notion-block-renderer"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
 import { FadeIn } from "@/components/motion"
-import { getSelectedWorkContent } from "@/lib/notion"
+import { getSelectedWorkItems } from "@/lib/notion"
 
 const experience = [
   {
@@ -51,7 +51,7 @@ export const revalidate = 3600
 
 async function getNotionContent() {
   try {
-    return await getSelectedWorkContent(selectedWorkPageId)
+    return await getSelectedWorkItems(selectedWorkPageId)
   } catch {
     return []
   }

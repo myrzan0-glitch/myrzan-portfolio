@@ -227,18 +227,36 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
       return <hr className="my-8 border-border" />
 
     case "child_page":
+    case "link_to_page": {
+      const pageId = block.type === "child_page" ? block.id : block.link_to_page?.page_id
+      const title = block.pageMeta?.title || block.child_page?.title || "Untitled"
+      const cover: string | null = block.pageMeta?.cover ?? null
+
       return (
         <Link
-          href={`/selected-work/${block.id}`}
-          className="my-5 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/[0.03] px-5 py-4 no-underline text-white shadow-[0_0_0_rgba(0,0,0,0)] transition duration-300 hover:no-underline hover:border-white/20 hover:shadow-[0_18px_40px_-24px_rgba(255,255,255,0.18)]"
+          href={`/selected-work/${pageId}`}
+          className="group my-5 flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] no-underline text-white shadow-[0_0_0_rgba(0,0,0,0)] transition duration-300 hover:no-underline hover:border-white/20 hover:shadow-[0_18px_40px_-24px_rgba(255,255,255,0.18)]"
           style={{ textDecoration: "none" }}
         >
-          <span className="truncate text-xl font-semibold leading-tight text-current">
-            {block.pageMeta?.title || block.child_page.title}
-          </span>
-          <span className="shrink-0 text-base text-white/65">-&gt;</span>
+          {cover && (
+            <div className="w-full overflow-hidden">
+              {/* Plain img preserves APNG animation; next/image would strip it */}
+              <img
+                src={cover}
+                alt=""
+                className="h-auto w-full object-cover"
+              />
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-4 px-5 py-4">
+            <span className="truncate text-xl font-semibold leading-tight text-current">
+              {title}
+            </span>
+            <span className="shrink-0 text-base text-white/65">-&gt;</span>
+          </div>
         </Link>
       )
+    }
 
     default:
       return null
