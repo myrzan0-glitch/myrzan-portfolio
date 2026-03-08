@@ -234,9 +234,11 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
         <figure className="my-8">
           <video
             src={videoUrl}
-            controls
+            autoPlay
+            loop
+            muted
+            playsInline
             className="h-auto w-full rounded-lg"
-            preload="metadata"
           />
           {caption ? (
             <figcaption className="mt-2 text-sm text-muted-foreground">{caption}</figcaption>
@@ -270,9 +272,11 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
           <figure className="my-8">
             <video
               src={url}
-              controls
+              autoPlay
+              loop
+              muted
+              playsInline
               className="h-auto w-full rounded-lg"
-              preload="metadata"
             />
           </figure>
         )
