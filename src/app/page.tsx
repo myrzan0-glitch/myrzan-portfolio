@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 
 import { NotionContent } from "@/components/notion-block-renderer"
@@ -72,11 +73,12 @@ export default async function HomePage() {
       <main id="main" className="mx-auto max-w-7xl px-6 pb-40 pt-20 sm:px-8 sm:pt-24 md:pb-24 md:pt-28">
         <section id="intro">
           <FadeIn>
-            <div className="py-[4.75rem] sm:py-16 md:py-20">
+            <div className="flex items-start justify-between gap-12 py-[4.75rem] sm:py-16 md:py-20">
+              <div>
               <h1 className="max-w-[14ch] text-[2rem] font-medium leading-[2.35rem] tracking-tight text-white sm:max-w-none">
                 Hello, I&apos;m Myrzan
               </h1>
-              <p className="mt-5 max-w-[18ch] text-lg leading-7 text-white/86 sm:mt-6 sm:max-w-5xl">
+              <p className="mt-5 text-lg leading-7 text-white/86 sm:mt-6 sm:max-w-5xl">
                 A product designer with 6+ years of experience building high-traffic apps and
                 simplifying complex systems into elegant user journeys. Currently designing at{" "}
                 <Link
@@ -114,6 +116,24 @@ export default async function HomePage() {
                   <ArrowUpRight className="relative -top-[1px] h-[0.42em] w-[0.42em] shrink-0 text-white/85" />
                 </Link>
               </p>
+              </div>
+
+              {/* Avatar — desktop only */}
+              <div className="group relative hidden h-60 w-60 shrink-0 cursor-default overflow-hidden rounded-2xl sm:block">
+                <Image
+                  src="/avatar-default.webp"
+                  alt="Myrzan Izimbetov"
+                  fill
+                  className="object-cover transition-opacity duration-300 group-hover:opacity-0"
+                  priority
+                />
+                <Image
+                  src="/avatar-hover.webp"
+                  alt=""
+                  fill
+                  className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
+              </div>
             </div>
           </FadeIn>
         </section>
@@ -234,7 +254,7 @@ export default async function HomePage() {
           <FadeIn>
             <div className="max-w-3xl">
               <p className="text-sm text-white/55">Contact</p>
-              <p className="mt-3 text-[2rem] font-medium leading-[2.35rem] tracking-tight text-white">
+              <p className="mt-3 text-xl font-medium leading-[2.35rem] tracking-tight text-white sm:text-[2rem]">
                 Say hi
                 <br />
                 <Link
