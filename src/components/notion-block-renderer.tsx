@@ -223,6 +223,37 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
       )
     }
 
+    case "file": {
+      const fileData = block.file
+      const url = fileData?.type === "file" ? fileData.file.url : fileData?.external?.url
+      if (!url) return null
+
+      const isImage = /\.(apng|gif|png|jpe?g|webp|svg|bmp)(\?|$)/i.test(url)
+      if (isImage) {
+        return (
+          <figure className="my-8">
+            <img
+              src={url}
+              alt={fileData?.name || ""}
+              className="h-auto w-full rounded-lg"
+              loading="lazy"
+            />
+          </figure>
+        )
+      }
+
+      return (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="my-4 flex items-center gap-2 text-sm text-white/70 underline hover:text-white"
+        >
+          {fileData?.name || "Download file"}
+        </a>
+      )
+    }
+
     case "divider":
       return <hr className="my-8 border-border" />
 
