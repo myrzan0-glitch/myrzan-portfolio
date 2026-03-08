@@ -22,6 +22,10 @@ function verifySignature(rawBody: string, header: string, secret: string): boole
   }
 }
 
+export async function GET() {
+  return NextResponse.json({ ok: true }, { status: 200 })
+}
+
 export async function POST(request: NextRequest) {
   const rawBody = await request.text()
 
