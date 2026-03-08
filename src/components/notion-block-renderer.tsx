@@ -223,6 +223,30 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
       )
     }
 
+    case "video": {
+      const video = block.video
+      const videoUrl = video?.type === "file" ? video.file.url : video?.external?.url
+      if (!videoUrl) return null
+
+      const caption = video.caption?.[0]?.plain_text
+
+      return (
+        <figure className="my-8">
+          <video
+            src={videoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-auto w-full rounded-lg"
+          />
+          {caption ? (
+            <figcaption className="mt-2 text-sm text-muted-foreground">{caption}</figcaption>
+          ) : null}
+        </figure>
+      )
+    }
+
     case "file": {
       const fileData = block.file
       const url = fileData?.type === "file" ? fileData.file.url : fileData?.external?.url
@@ -237,6 +261,22 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
               alt={fileData?.name || ""}
               className="h-auto w-full rounded-lg"
               loading="lazy"
+            />
+          </figure>
+        )
+      }
+
+      const isVideo = /\.(mp4|webm|mov|ogg|avi)(\?|$)/i.test(url)
+      if (isVideo) {
+        return (
+          <figure className="my-8">
+            <video
+              src={url}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-auto w-full rounded-lg"
             />
           </figure>
         )
