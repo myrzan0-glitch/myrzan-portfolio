@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, ArrowUpRight } from "lucide-react"
@@ -48,6 +49,31 @@ function collectHeadingSections(blocks: any[]): Array<{ id: string; title: strin
   }
 
   return items
+}
+
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  try {
+    const page = await getPage(id)
+    const pageObject = page as any
+    const title =
+      pageObject?.properties?.title?.title?.[0]?.plain_text ||
+      pageObject?.properties?.Name?.title?.[0]?.plain_text ||
+      pageObject?.properties?.name?.title?.[0]?.plain_text ||
+      pageObject?.child_page?.title ||
+      "Selected Work"
+    return {
+      title,
+      openGraph: { title },
+      twitter: { title }
+    }
+  } catch {
+    return {}
+  }
 }
 
 export default async function SelectedWorkDetailPage({

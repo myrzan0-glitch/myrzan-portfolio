@@ -129,7 +129,8 @@ export default async function HomePage() {
                 />
                 <Image
                   src="/avatar-hover.webp"
-                  alt=""
+                  alt="Myrzan Izimbetov"
+                  aria-hidden="true"
                   fill
                   className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 />
