@@ -1,6 +1,7 @@
-import Image from "next/image"
 import Link from "next/link"
 import * as React from "react"
+
+import { getPlainText, slugify } from "@/lib/notion-utils"
 
 type RichText = {
   plain_text: string
@@ -24,18 +25,8 @@ type Block = {
   [key: string]: any
 }
 
-function getPlainText(richText: RichText[] = []) {
-  return richText.map((text) => text.plain_text).join("")
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-}
+const IMAGE_EXTENSIONS = /\.(apng|gif|png|jpe?g|webp|svg|bmp)(\?|$)/i
+const VIDEO_EXTENSIONS = /\.(mp4|webm|mov|ogg|avi)(\?|$)/i
 
 function renderRichText(richText: RichText[]) {
   return richText.map((text, index) => {
@@ -139,7 +130,7 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
 
     case "heading_1":
       return (
-        <h1 className="mb-6 mt-10 text-4xl font-bold">
+        <h1 className="mb-6 mt-10 text-[2rem] font-bold">
           {renderRichText(block.heading_1.rich_text)}
         </h1>
       )
@@ -205,27 +196,16 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
         )
       }
 
-      const isNotion = imageUrl.includes("notion") || imageUrl.includes("amazonaws.com")
-
       return (
         <figure className="my-8">
-          {isNotion ? (
-            // Notion image URLs are signed and can reject proxying; use plain img.
-            <img
-              src={imageUrl}
-              alt={caption || "Case study image"}
-              className="h-auto w-full rounded-lg"
-              loading="lazy"
-            />
-          ) : (
-            <Image
-              src={imageUrl}
-              alt={caption || "Case study image"}
-              width={1200}
-              height={800}
-              className="h-auto w-full rounded-lg"
-            />
-          )}
+          {/* Use plain img: Notion URLs are signed/can't be proxied, and external
+              URLs may be from unregistered domains — works for all formats incl. WebP */}
+          <img
+            src={imageUrl}
+            alt={caption || "Case study image"}
+            className="h-auto w-full rounded-lg"
+            loading="lazy"
+          />
           {caption ? (
             <figcaption className="mt-2 text-sm text-muted-foreground">
               {caption}
@@ -234,6 +214,91 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
         </figure>
       )
     }
+
+    case "video": {
+      const video = block.video
+      const videoUrl = video?.type === "file" ? video.file.url : video?.external?.url
+      if (!videoUrl) return null
+
+      const caption = video.caption?.[0]?.plain_text
+
+      return (
+        <figure className="my-8">
+          <video
+            src={videoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-auto w-full rounded-lg"
+          />
+          {caption ? (
+            <figcaption className="mt-2 text-sm text-muted-foreground">{caption}</figcaption>
+          ) : null}
+        </figure>
+      )
+    }
+
+    case "file": {
+      const fileData = block.file
+      const url = fileData?.type === "file" ? fileData.file.url : fileData?.external?.url
+      if (!url) return null
+
+      const isImage = IMAGE_EXTENSIONS.test(url)
+      if (isImage) {
+        return (
+          <figure className="my-8">
+            <img
+              src={url}
+              alt={fileData?.name || ""}
+              className="h-auto w-full rounded-lg"
+              loading="lazy"
+            />
+          </figure>
+        )
+      }
+
+      const isVideo = VIDEO_EXTENSIONS.test(url)
+      if (isVideo) {
+        return (
+          <figure className="my-8">
+            <video
+              src={url}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-auto w-full rounded-lg"
+            />
+          </figure>
+        )
+      }
+
+      return (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="my-4 flex items-center gap-2 text-sm text-white/70 underline hover:text-white"
+        >
+          {fileData?.name || "Download file"}
+        </a>
+      )
+    }
+
+    case "column_list":
+      return (
+        <div className="my-4 grid gap-6" style={{ gridTemplateColumns: `repeat(${block.children?.length || 1}, minmax(0, 1fr))` }}>
+          {block.children?.map((col: Block) => (
+            <div key={col.id} className="min-w-0">
+              {renderBlocks(col.children || [])}
+            </div>
+          ))}
+        </div>
+      )
+
+    case "column":
+      return null // rendered by parent column_list
 
     case "divider":
       return <hr className="my-8 border-border" />

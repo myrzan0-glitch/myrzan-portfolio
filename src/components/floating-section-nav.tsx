@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import * as React from "react"
 
 type NavItem = {
@@ -10,40 +9,56 @@ type NavItem = {
 }
 
 const items: NavItem[] = [
-  { id: "about", label: "About", href: "#about" },
   { id: "projects", label: "Work", href: "#projects" },
-  { id: "contact", label: "Contact", href: "#contact" }
+  { id: "about", label: "About", href: "#about" }
 ]
 
 export function FloatingSectionNav() {
-  const [activeId, setActiveId] = React.useState<string>("about")
+  const [activeId, setActiveId] = React.useState<string>("projects")
 
   React.useEffect(() => {
-    const sections = items
-      .map((item) => document.getElementById(item.id))
-      .filter(Boolean) as HTMLElement[]
+    const getSections = () =>
+      items
+        .map((item) => document.getElementById(item.id))
+        .filter(Boolean) as HTMLElement[]
 
-    if (!sections.length) return
+    const updateActive = () => {
+      const sections = getSections()
+      if (!sections.length) return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-
-        if (visible[0]?.target?.id) {
-          setActiveId(visible[0].target.id)
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-25% 0px -55% 0px",
-        threshold: [0.1, 0.25, 0.5, 0.75]
+      // If scrolled near the bottom — last section is active
+      const scrollBottom = window.scrollY + window.innerHeight
+      if (scrollBottom >= document.documentElement.scrollHeight - 10) {
+        setActiveId((prev) => {
+          const last = sections[sections.length - 1].id
+          return prev === last ? prev : last
+        })
+        return
       }
-    )
 
-    sections.forEach((section) => observer.observe(section))
-    return () => observer.disconnect()
+      // Find section whose top is closest to 30% of viewport
+      const target = window.innerHeight * 0.3
+      let closest: HTMLElement | null = null
+      let closestDist = Infinity
+
+      for (const section of sections) {
+        const rect = section.getBoundingClientRect()
+        // Consider sections that have entered the top 60% of viewport
+        if (rect.top <= window.innerHeight * 0.6) {
+          const dist = Math.abs(rect.top - target)
+          if (dist < closestDist) {
+            closestDist = dist
+            closest = section
+          }
+        }
+      }
+
+      if (closest) setActiveId((prev) => (prev === closest!.id ? prev : closest!.id))
+    }
+
+    window.addEventListener("scroll", updateActive, { passive: true })
+    updateActive()
+    return () => window.removeEventListener("scroll", updateActive)
   }, [])
 
   return (
@@ -55,9 +70,12 @@ export function FloatingSectionNav() {
         {items.map((item) => {
           const isActive = item.id === activeId
           return (
-            <Link
+            <button
               key={item.id}
-              href={item.href}
+              onClick={() => {
+                setActiveId(item.id)
+                document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }}
               className={[
                 "flex-1 rounded-[1.15rem] px-4 py-3 text-center text-[0.95rem] transition md:flex-none md:rounded-full md:px-5 md:py-2 md:text-sm",
                 isActive
@@ -66,7 +84,7 @@ export function FloatingSectionNav() {
               ].join(" ")}
             >
               {item.label}
-            </Link>
+            </button>
           )
         })}
       </nav>
