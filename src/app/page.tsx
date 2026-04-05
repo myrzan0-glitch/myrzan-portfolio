@@ -68,7 +68,7 @@ export default async function HomePage() {
                   Myrzan Izimbetov
                 </h1>
                 <p className="mt-1 text-base text-white/55 tracking-tight">
-                  Product Designer · 6 years · $4M+ MRR influenced
+                  Product Designer · 6 years · $4M+ monthly revenue impact
                 </p>
                 <p className="mt-5 text-lg leading-7 text-white/86 sm:mt-6 sm:max-w-xl">
                   I design mobile products that move metrics —{" "}
@@ -173,8 +173,10 @@ export default async function HomePage() {
                   credit flows at Technodom ($4M+ MRR), and enterprise ERP at Petrel AI.
                 </p>
                 <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  I care about measurable outcomes, fast iteration, and design that
-                  works across the full stack — from research to code.
+                  My work combines product thinking, rapid experimentation, and system design across the full path from research to implementation.
+                </p>
+                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
+                  I use AI-assisted workflows for prototyping, front-end experimentation, and faster iteration, while keeping product judgment and design decisions firmly human-led.
                 </p>
               </div>
 
