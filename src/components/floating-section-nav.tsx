@@ -10,13 +10,13 @@ type NavItem = {
 }
 
 const items: NavItem[] = [
-  { id: "about", label: "About", href: "#about" },
   { id: "projects", label: "Work", href: "#projects" },
+  { id: "about", label: "About", href: "#about" },
   { id: "contact", label: "Contact", href: "#contact" }
 ]
 
 export function FloatingSectionNav() {
-  const [activeId, setActiveId] = React.useState<string>("about")
+  const [activeId, setActiveId] = React.useState<string>("projects")
 
   React.useEffect(() => {
     const getSections = () =>
