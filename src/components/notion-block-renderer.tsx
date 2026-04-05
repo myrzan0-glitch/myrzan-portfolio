@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import * as React from "react"
 
@@ -205,33 +204,93 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
         )
       }
 
-      const isNotion = imageUrl.includes("notion") || imageUrl.includes("amazonaws.com")
-
       return (
         <figure className="my-8">
-          {isNotion ? (
-            // Notion image URLs are signed and can reject proxying; use plain img.
-            <img
-              src={imageUrl}
-              alt={caption || "Case study image"}
-              className="h-auto w-full rounded-lg"
-              loading="lazy"
-            />
-          ) : (
-            <Image
-              src={imageUrl}
-              alt={caption || "Case study image"}
-              width={1200}
-              height={800}
-              className="h-auto w-full rounded-lg"
-            />
-          )}
+          {/* Use plain img: Notion URLs are signed/can't be proxied, and external
+              URLs may be from unregistered domains — works for all formats incl. WebP */}
+          <img
+            src={imageUrl}
+            alt={caption || "Case study image"}
+            className="h-auto w-full rounded-lg"
+            loading="lazy"
+          />
           {caption ? (
             <figcaption className="mt-2 text-sm text-muted-foreground">
               {caption}
             </figcaption>
           ) : null}
         </figure>
+      )
+    }
+
+    case "video": {
+      const video = block.video
+      const videoUrl = video?.type === "file" ? video.file.url : video?.external?.url
+      if (!videoUrl) return null
+
+      const caption = video.caption?.[0]?.plain_text
+
+      return (
+        <figure className="my-8">
+          <video
+            src={videoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-auto w-full rounded-lg"
+          />
+          {caption ? (
+            <figcaption className="mt-2 text-sm text-muted-foreground">{caption}</figcaption>
+          ) : null}
+        </figure>
+      )
+    }
+
+    case "file": {
+      const fileData = block.file
+      const url = fileData?.type === "file" ? fileData.file.url : fileData?.external?.url
+      if (!url) return null
+
+      const isImage = /\.(apng|gif|png|jpe?g|webp|svg|bmp)(\?|$)/i.test(url)
+      if (isImage) {
+        return (
+          <figure className="my-8">
+            <img
+              src={url}
+              alt={fileData?.name || ""}
+              className="h-auto w-full rounded-lg"
+              loading="lazy"
+            />
+          </figure>
+        )
+      }
+
+      const isVideo = /\.(mp4|webm|mov|ogg|avi)(\?|$)/i.test(url)
+      if (isVideo) {
+        return (
+          <figure className="my-8">
+            <video
+              src={url}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-auto w-full rounded-lg"
+            />
+          </figure>
+        )
+      }
+
+      return (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="my-4 flex items-center gap-2 text-sm text-white/70 underline hover:text-white"
+        >
+          {fileData?.name || "Download file"}
+        </a>
       )
     }
 
