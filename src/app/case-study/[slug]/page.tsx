@@ -33,6 +33,7 @@ export async function generateMetadata({
   const study = caseStudies.find((s) => s.slug === slug)
   if (!study) return {}
   return {
+    robots: { index: false, follow: false },
     title: study.title,
     description: study.description,
     openGraph: {
