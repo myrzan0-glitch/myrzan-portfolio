@@ -68,7 +68,7 @@ export default async function HomePage() {
                   Myrzan Izimbetov
                 </h1>
                 <p className="mt-1 text-base text-white/55 tracking-tight">
-                  Product Designer · 6 years · 2M+ daily users
+                  Product Designer · 6 years · $4M+ MRR influenced
                 </p>
                 <p className="mt-5 text-lg leading-7 text-white/86 sm:mt-6 sm:max-w-xl">
                   I design mobile products that move metrics —{" "}
@@ -215,17 +215,30 @@ export default async function HomePage() {
           <FadeIn>
             <div className="max-w-3xl">
               <p className="text-sm text-white/55">Contact</p>
-              <p className="mt-3 text-xl font-medium leading-[2.35rem] tracking-tight text-white sm:text-[2rem]">
-                Say hi
-                <br />
+              <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2">
                 <Link
                   href="mailto:izimbetov.myrzan@gmail.com"
-                  className="inline-flex max-w-full items-center gap-2 break-all text-white transition hover:text-white/80 sm:break-normal"
+                  className="text-base text-white transition hover:text-white/70"
                 >
-                  <span>izimbetov.myrzan@gmail.com</span>
-                  <ArrowUpRight className="h-[0.7em] w-[0.7em] shrink-0" />
+                  izimbetov.myrzan@gmail.com
                 </Link>
-              </p>
+                <Link
+                  href="https://linkedin.com/in/myrzanio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base text-white transition hover:text-white/70"
+                >
+                  linkedin.com/in/myrzanio
+                </Link>
+                <Link
+                  href="https://t.me/myrzanio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base text-white transition hover:text-white/70"
+                >
+                  t.me/myrzanio
+                </Link>
+              </div>
             </div>
           </FadeIn>
         </section>
