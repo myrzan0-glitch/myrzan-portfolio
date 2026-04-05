@@ -29,7 +29,10 @@ export function FloatingSectionNav() {
       // If scrolled near the bottom — last section is active
       const scrollBottom = window.scrollY + window.innerHeight
       if (scrollBottom >= document.documentElement.scrollHeight - 10) {
-        setActiveId(sections[sections.length - 1].id)
+        setActiveId((prev) => {
+          const last = sections[sections.length - 1].id
+          return prev === last ? prev : last
+        })
         return
       }
 
@@ -50,7 +53,7 @@ export function FloatingSectionNav() {
         }
       }
 
-      if (closest) setActiveId(closest.id)
+      if (closest) setActiveId((prev) => (prev === closest!.id ? prev : closest!.id))
     }
 
     window.addEventListener("scroll", updateActive, { passive: true })
