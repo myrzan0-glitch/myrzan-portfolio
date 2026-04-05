@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { createHmac, timingSafeEqual } from "crypto"
 
-import { caseStudies } from "@/data/case-studies"
-
 const SELECTED_WORK_PAGE_ID = "31725685-1722-8035-ac20-cd8311aec051"
 
 // Strip hyphens for comparison since Notion IDs can appear in both formats
@@ -68,14 +66,6 @@ export async function POST(request: NextRequest) {
   if (stripHyphens(SELECTED_WORK_PAGE_ID) === normalizedId) {
     revalidatePath("/")
     revalidated.push("/")
-  }
-
-  // Case study pages
-  for (const study of caseStudies) {
-    if (stripHyphens(study.notionPageId) === normalizedId) {
-      revalidatePath(`/case-study/${study.slug}`)
-      revalidated.push(`/case-study/${study.slug}`)
-    }
   }
 
   // Selected work sub-pages (dynamic)

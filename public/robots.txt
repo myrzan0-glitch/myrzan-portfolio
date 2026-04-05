@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /case-study/
+Allow: /
+
+Sitemap: https://myrzanio.com/sitemap.xml
