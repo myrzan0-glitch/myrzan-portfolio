@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import * as React from "react"
 
 type NavItem = {
@@ -68,10 +67,12 @@ export function FloatingSectionNav() {
         {items.map((item) => {
           const isActive = item.id === activeId
           return (
-            <Link
+            <button
               key={item.id}
-              href={item.href}
-              onClick={() => setActiveId(item.id)}
+              onClick={() => {
+                setActiveId(item.id)
+                document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }}
               className={[
                 "flex-1 rounded-[1.15rem] px-4 py-3 text-center text-[0.95rem] transition md:flex-none md:rounded-full md:px-5 md:py-2 md:text-sm",
                 isActive
@@ -80,7 +81,7 @@ export function FloatingSectionNav() {
               ].join(" ")}
             >
               {item.label}
-            </Link>
+            </button>
           )
         })}
       </nav>
