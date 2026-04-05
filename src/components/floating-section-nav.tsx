@@ -11,8 +11,7 @@ type NavItem = {
 
 const items: NavItem[] = [
   { id: "projects", label: "Work", href: "#projects" },
-  { id: "about", label: "About", href: "#about" },
-  { id: "contact", label: "Contact", href: "#contact" }
+  { id: "about", label: "About", href: "#about" }
 ]
 
 export function FloatingSectionNav() {

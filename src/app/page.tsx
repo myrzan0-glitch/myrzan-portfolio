@@ -78,6 +78,30 @@ export default async function HomePage() {
                 <p className="mt-4 text-sm text-white/55">
                   London, UK · Open to work
                 </p>
+                <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+                  <Link
+                    href="mailto:izimbetov.myrzan@gmail.com"
+                    className="text-sm text-white/55 transition hover:text-white/80"
+                  >
+                    izimbetov.myrzan@gmail.com
+                  </Link>
+                  <Link
+                    href="https://linkedin.com/in/myrzanio"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-white/55 transition hover:text-white/80"
+                  >
+                    linkedin.com/in/myrzanio
+                  </Link>
+                  <Link
+                    href="https://t.me/myrzanio"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-white/55 transition hover:text-white/80"
+                  >
+                    t.me/myrzanio
+                  </Link>
+                </div>
               </div>
 
               {/* Avatar — desktop only */}
@@ -207,38 +231,6 @@ export default async function HomePage() {
                   )}
                 </div>
               ))}
-            </div>
-          </FadeIn>
-        </section>
-
-        <section id="contact" className="mt-12 scroll-mt-24 pt-8 sm:mt-16 sm:pt-10 md:mt-20">
-          <FadeIn>
-            <div className="max-w-3xl">
-              <p className="text-sm text-white/55">Contact</p>
-              <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2">
-                <Link
-                  href="mailto:izimbetov.myrzan@gmail.com"
-                  className="text-base text-white transition hover:text-white/70"
-                >
-                  izimbetov.myrzan@gmail.com
-                </Link>
-                <Link
-                  href="https://linkedin.com/in/myrzanio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-base text-white transition hover:text-white/70"
-                >
-                  linkedin.com/in/myrzanio
-                </Link>
-                <Link
-                  href="https://t.me/myrzanio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-base text-white transition hover:text-white/70"
-                >
-                  t.me/myrzanio
-                </Link>
-              </div>
             </div>
           </FadeIn>
         </section>
