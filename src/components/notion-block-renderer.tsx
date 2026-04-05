@@ -294,6 +294,20 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
       )
     }
 
+    case "column_list":
+      return (
+        <div className="my-4 grid gap-6" style={{ gridTemplateColumns: `repeat(${block.children?.length || 1}, minmax(0, 1fr))` }}>
+          {block.children?.map((col: Block) => (
+            <div key={col.id} className="min-w-0">
+              {renderBlocks(col.children || [])}
+            </div>
+          ))}
+        </div>
+      )
+
+    case "column":
+      return null // rendered by parent column_list
+
     case "divider":
       return <hr className="my-8 border-border" />
 
