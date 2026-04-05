@@ -1,6 +1,8 @@
 import Link from "next/link"
 import * as React from "react"
 
+import { getPlainText, slugify } from "@/lib/notion-utils"
+
 type RichText = {
   plain_text: string
   href: string | null
@@ -23,18 +25,8 @@ type Block = {
   [key: string]: any
 }
 
-function getPlainText(richText: RichText[] = []) {
-  return richText.map((text) => text.plain_text).join("")
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-}
+const IMAGE_EXTENSIONS = /\.(apng|gif|png|jpe?g|webp|svg|bmp)(\?|$)/i
+const VIDEO_EXTENSIONS = /\.(mp4|webm|mov|ogg|avi)(\?|$)/i
 
 function renderRichText(richText: RichText[]) {
   return richText.map((text, index) => {
@@ -252,7 +244,7 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
       const url = fileData?.type === "file" ? fileData.file.url : fileData?.external?.url
       if (!url) return null
 
-      const isImage = /\.(apng|gif|png|jpe?g|webp|svg|bmp)(\?|$)/i.test(url)
+      const isImage = IMAGE_EXTENSIONS.test(url)
       if (isImage) {
         return (
           <figure className="my-8">
@@ -266,7 +258,7 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
         )
       }
 
-      const isVideo = /\.(mp4|webm|mov|ogg|avi)(\?|$)/i.test(url)
+      const isVideo = VIDEO_EXTENSIONS.test(url)
       if (isVideo) {
         return (
           <figure className="my-8">
@@ -293,6 +285,20 @@ export function NotionBlockRenderer({ block }: { block: Block }) {
         </a>
       )
     }
+
+    case "column_list":
+      return (
+        <div className="my-4 grid gap-6" style={{ gridTemplateColumns: `repeat(${block.children?.length || 1}, minmax(0, 1fr))` }}>
+          {block.children?.map((col: Block) => (
+            <div key={col.id} className="min-w-0">
+              {renderBlocks(col.children || [])}
+            </div>
+          ))}
+        </div>
+      )
+
+    case "column":
+      return null // rendered by parent column_list
 
     case "divider":
       return <hr className="my-8 border-border" />

@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, ArrowUpRight } from "lucide-react"
@@ -5,30 +6,17 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react"
 import { NotionContent } from "@/components/notion-block-renderer"
 import { Button } from "@/components/ui/button"
 import { getBlocksRecursively, getPage } from "@/lib/notion"
+import { extractNotionTitle, getPlainText, slugify } from "@/lib/notion-utils"
 
 export const revalidate = 3600
 
 async function getSelectedWorkPage(id: string) {
   try {
-    const page = await getPage(id)
-    const blocks = await getBlocksRecursively(id)
+    const [page, blocks] = await Promise.all([getPage(id), getBlocksRecursively(id)])
     return { page, blocks }
   } catch {
     return null
   }
-}
-
-function getPlainText(richText: Array<{ plain_text: string }> = []) {
-  return richText.map((item) => item.plain_text).join("")
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
 }
 
 function collectHeadingSections(blocks: any[]): Array<{ id: string; title: string }> {
@@ -50,6 +38,26 @@ function collectHeadingSections(blocks: any[]): Array<{ id: string; title: strin
   return items
 }
 
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  try {
+    const data = await getSelectedWorkPage(id)
+    if (!data) return {}
+    const title = extractNotionTitle(data.page, "Selected Work")
+    return {
+      title,
+      openGraph: { title },
+      twitter: { title }
+    }
+  } catch {
+    return {}
+  }
+}
+
 export default async function SelectedWorkDetailPage({
   params
 }: {
@@ -63,13 +71,7 @@ export default async function SelectedWorkDetailPage({
   }
 
   const { page, blocks } = data
-  const pageObject = page as any
-  const title =
-    pageObject?.properties?.title?.title?.[0]?.plain_text ||
-    pageObject?.properties?.Name?.title?.[0]?.plain_text ||
-    pageObject?.properties?.name?.title?.[0]?.plain_text ||
-    pageObject?.child_page?.title ||
-    "Selected Work"
+  const title = extractNotionTitle(page, "Selected Work")
   const headingSections = collectHeadingSections(blocks)
 
   return (

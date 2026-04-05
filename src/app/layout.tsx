@@ -19,20 +19,25 @@ const body = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Myrzan Izimbetov | Product Designer | Design Engineer | Portfolio",
+  title: {
+    default: "Myrzan Izimbetov — Product Designer",
+    template: "%s | Myrzan Izimbetov"
+  },
   description:
     "Results-driven Product Designer focused on UX and UI. +$4M in MRR impact and +37% pageview growth across mobile, desktop, and web platforms.",
   openGraph: {
-    title: "Myrzan Izimbetov | Product Designer",
+    title: "Myrzan Izimbetov — Product Designer",
     description:
       "Results-driven Product Designer focused on UX and UI. +$4M in MRR impact and +37% pageview growth.",
-    type: "profile"
+    type: "profile",
+    images: [{ url: "/avatar-default.webp", width: 800, height: 800, alt: "Myrzan Izimbetov" }]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Myrzan Izimbetov | Product Designer",
+    title: "Myrzan Izimbetov — Product Designer",
     description:
-      "Results-driven Product Designer focused on UX and UI. +$4M in MRR impact and +37% pageview growth."
+      "Results-driven Product Designer focused on UX and UI. +$4M in MRR impact and +37% pageview growth.",
+    images: ["/avatar-default.webp"]
   }
 }
 

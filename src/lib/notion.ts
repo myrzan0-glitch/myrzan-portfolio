@@ -1,5 +1,7 @@
 import { Client } from "@notionhq/client"
 
+import { extractNotionTitle } from "./notion-utils"
+
 const notion = new Client({
   auth: process.env.NOTION_API_KEY
 })
@@ -30,9 +32,9 @@ export async function getPageContent(pageId: string) {
   return blocks.results
 }
 
-// Get content blocks from the Selected Work page itself
+// Get content blocks from the Selected Work page itself (with children for column layouts)
 export async function getSelectedWorkContent(pageId: string): Promise<any[]> {
-  return getPageContent(pageId)
+  return getBlocksRecursively(pageId)
 }
 
 // Fetches only the top-level child_page / link_to_page items from a container page,
@@ -53,12 +55,7 @@ export async function getSelectedWorkItems(pageId: string): Promise<any[]> {
         const page: any = await getPage(targetId)
         block.pageMeta = {
           pageId: targetId,
-          title:
-            page?.properties?.title?.title?.[0]?.plain_text ||
-            page?.properties?.Name?.title?.[0]?.plain_text ||
-            page?.properties?.name?.title?.[0]?.plain_text ||
-            block.child_page?.title ||
-            "Untitled",
+          title: extractNotionTitle(page, block.child_page?.title || "Untitled"),
           cover:
             page?.cover?.type === "file"
               ? page.cover.file.url
@@ -90,12 +87,7 @@ export async function getBlocksRecursively(blockId: string): Promise<any[]> {
           const page: any = await getPage(block.id)
           block.pageMeta = {
             icon: page?.icon ?? null,
-            title:
-              page?.properties?.title?.title?.[0]?.plain_text ||
-              page?.properties?.Name?.title?.[0]?.plain_text ||
-              page?.properties?.name?.title?.[0]?.plain_text ||
-              block.child_page?.title ||
-              "Untitled"
+            title: extractNotionTitle(page, block.child_page?.title || "Untitled")
           }
         } catch {
           block.pageMeta = {

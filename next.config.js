@@ -9,6 +9,16 @@ const nextConfig = {
       { protocol: "https", hostname: "*.amazonaws.com" },
       { protocol: "https", hostname: "images.unsplash.com" }
     ]
+  },
+  async headers() {
+    return [
+      {
+        source: "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|pdf|ico|woff2?|ttf|otf)).*)",
+        headers: [
+          { key: "Cache-Control", value: "no-store" }
+        ]
+      }
+    ]
   }
 }
 
