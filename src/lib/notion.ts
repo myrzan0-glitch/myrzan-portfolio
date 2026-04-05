@@ -30,9 +30,9 @@ export async function getPageContent(pageId: string) {
   return blocks.results
 }
 
-// Get content blocks from the Selected Work page itself
+// Get content blocks from the Selected Work page itself (with children for column layouts)
 export async function getSelectedWorkContent(pageId: string): Promise<any[]> {
-  return getPageContent(pageId)
+  return getBlocksRecursively(pageId)
 }
 
 // Fetches only the top-level child_page / link_to_page items from a container page,
