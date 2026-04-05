@@ -15,7 +15,7 @@ const nextConfig = {
       {
         source: "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|pdf|ico|woff2?|ttf|otf)).*)",
         headers: [
-          { key: "Cache-Control", value: "no-store" }
+          { key: "Cache-Control", value: "no-store, max-age=0, s-maxage=0" }
         ]
       }
     ]
