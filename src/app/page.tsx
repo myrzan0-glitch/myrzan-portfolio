@@ -36,7 +36,7 @@ const experience = [
 
 const selectedWorkPageId = "31725685-1722-8035-ac20-cd8311aec051"
 
-export const revalidate = 3600
+export const revalidate = 0
 
 async function getNotionContent() {
   try {
