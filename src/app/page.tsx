@@ -4,6 +4,7 @@ import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 
 import { NotionContent } from "@/components/notion-block-renderer"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
+import { HeroBackground } from "@/components/hero-background"
 import { FadeIn } from "@/components/motion"
 import { getSelectedWorkContent } from "@/lib/notion"
 
@@ -60,7 +61,8 @@ export default async function HomePage() {
       <FloatingSectionNav />
 
       <main id="main" className="mx-auto max-w-7xl px-6 pb-40 pt-20 sm:px-8 sm:pt-24 md:pb-24 md:pt-28">
-        <section id="intro">
+        <section id="intro" className="relative isolate">
+          <HeroBackground />
           <FadeIn>
             <div className="flex items-start justify-between gap-12 py-[4.75rem] sm:py-16 md:py-20">
               <div>
