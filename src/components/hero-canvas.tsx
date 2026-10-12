@@ -14,8 +14,19 @@ const WARP_SPEED = 15
 const WARP_STREAK = 2
 const WARP_NEAR_Z = 12.5
 const WARP_FLUSH_SPEED = 8
+const STREAK_TAIL_BRIGHTNESS = 0.12
 const ACCENT = new THREE.Color("hsl(84, 90%, 55%)")
 const WHITE = new THREE.Color("#ffffff")
+// Starlight palette used while warping: mostly white with cool blue and warm stars mixed in
+const STAR_BLUE = new THREE.Color("hsl(212, 85%, 82%)")
+const STAR_WARM = new THREE.Color("hsl(38, 90%, 84%)")
+
+function pickStarColor() {
+  const roll = Math.random()
+  if (roll < 0.18) return STAR_BLUE
+  if (roll < 0.3) return STAR_WARM
+  return WHITE
+}
 
 export function HeroCanvas() {
   const mountRef = React.useRef<HTMLDivElement>(null)
@@ -37,6 +48,7 @@ export function HeroCanvas() {
 
     const positions = new Float32Array(PARTICLE_COUNT * 3)
     const colors = new Float32Array(PARTICLE_COUNT * 3)
+    const starColors = new Float32Array(PARTICLE_COUNT * 3)
     const phases = new Float32Array(PARTICLE_COUNT)
     const tmp = new THREE.Color()
 
@@ -55,12 +67,17 @@ export function HeroCanvas() {
       colors[i * 3 + 1] = tmp.g
       colors[i * 3 + 2] = tmp.b
 
+      tmp.copy(pickStarColor())
+      starColors[i * 3] = tmp.r
+      starColors[i * 3 + 1] = tmp.g
+      starColors[i * 3 + 2] = tmp.b
+
       phases[i] = Math.random() * Math.PI * 2
     }
 
     const geometry = new THREE.BufferGeometry()
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors.slice(), 3))
     const basePositions = positions.slice()
 
     const material = new THREE.PointsMaterial({
@@ -81,10 +98,12 @@ export function HeroCanvas() {
     const streakPositions = new Float32Array(PARTICLE_COUNT * 6)
     const streakColors = new Float32Array(PARTICLE_COUNT * 6)
     for (let i = 0; i < PARTICLE_COUNT; i++) {
+      // Bright head, dim tail: additive blending turns the gradient into a light trail
       for (let k = 0; k < 2; k++) {
-        streakColors[i * 6 + k * 3] = colors[i * 3]
-        streakColors[i * 6 + k * 3 + 1] = colors[i * 3 + 1]
-        streakColors[i * 6 + k * 3 + 2] = colors[i * 3 + 2]
+        const brightness = k === 0 ? 1 : STREAK_TAIL_BRIGHTNESS
+        streakColors[i * 6 + k * 3] = starColors[i * 3] * brightness
+        streakColors[i * 6 + k * 3 + 1] = starColors[i * 3 + 1] * brightness
+        streakColors[i * 6 + k * 3 + 2] = starColors[i * 3 + 2] * brightness
       }
     }
     const streakGeometry = new THREE.BufferGeometry()
@@ -143,6 +162,8 @@ export function HeroCanvas() {
     let lastT = 0
     const posAttr = geometry.getAttribute("position") as THREE.BufferAttribute
     const streakAttr = streakGeometry.getAttribute("position") as THREE.BufferAttribute
+    const colorAttr = geometry.getAttribute("color") as THREE.BufferAttribute
+    let lastColorWarp = 0
     const toCamera = new THREE.Vector3()
     const inverseRotation = new THREE.Quaternion()
 
@@ -208,9 +229,19 @@ export function HeroCanvas() {
         streaks.visible = warp > 0
         if (warp > 0) {
           streakAttr.needsUpdate = true
-          streakMaterial.opacity = 0.42 * warp
+          streakMaterial.opacity = 0.55 * warp
         }
         material.opacity = 0.55 + 0.35 * warp
+
+        // Blend resting colors (with the faint lime sprinkle) into starlight while warping
+        if (warp !== lastColorWarp) {
+          const cArr = colorAttr.array as Float32Array
+          for (let j = 0; j < cArr.length; j++) {
+            cArr[j] = colors[j] + (starColors[j] - colors[j]) * warp
+          }
+          colorAttr.needsUpdate = true
+          lastColorWarp = warp
+        }
 
         points.rotation.y = t * DRIFT_SPEED
         points.rotation.x = Math.sin(t * DRIFT_SPEED * 0.5) * 0.15

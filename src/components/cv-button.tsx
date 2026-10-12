@@ -34,11 +34,17 @@ export function CvButton() {
       }}
       onFocus={() => setWarp(true)}
       onBlur={() => setWarp(false)}
-      className="group relative mt-6 inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black [--x:50%] [--y:50%] transition-transform duration-300 ease-out hover:scale-[1.04] focus-visible:scale-[1.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-[0.98]"
+      className="group relative mt-6 inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black [--x:50%] [--y:50%] transition-[transform,color,box-shadow] duration-300 ease-out hover:scale-[1.04] hover:text-white hover:shadow-[0_0_28px_-4px_rgba(255,255,255,0.45)] focus-visible:scale-[1.04] focus-visible:text-white focus-visible:shadow-[0_0_28px_-4px_rgba(255,255,255,0.45)] focus-visible:outline-none active:scale-[0.98]"
     >
+      {/* Inverts the pill to black from the pointer's entry point, like a light switching off */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute left-[var(--x)] top-[var(--y)] aspect-square w-[250%] -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-accent transition-transform duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-focus-visible:scale-100 motion-reduce:transition-none"
+        className="pointer-events-none absolute left-[var(--x)] top-[var(--y)] aspect-square w-[250%] -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-black transition-transform duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-focus-visible:scale-100 motion-reduce:transition-none"
+      />
+      {/* Keeps the pill's outline visible once it turns black */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/80"
       />
       <span className="relative">Download CV</span>
       <span className="relative inline-flex h-4 w-4 overflow-hidden" aria-hidden="true">

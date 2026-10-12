@@ -52,7 +52,7 @@ export default async function HomePage() {
   const notionContent = await getNotionContent()
 
   return (
-    <div className="relative min-h-screen bg-black text-white">
+    <div className="relative min-h-screen overflow-x-clip bg-black text-white">
       <Link
         href="#main"
         className="absolute left-5 top-5 z-40 flex h-[46px] items-center text-sm tracking-tight text-white/90 transition hover:text-white sm:left-8 sm:top-6"
