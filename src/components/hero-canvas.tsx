@@ -3,10 +3,17 @@
 import * as React from "react"
 import * as THREE from "three"
 
+import { HERO_WARP_EVENT } from "@/lib/hero-warp"
+
 const PARTICLE_COUNT = 1400
 const FIELD_RADIUS = 9
 const DRIFT_SPEED = 0.035
 const PARALLAX_STRENGTH = 0.35
+// Warp: particles fly toward the camera and leave streaks, so the field reads as a starburst
+const WARP_SPEED = 15
+const WARP_STREAK = 2
+const WARP_NEAR_Z = 12.5
+const WARP_FLUSH_SPEED = 8
 const ACCENT = new THREE.Color("hsl(84, 90%, 55%)")
 const WHITE = new THREE.Color("#ffffff")
 
@@ -69,6 +76,37 @@ export function HeroCanvas() {
     const points = new THREE.Points(geometry, material)
     scene.add(points)
 
+    // Streaks: one segment per particle, head at the particle, tail trailing back along z
+    const zOffsets = new Float32Array(PARTICLE_COUNT)
+    const streakPositions = new Float32Array(PARTICLE_COUNT * 6)
+    const streakColors = new Float32Array(PARTICLE_COUNT * 6)
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      for (let k = 0; k < 2; k++) {
+        streakColors[i * 6 + k * 3] = colors[i * 3]
+        streakColors[i * 6 + k * 3 + 1] = colors[i * 3 + 1]
+        streakColors[i * 6 + k * 3 + 2] = colors[i * 3 + 2]
+      }
+    }
+    const streakGeometry = new THREE.BufferGeometry()
+    streakGeometry.setAttribute("position", new THREE.BufferAttribute(streakPositions, 3))
+    streakGeometry.setAttribute("color", new THREE.BufferAttribute(streakColors, 3))
+    const streakMaterial = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    })
+    const streaks = new THREE.LineSegments(streakGeometry, streakMaterial)
+    streaks.visible = false
+    points.add(streaks)
+
+    let warpTarget = 0
+    let warp = 0
+    const onWarp = (event: Event) => {
+      warpTarget = (event as CustomEvent<{ active: boolean }>).detail?.active ? 1 : 0
+    }
+
     const target = new THREE.Vector2()
     const current = new THREE.Vector2()
 
@@ -102,22 +140,77 @@ export function HeroCanvas() {
 
     let frame = 0
     const clock = new THREE.Clock()
+    let lastT = 0
     const posAttr = geometry.getAttribute("position") as THREE.BufferAttribute
+    const streakAttr = streakGeometry.getAttribute("position") as THREE.BufferAttribute
+    const toCamera = new THREE.Vector3()
+    const inverseRotation = new THREE.Quaternion()
 
     const render = () => {
       frame = requestAnimationFrame(render)
       if (!visible || document.hidden) return
 
       const t = clock.getElapsedTime()
+      const dt = Math.min(t - lastT, 0.05)
+      lastT = t
 
       if (!reduceMotion) {
+        // Ease in quickly, ease out a little slower so the burst settles rather than snaps
+        warp += (warpTarget - warp) * (warpTarget > warp ? 0.08 : 0.05)
+        if (warp < 0.001) warp = 0
+
+        // Camera axis expressed in the field's local (rotated) space
+        inverseRotation.copy(points.quaternion).invert()
+        toCamera.set(0, 0, 1).applyQuaternion(inverseRotation)
+        const dx = toCamera.x
+        const dy = toCamera.y
+        const dz = toCamera.z
+        const step = WARP_SPEED * warp * warp * dt
+        const tail = WARP_STREAK * warp
+
         const arr = posAttr.array as Float32Array
+        const sArr = streakAttr.array as Float32Array
         for (let i = 0; i < PARTICLE_COUNT; i++) {
           const p = phases[i]
-          arr[i * 3] = basePositions[i * 3] + Math.sin(t * DRIFT_SPEED * 6 + p) * 0.12
-          arr[i * 3 + 1] = basePositions[i * 3 + 1] + Math.cos(t * DRIFT_SPEED * 5 + p) * 0.12
+          const bx = basePositions[i * 3] + Math.sin(t * DRIFT_SPEED * 6 + p) * 0.12
+          const by = basePositions[i * 3 + 1] + Math.cos(t * DRIFT_SPEED * 5 + p) * 0.12
+          const bz = basePositions[i * 3 + 2]
+
+          if (zOffsets[i] !== 0 || step > 0) {
+            let depth = bx * dx + by * dy + bz * dz + zOffsets[i]
+            // Particles left in front of the field after a warp keep flying until recycled,
+            // otherwise they'd sit next to the lens as oversized squares
+            const s = depth > FIELD_RADIUS ? Math.max(step, WARP_FLUSH_SPEED * dt) : step
+            zOffsets[i] += s
+            depth += s
+            // Recycle particles that pass the camera to the far side of the field
+            if (depth > WARP_NEAR_Z) zOffsets[i] -= WARP_NEAR_Z + FIELD_RADIUS
+          }
+
+          const o = zOffsets[i]
+          const x = bx + dx * o
+          const y = by + dy * o
+          const z = bz + dz * o
+          arr[i * 3] = x
+          arr[i * 3 + 1] = y
+          arr[i * 3 + 2] = z
+
+          if (warp > 0) {
+            sArr[i * 6] = x
+            sArr[i * 6 + 1] = y
+            sArr[i * 6 + 2] = z
+            sArr[i * 6 + 3] = x - dx * tail
+            sArr[i * 6 + 4] = y - dy * tail
+            sArr[i * 6 + 5] = z - dz * tail
+          }
         }
         posAttr.needsUpdate = true
+        streaks.visible = warp > 0
+        if (warp > 0) {
+          streakAttr.needsUpdate = true
+          streakMaterial.opacity = 0.42 * warp
+        }
+        material.opacity = 0.55 + 0.35 * warp
 
         points.rotation.y = t * DRIFT_SPEED
         points.rotation.x = Math.sin(t * DRIFT_SPEED * 0.5) * 0.15
@@ -133,16 +226,20 @@ export function HeroCanvas() {
 
     if (!reduceMotion) {
       window.addEventListener("pointermove", onPointerMove, { passive: true })
+      window.addEventListener(HERO_WARP_EVENT, onWarp)
     }
     render()
 
     return () => {
       cancelAnimationFrame(frame)
       window.removeEventListener("pointermove", onPointerMove)
+      window.removeEventListener(HERO_WARP_EVENT, onWarp)
       resizeObserver.disconnect()
       intersection.disconnect()
       geometry.dispose()
       material.dispose()
+      streakGeometry.dispose()
+      streakMaterial.dispose()
       renderer.dispose()
       if (renderer.domElement.parentNode === mount) {
         mount.removeChild(renderer.domElement)

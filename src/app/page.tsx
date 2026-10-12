@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
 
+import { CvButton } from "@/components/cv-button"
 import { NotionContent } from "@/components/notion-block-renderer"
 import { FloatingSectionNav } from "@/components/floating-section-nav"
 import { HeroBackground } from "@/components/hero-background"
@@ -104,13 +105,7 @@ export default async function HomePage() {
                     t.me/myrzanio
                   </Link>
                 </div>
-                <a
-                  href="/cv-myrzan-izimbetov.pdf"
-                  download
-                  className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
-                >
-                  Download CV
-                </a>
+                <CvButton />
               </div>
 
               {/* Avatar — desktop only */}
