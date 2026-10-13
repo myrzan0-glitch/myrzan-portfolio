@@ -5,52 +5,56 @@ import { ArrowDown } from "lucide-react"
 
 import { setHeroWarp as setWarp } from "@/lib/hero-warp"
 
-export function CvButton() {
-  const ref = React.useRef<HTMLAnchorElement>(null)
+// Positions for the sparks that blink around the button on hover
+const SPARKS = [
+  { x: "-10px", y: "-9px", s: 12, d: "0s", tone: "a" },
+  { x: "30%", y: "-15px", s: 8, d: ".25s", tone: "b" },
+  { x: "78%", y: "-12px", s: 14, d: ".5s", tone: "a" },
+  { x: "102%", y: "35%", s: 9, d: ".15s", tone: "b" },
+  { x: "60%", y: "46px", s: 11, d: ".7s", tone: "a" },
+  { x: "12%", y: "44px", s: 8, d: ".4s", tone: "b" }
+] as const
 
-  // Grow the fill from wherever the pointer crosses the edge, like a ripple entering the pill
-  const setOrigin = (event: React.PointerEvent<HTMLAnchorElement>) => {
-    const el = ref.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    el.style.setProperty("--x", `${event.clientX - rect.left}px`)
-    el.style.setProperty("--y", `${event.clientY - rect.top}px`)
-  }
-
+export function CvButton({ className = "" }: { className?: string }) {
   React.useEffect(() => () => setWarp(false), [])
 
   return (
     <a
-      ref={ref}
       href="/cv-myrzan-izimbetov.pdf"
       download
-      onPointerEnter={(event) => {
-        setOrigin(event)
-        setWarp(true)
-      }}
-      onPointerLeave={(event) => {
-        setOrigin(event)
-        setWarp(false)
-      }}
+      onPointerEnter={() => setWarp(true)}
+      onPointerLeave={() => setWarp(false)}
       onFocus={() => setWarp(true)}
       onBlur={() => setWarp(false)}
-      className="group relative mt-6 inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black [--x:50%] [--y:50%] transition-[transform,color,box-shadow] duration-300 ease-out hover:scale-[1.04] hover:text-white hover:shadow-[0_0_28px_-4px_rgba(255,255,255,0.45)] focus-visible:scale-[1.04] focus-visible:text-white focus-visible:shadow-[0_0_28px_-4px_rgba(255,255,255,0.45)] focus-visible:outline-none active:scale-[0.98]"
+      className={`cv-spark relative inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[var(--home-fg)] px-5 text-sm font-medium text-[var(--home-bg)] transition-[transform,box-shadow] duration-300 hover:-translate-y-px hover:shadow-[0_0_0_4px_var(--home-ring),0_10px_30px_-10px_var(--home-glow)] focus-visible:outline-none focus-visible:shadow-[0_0_0_4px_var(--home-ring)] ${className}`}
     >
-      {/* Inverts the pill to black from the pointer's entry point, like a light switching off */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute left-[var(--x)] top-[var(--y)] aspect-square w-[250%] -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-black transition-transform duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-focus-visible:scale-100 motion-reduce:transition-none"
-      />
-      {/* Keeps the pill's outline visible once it turns black */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/80"
-      />
-      <span className="relative">Download CV</span>
-      <span className="relative inline-flex h-4 w-4 overflow-hidden" aria-hidden="true">
-        <ArrowDown className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-y-full motion-reduce:transition-none" />
-        <ArrowDown className="absolute inset-0 h-4 w-4 -translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 motion-reduce:transition-none" />
-      </span>
+      {SPARKS.map((spark, i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          className="spark"
+          style={
+            {
+              "--x": spark.x,
+              "--y": spark.y,
+              "--s": `${spark.s}px`,
+              "--d": spark.d,
+              color: spark.tone === "a" ? "var(--home-spark-a)" : "var(--home-spark-b)"
+            } as React.CSSProperties
+          }
+        >
+          {/* Four-point star at night, a small sun by day */}
+          <svg className="spark-star" viewBox="0 0 24 24">
+            <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" fill="currentColor" />
+          </svg>
+          <svg className="spark-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+            <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
+            <path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1" />
+          </svg>
+        </span>
+      ))}
+      <span>Download CV</span>
+      <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
     </a>
   )
 }

@@ -5,36 +5,96 @@ import * as THREE from "three"
 
 import { HERO_WARP_EVENT } from "@/lib/hero-warp"
 
+export type HeroTheme = "dark" | "light"
+
 const PARTICLE_COUNT = 1400
 const FIELD_RADIUS = 9
 const DRIFT_SPEED = 0.035
 const PARALLAX_STRENGTH = 0.35
-// Warp: particles fly toward the camera and leave streaks, so the field reads as a starburst
+// Warp: particles fly toward the camera and leave streaks, so the field reads as a burst
 const WARP_SPEED = 15
 const WARP_STREAK = 2
 const WARP_NEAR_Z = 12.5
 const WARP_FLUSH_SPEED = 8
-const STREAK_TAIL_BRIGHTNESS = 0.12
-const ACCENT = new THREE.Color("hsl(84, 90%, 55%)")
-const WHITE = new THREE.Color("#ffffff")
-// Starlight palette used while warping: mostly white with cool blue and warm stars mixed in
-const STAR_BLUE = new THREE.Color("hsl(212, 85%, 82%)")
-const STAR_WARM = new THREE.Color("hsl(38, 90%, 84%)")
 
-function pickStarColor() {
-  const roll = Math.random()
-  if (roll < 0.18) return STAR_BLUE
-  if (roll < 0.3) return STAR_WARM
-  return WHITE
+type Palette = { color: THREE.Color; weight: number }[]
+
+// Dark mode is a night sky: white stars with cool blue and warm ones mixed in.
+// Light mode is sunlight: warm gold and amber sparks that stay readable on white.
+const THEMES: Record<
+  HeroTheme,
+  {
+    palette: Palette
+    blending: THREE.Blending
+    size: number
+    restOpacity: number
+    warpOpacityBoost: number
+    streakOpacity: number
+  }
+> = {
+  dark: {
+    palette: [
+      { color: new THREE.Color("#ffffff"), weight: 0.7 },
+      { color: new THREE.Color("hsl(212, 85%, 82%)"), weight: 0.18 },
+      { color: new THREE.Color("hsl(38, 90%, 84%)"), weight: 0.12 }
+    ],
+    blending: THREE.AdditiveBlending,
+    size: 0.08,
+    restOpacity: 0.7,
+    warpOpacityBoost: 0.3,
+    streakOpacity: 0.55
+  },
+  light: {
+    palette: [
+      { color: new THREE.Color("hsl(40, 95%, 55%)"), weight: 0.45 },
+      { color: new THREE.Color("hsl(28, 95%, 55%)"), weight: 0.3 },
+      { color: new THREE.Color("hsl(46, 100%, 66%)"), weight: 0.25 }
+    ],
+    blending: THREE.NormalBlending,
+    size: 0.1,
+    restOpacity: 0.75,
+    warpOpacityBoost: 0.2,
+    streakOpacity: 0.7
+  }
 }
 
-export function HeroCanvas() {
+function pick(palette: Palette) {
+  let roll = Math.random()
+  for (const entry of palette) {
+    if (roll < entry.weight) return entry.color
+    roll -= entry.weight
+  }
+  return palette[0].color
+}
+
+// Soft round dot so particles render as glowing points, not squares
+function makeDotTexture() {
+  const size = 64
+  const canvas = document.createElement("canvas")
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext("2d")
+  if (ctx) {
+    const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2)
+    g.addColorStop(0, "rgba(255,255,255,1)")
+    g.addColorStop(0.35, "rgba(255,255,255,0.85)")
+    g.addColorStop(1, "rgba(255,255,255,0)")
+    ctx.fillStyle = g
+    ctx.fillRect(0, 0, size, size)
+  }
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+  return texture
+}
+
+export function HeroCanvas({ theme = "dark" }: { theme?: HeroTheme }) {
   const mountRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     const mount = mountRef.current
     if (!mount) return
 
+    const config = THEMES[theme]
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
     const scene = new THREE.Scene()
@@ -48,12 +108,10 @@ export function HeroCanvas() {
 
     const positions = new Float32Array(PARTICLE_COUNT * 3)
     const colors = new Float32Array(PARTICLE_COUNT * 3)
-    const starColors = new Float32Array(PARTICLE_COUNT * 3)
     const phases = new Float32Array(PARTICLE_COUNT)
-    const tmp = new THREE.Color()
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // Spherical shell with soft inner fill so the field reads as a volume, not a flat plane
+      // Uniform fill of a sphere so the field reads as a volume, not a flat plane
       const r = FIELD_RADIUS * Math.cbrt(Math.random())
       const theta = Math.random() * Math.PI * 2
       const phi = Math.acos(2 * Math.random() - 1)
@@ -61,60 +119,56 @@ export function HeroCanvas() {
       positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta)
       positions[i * 3 + 2] = r * Math.cos(phi)
 
-      // Mostly white, a small share tinted with the site's lime accent
-      tmp.copy(Math.random() < 0.12 ? ACCENT : WHITE)
-      colors[i * 3] = tmp.r
-      colors[i * 3 + 1] = tmp.g
-      colors[i * 3 + 2] = tmp.b
-
-      tmp.copy(pickStarColor())
-      starColors[i * 3] = tmp.r
-      starColors[i * 3 + 1] = tmp.g
-      starColors[i * 3 + 2] = tmp.b
+      const c = pick(config.palette)
+      colors[i * 3] = c.r
+      colors[i * 3 + 1] = c.g
+      colors[i * 3 + 2] = c.b
 
       phases[i] = Math.random() * Math.PI * 2
     }
 
     const geometry = new THREE.BufferGeometry()
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors.slice(), 3))
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
     const basePositions = positions.slice()
 
+    const dot = makeDotTexture()
     const material = new THREE.PointsMaterial({
-      size: 0.045,
+      size: config.size,
+      map: dot,
       vertexColors: true,
       transparent: true,
-      opacity: 0.55,
+      opacity: config.restOpacity,
       sizeAttenuation: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending
+      blending: config.blending
     })
 
     const points = new THREE.Points(geometry, material)
     scene.add(points)
 
-    // Streaks: one segment per particle, head at the particle, tail trailing back along z
+    // Streaks: one segment per particle, head at the particle, tail fading out behind it.
+    // RGBA vertex colours let the tail fade to transparent in both blending modes.
     const zOffsets = new Float32Array(PARTICLE_COUNT)
     const streakPositions = new Float32Array(PARTICLE_COUNT * 6)
-    const streakColors = new Float32Array(PARTICLE_COUNT * 6)
+    const streakColors = new Float32Array(PARTICLE_COUNT * 8)
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // Bright head, dim tail: additive blending turns the gradient into a light trail
       for (let k = 0; k < 2; k++) {
-        const brightness = k === 0 ? 1 : STREAK_TAIL_BRIGHTNESS
-        streakColors[i * 6 + k * 3] = starColors[i * 3] * brightness
-        streakColors[i * 6 + k * 3 + 1] = starColors[i * 3 + 1] * brightness
-        streakColors[i * 6 + k * 3 + 2] = starColors[i * 3 + 2] * brightness
+        streakColors[i * 8 + k * 4] = colors[i * 3]
+        streakColors[i * 8 + k * 4 + 1] = colors[i * 3 + 1]
+        streakColors[i * 8 + k * 4 + 2] = colors[i * 3 + 2]
+        streakColors[i * 8 + k * 4 + 3] = k === 0 ? 1 : 0
       }
     }
     const streakGeometry = new THREE.BufferGeometry()
     streakGeometry.setAttribute("position", new THREE.BufferAttribute(streakPositions, 3))
-    streakGeometry.setAttribute("color", new THREE.BufferAttribute(streakColors, 3))
+    streakGeometry.setAttribute("color", new THREE.BufferAttribute(streakColors, 4))
     const streakMaterial = new THREE.LineBasicMaterial({
       vertexColors: true,
       transparent: true,
       opacity: 0,
       depthWrite: false,
-      blending: THREE.AdditiveBlending
+      blending: config.blending
     })
     const streaks = new THREE.LineSegments(streakGeometry, streakMaterial)
     streaks.visible = false
@@ -162,8 +216,6 @@ export function HeroCanvas() {
     let lastT = 0
     const posAttr = geometry.getAttribute("position") as THREE.BufferAttribute
     const streakAttr = streakGeometry.getAttribute("position") as THREE.BufferAttribute
-    const colorAttr = geometry.getAttribute("color") as THREE.BufferAttribute
-    let lastColorWarp = 0
     const toCamera = new THREE.Vector3()
     const inverseRotation = new THREE.Quaternion()
 
@@ -200,11 +252,10 @@ export function HeroCanvas() {
           if (zOffsets[i] !== 0 || step > 0) {
             let depth = bx * dx + by * dy + bz * dz + zOffsets[i]
             // Particles left in front of the field after a warp keep flying until recycled,
-            // otherwise they'd sit next to the lens as oversized squares
+            // otherwise they'd sit next to the lens as oversized blobs
             const s = depth > FIELD_RADIUS ? Math.max(step, WARP_FLUSH_SPEED * dt) : step
             zOffsets[i] += s
             depth += s
-            // Recycle particles that pass the camera to the far side of the field
             if (depth > WARP_NEAR_Z) zOffsets[i] -= WARP_NEAR_Z + FIELD_RADIUS
           }
 
@@ -229,19 +280,9 @@ export function HeroCanvas() {
         streaks.visible = warp > 0
         if (warp > 0) {
           streakAttr.needsUpdate = true
-          streakMaterial.opacity = 0.55 * warp
+          streakMaterial.opacity = config.streakOpacity * warp
         }
-        material.opacity = 0.55 + 0.35 * warp
-
-        // Blend resting colors (with the faint lime sprinkle) into starlight while warping
-        if (warp !== lastColorWarp) {
-          const cArr = colorAttr.array as Float32Array
-          for (let j = 0; j < cArr.length; j++) {
-            cArr[j] = colors[j] + (starColors[j] - colors[j]) * warp
-          }
-          colorAttr.needsUpdate = true
-          lastColorWarp = warp
-        }
+        material.opacity = config.restOpacity + config.warpOpacityBoost * warp
 
         points.rotation.y = t * DRIFT_SPEED
         points.rotation.x = Math.sin(t * DRIFT_SPEED * 0.5) * 0.15
@@ -269,6 +310,7 @@ export function HeroCanvas() {
       intersection.disconnect()
       geometry.dispose()
       material.dispose()
+      dot.dispose()
       streakGeometry.dispose()
       streakMaterial.dispose()
       renderer.dispose()
@@ -276,7 +318,7 @@ export function HeroCanvas() {
         mount.removeChild(renderer.domElement)
       }
     }
-  }, [])
+  }, [theme])
 
   return (
     <div

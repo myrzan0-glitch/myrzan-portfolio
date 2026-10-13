@@ -1,256 +1,280 @@
-import Link from "next/link"
 import Image from "next/image"
-import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 
 import { CvButton } from "@/components/cv-button"
-import { NotionContent } from "@/components/notion-block-renderer"
-import { FloatingSectionNav } from "@/components/floating-section-nav"
 import { HeroBackground } from "@/components/hero-background"
+import { CopyEmail, EMAIL } from "@/components/home/copy-email"
+import { LondonClock } from "@/components/home/london-clock"
+import { ThemeSwitch } from "@/components/home/theme-switch"
 import { FadeIn } from "@/components/motion"
-import { getSelectedWorkContent } from "@/lib/notion"
 
-const experience = [
+const fan = [
+  { src: "/work/bi-final.webp", w: 230, h: 260, r: "-7deg", y: "18px", z: 1 },
+  { src: "/work/td-solution.webp", w: 280, h: 210, r: "3deg", y: "-6px", z: 2 },
+  { src: "/work/video-consult.webp", w: 280, h: 210, r: "-2deg", y: "10px", z: 3 },
+  { src: "/work/ds-poster.webp", w: 230, h: 260, r: "6deg", y: "-10px", z: 2 }
+]
+
+const featured = [
   {
-    years: "2023 – Present",
-    title: "Product Designer @ BI Group",
-    href: "https://bi.group/"
+    n: "01",
+    company: "BI Group · Mobile web",
+    year: "2025",
+    title: "Lifted mobile conversion 54% by redesigning search filters in six weeks",
+    line: "Ran field research with buyers in a sales office, cut the filter panel down to the three that cover 87% of use, and validated with a split test before handoff.",
+    stats: ["54% conversion via filters", "Bounce 25% → 16.8%", "2M+ daily users"],
+    img: "/work/bi-final.webp",
+    alt: "Redesigned BI Group mobile search with quick-filter chips and a map view"
   },
   {
-    years: "2022 – 2023",
-    title: "Product Designer @ Beeline",
-    href: "https://apps.apple.com/kz/app/janymda-beeline-%D0%BA%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD/id711280776"
+    n: "02",
+    company: "Technodom · Fintech",
+    year: "2021",
+    title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
+    line: "Partnered with five banks to pre-score every shopper in one step instead of one bank at a time. Became the company’s #1 revenue source.",
+    stats: ["$4M+ monthly revenue", "+35% approvals", "#1 revenue stream"],
+    img: "/work/td-solution.webp",
+    alt: "Technodom credit flow showing offers from every partner bank at once"
   },
   {
-    years: "2022",
-    title: "Product Designer @ Petrel AI (NDA)"
-  },
-  {
-    years: "2020 – 2022",
-    title: "Product Designer @ Technodom",
-    href: "https://apps.apple.com/gb/app/technodom-kz-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82-%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD/id1435756761"
-  },
-  {
-    years: "2020",
-    title: "UI/UX Designer @ Vlife",
-    href: "https://apps.apple.com/kz/app/vlife-%D0%B0%D0%B7%D1%81-%D0%BF%D0%B0%D1%80%D1%82%D0%BD%D0%B5%D1%80%D1%8B-%D0%B1%D0%B0%D0%BB%D0%BB%D1%8B/id1527733098"
+    n: "03",
+    company: "BI Group · Growth experiment",
+    year: "2026",
+    title: "Opened a new sales channel with a $100K remote sale and zero engineering",
+    line: "Mapped the showroom journey with the sales team, found the three moments where buyers need to see to trust, and shipped video consultations in under two weeks.",
+    stats: ["$100K first sale", "< 2 weeks to launch", "0 engineers"],
+    img: "/work/video-consult.webp",
+    alt: "Video consultation flow from the BI Group site to a booked call"
   }
 ]
 
-const selectedWorkPageId = "31725685-1722-8035-ac20-cd8311aec051"
+const more = [
+  { title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2024", metric: "−83% QA time" },
+  { title: "AI prototyping in production code", where: "BI Group · 2025", metric: "1 day to decision" },
+  { title: "Checkout and brokerage", where: "Beeline · 2022", metric: "+17.5% conversion" },
+  { title: "Enterprise HSE and HR workflows", where: "Petrel AI · 2022 · NDA", metric: "−40% manual work" },
+  { title: "Service booking CMS", where: "Vlife · 2020", metric: "0 → 1" }
+]
 
-export const dynamic = "force-dynamic"
+const rules = [
+  { n: "01", t: "Context before pixels", b: "I open every project with one-to-ones across product, engineering and business, so each design decision traces back to a goal." },
+  { n: "02", t: "Jobs to be done", b: "I design for the job the customer hires the product to do, and I measure success by whether that job gets done." },
+  { n: "03", t: "Clear design ownership", b: "I gather input widely and align with users and partners, then I make the call and own the outcome." },
+  { n: "04", t: "Fluent in code", b: "Former front-end engineer. I prototype on our production Storybook through AI, so engineering builds from real components, not specs." }
+]
 
-async function getNotionContent() {
-  try {
-    return await getSelectedWorkContent(selectedWorkPageId)
-  } catch {
-    return []
-  }
-}
+const jobs = [
+  { years: "2023 – now", role: "Product Designer", company: "BI Group", line: "Own search, the design system and AI prototyping for a platform with 2M+ daily users." },
+  { years: "2022 – 2023", role: "Product Designer", company: "Beeline", line: "Lifted mobile checkout conversion 17.5% for a telecom with 11M+ subscribers." },
+  { years: "2022", role: "Product Designer", company: "Petrel AI", line: "Cut manual work 40% in enterprise HSE and HR workflows. NDA." },
+  { years: "2020 – 2022", role: "Product Designer", company: "Technodom", line: "Designed the credit brokerage that made $4M in one month and became the #1 revenue stream." },
+  { years: "2020", role: "UI/UX Designer", company: "Vlife", line: "Designed a booking CMS end to end, plus app motion." }
+]
 
-export default async function HomePage() {
-  const notionContent = await getNotionContent()
+const contacts = [
+  { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
+  { label: "LinkedIn", value: "/in/myrzanio", href: "https://linkedin.com/in/myrzanio" },
+  { label: "Telegram", value: "@myrzanio", href: "https://t.me/myrzanio" },
+  { label: "CV", value: "PDF", href: "/cv-myrzan-izimbetov.pdf" }
+]
 
+const column = "mx-auto w-full max-w-[640px] px-5 sm:px-6"
+
+export default function HomePage() {
   return (
-    <div className="relative min-h-screen overflow-x-clip bg-black text-white">
-      <Link
-        href="#main"
-        className="absolute left-5 top-5 z-40 flex h-[46px] items-center text-sm tracking-tight text-white/90 transition hover:text-white sm:left-8 sm:top-6"
-      >
-        Myrzan Izimbetov
-      </Link>
-      <FloatingSectionNav />
-
-      <main id="main" className="mx-auto max-w-7xl px-6 pb-40 pt-20 sm:px-8 sm:pt-24 md:pb-24 md:pt-28">
+    <div className="home-root">
+      <main id="main">
         <section id="intro" className="relative isolate">
           <HeroBackground />
-          <FadeIn>
-            <div className="flex items-start justify-between gap-12 py-[4.75rem] sm:py-16 md:py-20">
-              <div>
-                <h1 className="text-[2rem] font-medium leading-[2.35rem] tracking-tight text-white">
-                  Myrzan Izimbetov
-                </h1>
-                <p className="mt-1 text-base text-white/55 tracking-tight">
-                  Product Designer · 6 years · $4M+ monthly revenue impact
-                </p>
-                <p className="mt-5 text-lg leading-7 text-white/86 sm:mt-6 sm:max-w-xl">
-                  I design mobile products that move metrics —{" "}
-                  from search and payments to growth experiments{" "}
-                  shipped to production with AI.
-                </p>
-                <p className="mt-4 text-sm text-white/55">
-                  London, UK · Open to work
-                </p>
-                <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-                  <Link
-                    href="mailto:izimbetov.myrzan@gmail.com"
-                    className="text-sm text-white/55 transition hover:text-white/80"
-                  >
-                    izimbetov.myrzan@gmail.com
-                  </Link>
-                  <Link
-                    href="https://linkedin.com/in/myrzanio"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-white/55 transition hover:text-white/80"
-                  >
-                    linkedin.com/in/myrzanio
-                  </Link>
-                  <Link
-                    href="https://t.me/myrzanio"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-white/55 transition hover:text-white/80"
-                  >
-                    t.me/myrzanio
-                  </Link>
-                </div>
-                <CvButton />
-              </div>
 
-              {/* Avatar — desktop only */}
-              <div className="group relative hidden h-60 w-60 shrink-0 cursor-default overflow-hidden rounded-2xl sm:block">
-                <Image
-                  src="/avatar-default.webp"
-                  alt="Myrzan Izimbetov"
-                  fill
-                  className="object-cover transition-opacity duration-300 group-hover:opacity-0"
-                  priority
-                />
-                <Image
-                  src="/avatar-hover.webp"
-                  alt="Myrzan Izimbetov"
-                  aria-hidden="true"
-                  fill
-                  loading="lazy"
-                  className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                />
-              </div>
-            </div>
-          </FadeIn>
-        </section>
-
-        <section id="projects" className="mt-12 scroll-mt-24 pt-8 sm:mt-16 sm:pt-10 md:mt-20">
-          <FadeIn>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-sm text-white/55">Selected Work</p>
-              </div>
-            </div>
-          </FadeIn>
-
-          {notionContent.length > 0 && (
-            <FadeIn delay={0.05}>
-              <div className="mt-8 space-y-8">
-                <NotionContent blocks={notionContent} />
-              </div>
-            </FadeIn>
-          )}
-        </section>
-
-        <section
-          id="about"
-          className="mt-10 grid scroll-mt-24 gap-10 pt-8 sm:mt-12 sm:pt-10 lg:mt-14 lg:grid-cols-[0.95fr_1.05fr]"
-        >
-          <FadeIn delay={0.05}>
-            <div className="max-w-2xl">
-              <div>
-                <p className="text-sm text-white/55">About</p>
-                <p className="mt-3 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  I&apos;m a product designer based in London with 6+ years designing
-                  high-traffic mobile products.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  Most recently at BI Group — a real estate platform with 2M+ daily
-                  users — where I ran growth experiments, rebuilt the design system,
-                  and shipped AI-assisted prototypes directly to production.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  Before that: fintech at Beeline (11M+ subscribers), e-commerce
-                  credit flows at Technodom ($4M+ MRR), and enterprise ERP at Petrel AI.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  My work combines product thinking, rapid experimentation, and system design across the full path from research to implementation.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  I use AI-assisted workflows for prototyping, front-end experimentation, and faster iteration, while keeping product judgment and design decisions firmly human-led.
-                </p>
-              </div>
-
-              <div className="mt-10">
-                <p className="text-sm text-white/55">Contact</p>
-                <div className="mt-3 space-y-2 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  <p>
-                    <Link
-                      href="mailto:izimbetov.myrzan@gmail.com"
-                      className="inline-flex items-center gap-2 hover:text-white"
-                    >
-                      <Mail className="h-4 w-4 shrink-0 text-white/65" />
-                      <span>izimbetov.myrzan@gmail.com</span>
-                    </Link>
-                  </p>
-                  <p>
-                    <Link
-                      href="https://www.linkedin.com/in/myrzanio/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:text-white"
-                    >
-                      <Linkedin className="h-4 w-4 shrink-0 text-white/65" />
-                      <span>linkedin.com/in/myrzanio</span>
-                    </Link>
-                  </p>
-                  <p>
-                    <Link
-                      href="https://t.me/myrzanio"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:text-white"
-                    >
-                      <Send className="h-4 w-4 shrink-0 text-white/65" />
-                      <span>t.me/myrzanio</span>
-                    </Link>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-
-          <FadeIn>
-            <div className="space-y-8">
-              {experience.map((item) => (
-                <div key={`${item.years}-${item.title}`}>
-                  <p className="text-sm text-white/55">{item.years}</p>
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group mt-1 inline-flex items-center gap-1.5 text-base leading-6 tracking-tight text-white sm:text-lg"
-                    >
-                      <span>{item.title}</span>
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
-                    </Link>
-                  ) : (
-                    <p className="mt-1 text-base leading-6 tracking-tight sm:text-lg">
-                      {item.title}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </section>
-
-        <footer className="mt-10 pb-24 pt-6 text-sm text-white/45 md:mt-12 md:pb-0">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span>© {new Date().getFullYear()} Myrzan Izimbetov</span>
-            <Link href="#main" className="hover:text-white/80">
-              Back to top
-            </Link>
+          <div className={`${column} flex items-center justify-between pt-5 sm:pt-7`}>
+            <span className="home-label">
+              <LondonClock />
+            </span>
+            <ThemeSwitch />
           </div>
-        </footer>
+
+          <FadeIn>
+            <div className={`${column} pb-4 pt-16 sm:pt-24`}>
+              <h1 className="m-0 text-[17px] font-medium">Myrzan Izimbetov</h1>
+              <p className="home-muted mt-0.5 text-[15px]">Product Designer · London</p>
+              <p className="mt-7 text-[19px] leading-[1.5] sm:text-[21px]">
+                I own problems end to end, from discovery to shipped code.
+              </p>
+              <p className="home-muted mt-2.5 text-[16px] leading-[1.55] sm:text-[21px] sm:leading-[1.5]">
+                For six years I&apos;ve led mobile, fintech and e-commerce products used by millions of people every day. I
+                start with context: where the business is going and why customers choose us. Then I research, design and
+                prototype in production until the metric moves.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4">
+                <CvButton />
+                <CopyEmail />
+              </div>
+              <p className="mt-7 inline-flex items-center gap-2 text-sm">
+                <span className="h-[7px] w-[7px] rounded-full bg-[var(--home-green)] shadow-[0_0_0_4px_var(--home-green-soft)]" />
+                <span className="home-muted">Open to product design roles in Big Tech</span>
+              </p>
+            </div>
+          </FadeIn>
+
+          <div
+            aria-label="Work preview"
+            className="work-fan mx-auto mt-10 flex max-w-[980px] items-center overflow-x-auto px-5 pb-8 pt-6 [scrollbar-width:none] sm:mt-14 sm:h-[300px] sm:justify-center sm:overflow-visible sm:pb-0 sm:pt-0 [&::-webkit-scrollbar]:hidden"
+          >
+            {fan.map((card, i) => (
+              <div
+                key={card.src}
+                className="fan-card relative shrink-0 overflow-hidden rounded-[10px] max-sm:-ml-3 max-sm:!h-[180px] max-sm:!w-[170px] sm:-ml-[30px]"
+                style={
+                  {
+                    width: card.w,
+                    height: card.h,
+                    zIndex: card.z,
+                    marginLeft: i === 0 ? 0 : undefined,
+                    "--r": card.r,
+                    "--y": card.y
+                  } as React.CSSProperties
+                }
+              >
+                <Image src={card.src} alt="" fill sizes="280px" className="object-cover" priority={i < 2} />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="work" className={`${column} pt-20 sm:pt-24`}>
+          <div className="home-rule">
+            <span className="home-label">Selected work</span>
+            <span className="home-label">3 case studies</span>
+          </div>
+          {featured.map((w) => (
+            <FadeIn key={w.n}>
+              <article className="group flex flex-col gap-3.5 border-b border-[var(--home-line)] py-8">
+                <div className="flex justify-between gap-3">
+                  <span className="home-label">
+                    {w.n} · {w.company}
+                  </span>
+                  <span className="home-label">{w.year}</span>
+                </div>
+                <div className="flex items-start justify-between gap-4">
+                  <h2 className="m-0 text-[19px] font-medium leading-[1.3] sm:text-[22px]">{w.title}</h2>
+                  <ArrowUpRight className="mt-1 h-[18px] w-[18px] shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                </div>
+                <p className="home-muted m-0 text-[15px] leading-[1.55]">{w.line}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {w.stats.map((s) => (
+                    <span key={s} className="home-chip">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+                <div className="relative mt-1.5 aspect-[16/9] overflow-hidden rounded-xl border border-[var(--home-line)] bg-[var(--home-soft)]">
+                  <Image
+                    src={w.img}
+                    alt={w.alt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 640px"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  />
+                </div>
+              </article>
+            </FadeIn>
+          ))}
+        </section>
+
+        <section className={`${column} pt-16 sm:pt-[72px]`}>
+          <div className="home-rule">
+            <span className="home-label">More work</span>
+          </div>
+          {more.map((m) => (
+            <div key={m.title} className="flex items-baseline justify-between gap-4 border-b border-[var(--home-line)] py-4">
+              <span className="flex flex-col gap-0.5">
+                <span className="text-[15px]">{m.title}</span>
+                <span className="home-muted text-[13px]">{m.where}</span>
+              </span>
+              <span className="home-muted shrink-0 font-[family-name:var(--font-mono)] text-xs">{m.metric}</span>
+            </div>
+          ))}
+        </section>
+
+        <section className={`${column} pt-20 sm:pt-[88px]`}>
+          <div className="home-rule">
+            <span className="home-label">How I work</span>
+          </div>
+          {rules.map((r) => (
+            <div key={r.n} className="grid gap-1 py-4 sm:grid-cols-[110px_1fr] sm:gap-4 sm:py-[18px]">
+              <span className="home-label sm:pt-[3px]">{r.n}</span>
+              <div>
+                <p className="m-0 text-[15px] sm:text-base">{r.t}</p>
+                <p className="home-muted mt-1 text-[13px] leading-[1.55] sm:text-sm">{r.b}</p>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        <section className={`${column} pt-20 sm:pt-[88px]`}>
+          <div className="home-rule">
+            <span className="home-label">Experience</span>
+            <span className="home-label">6 years</span>
+          </div>
+          {jobs.map((j) => (
+            <div key={j.company} className="grid gap-1 py-4 sm:grid-cols-[110px_1fr] sm:gap-4 sm:py-[18px]">
+              <span className="home-label sm:pt-[3px]">{j.years}</span>
+              <div>
+                <p className="m-0 text-[15px] sm:text-base">
+                  {j.role} <span className="home-muted">at</span> {j.company}
+                </p>
+                <p className="home-muted mt-1 text-[13px] leading-[1.55] sm:text-sm">{j.line}</p>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        <section className={`${column} pt-20 sm:pt-[88px]`}>
+          <div className="home-rule">
+            <span className="home-label">Personal</span>
+          </div>
+          <p className="home-muted mt-[18px] text-[15px] leading-[1.6]">
+            Born in Nukus, moved to Kazakhstan in 2008, now in London with my wife and our daughter Medina. Moving countries
+            taught me to join any team fast. As a kid I wanted to build things. I still do.
+          </p>
+          <div className="mt-4 flex items-center gap-3 rounded-[10px] bg-[var(--home-soft)] p-3 sm:max-w-[310px]">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[#E8E2D6] font-[family-name:var(--font-mono)] text-[11px] text-[#555]">
+              JTBD
+            </span>
+            <span className="flex flex-col gap-0.5">
+              <span className="text-sm">Competing Against Luck</span>
+              <span className="home-muted text-[13px]">The book that shaped how I design</span>
+            </span>
+          </div>
+        </section>
+
+        <section id="contact" className={`${column} pt-20 sm:pt-[88px]`}>
+          <div className="home-rule">
+            <span className="home-label">Contact</span>
+          </div>
+          {contacts.map((k) => (
+            <a
+              key={k.label}
+              href={k.href}
+              target={k.href.startsWith("http") ? "_blank" : undefined}
+              rel={k.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              className="group flex min-h-12 items-center justify-between py-2"
+            >
+              <span className="text-[15px]">{k.label}</span>
+              <span className="home-muted inline-flex items-center gap-1.5 text-[13px] sm:text-sm">
+                {k.value}
+                <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+              </span>
+            </a>
+          ))}
+        </section>
       </main>
+
+      <footer className={`${column} home-label flex justify-between pb-12 pt-20`}>
+        <span>London, UK</span>
+        <span>© {new Date().getFullYear()} Myrzan Izimbetov</span>
+      </footer>
     </div>
   )
 }
