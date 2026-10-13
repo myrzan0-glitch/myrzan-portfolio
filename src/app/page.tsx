@@ -15,6 +15,14 @@ const fan = [
   { src: "/work/ds-poster.webp", w: 230, h: 260, r: "6deg", y: "-10px", z: 2 }
 ]
 
+const photos = [
+  { src: "/personal/me-london.webp", alt: "Myrzan in London at Christmas", r: "-8deg", y: "14px", z: 1 },
+  { src: "/personal/medina-park.webp", alt: "Medina in sunglasses in a London park", r: "4deg", y: "-8px", z: 2 },
+  { src: "/personal/wife-medina.webp", alt: "Myrzan's wife holding Medina in a café", r: "-2deg", y: "10px", z: 4 },
+  { src: "/personal/me-medina.webp", alt: "Myrzan holding Medina", r: "6deg", y: "-6px", z: 3 },
+  { src: "/personal/family-walk.webp", alt: "Family on a city walk, black and white", r: "-5deg", y: "12px", z: 2 }
+]
+
 const featured = [
   {
     n: "01",
@@ -248,6 +256,28 @@ export default function HomePage() {
             </span>
           </div>
         </section>
+
+        <div
+          aria-label="Personal photos"
+          className="work-fan mx-auto mt-10 flex max-w-[860px] items-center overflow-x-auto px-5 pb-8 pt-6 [scrollbar-width:none] sm:h-[300px] sm:justify-center sm:overflow-visible sm:pb-0 sm:pt-0 [&::-webkit-scrollbar]:hidden"
+        >
+          {photos.map((photo, i) => (
+            <div
+              key={photo.src}
+              className="fan-card relative h-[220px] w-[150px] shrink-0 overflow-hidden rounded-[10px] max-sm:-ml-3 max-sm:h-[190px] max-sm:w-[128px] sm:-ml-[26px]"
+              style={
+                {
+                  zIndex: photo.z,
+                  marginLeft: i === 0 ? 0 : undefined,
+                  "--r": photo.r,
+                  "--y": photo.y
+                } as React.CSSProperties
+              }
+            >
+              <Image src={photo.src} alt={photo.alt} fill sizes="150px" className="object-cover" />
+            </div>
+          ))}
+        </div>
 
         <section id="contact" className={`${column} pt-20 sm:pt-[88px]`}>
           <div className="home-rule">
