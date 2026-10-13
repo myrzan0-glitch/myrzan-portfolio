@@ -32,7 +32,7 @@ const featured = [
     year: "2025",
     title: "Redesigned mobile search to a 54% conversion rate in six weeks",
     line: "Ran field research with buyers in a sales office, cut the filter panel down to the three that cover 87% of use, and validated with a split test before handoff.",
-    stats: ["54% conversion rate", "Bounce 25% → 16.8%", "2M+ daily users"],
+    stats: ["54% conversion rate", "Bounce 25% → 16.8%", "2M+ monthly users"],
     img: "/work/bi-final.webp",
     alt: "Redesigned BI Group mobile search with quick-filter chips and a map view"
   },
@@ -76,7 +76,7 @@ const rules = [
 ]
 
 const jobs = [
-  { years: "2023 – now", role: "Product Designer", company: "BI Group", line: "Own search, the design system and AI prototyping for a platform with 2M+ daily users." },
+  { years: "2023 – now", role: "Product Designer", company: "BI Group", line: "Own search, the design system and AI prototyping for a platform with 2M+ monthly users." },
   { years: "2022 – 2023", role: "Product Designer", company: "Beeline", line: "Lifted mobile checkout conversion 17.5% for a telecom with 11M+ subscribers." },
   { years: "2022", role: "Product Designer", company: "Petrel AI", line: "Cut manual work 40% in enterprise HSE and HR workflows. NDA." },
   { years: "2020 – 2022", role: "Product Designer", company: "Technodom", line: "Designed the credit brokerage that made $4M in one month and became the #1 revenue stream." },

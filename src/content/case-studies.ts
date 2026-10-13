@@ -33,7 +33,7 @@ export const caseStudies: CaseStudy[] = [
       { label: "Role", value: "Product Designer, research to handoff" },
       { label: "Team", value: "PM, engineers, QA" },
       { label: "Timeline", value: "6 weeks" },
-      { label: "Platform", value: "Mobile web, 2M+ daily users" }
+      { label: "Platform", value: "Mobile web, 2M+ monthly users" }
     ],
     outcomes: [
       { value: "54%", label: "conversion rate via quick filters" },
