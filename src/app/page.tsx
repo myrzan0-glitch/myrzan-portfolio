@@ -250,7 +250,7 @@ export default function HomePage() {
             href="https://www.amazon.com/dp/0062435612"
             target="_blank"
             rel="noopener noreferrer"
-            className="group mt-4 flex items-center gap-3 rounded-[10px] bg-[var(--home-soft)] p-3 ring-1 ring-transparent transition-shadow hover:ring-[var(--home-line)] sm:max-w-[310px]"
+            className="group mt-4 flex items-start gap-3 rounded-[10px] bg-[var(--home-soft)] p-3 ring-1 ring-transparent transition-shadow hover:ring-[var(--home-line)] sm:max-w-[440px]"
           >
             <Image
               src="/personal/competing-against-luck.webp"
@@ -261,10 +261,14 @@ export default function HomePage() {
             />
             <span className="flex flex-col gap-0.5">
               <span className="text-sm">Competing Against Luck</span>
-              <span className="home-muted text-[13px]">The book that shaped how I design</span>
+              <span className="home-label !text-[10px]">Clayton M. Christensen</span>
+              <span className="home-muted mt-1 text-[13px] leading-[1.5]">
+                People don&rsquo;t buy products, they hire them to make progress. It&rsquo;s why I start every project
+                with the customer&rsquo;s job, not the feature list.
+              </span>
             </span>
             <ArrowUpRight
-              className="home-muted ml-auto h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              className="home-muted ml-auto h-4 w-4 shrink-0 self-start transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               aria-hidden="true"
             />
           </a>
