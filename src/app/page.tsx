@@ -247,9 +247,13 @@ export default function HomePage() {
             taught me to join any team fast. As a kid I wanted to build things. I still do.
           </p>
           <div className="mt-4 flex items-center gap-3 rounded-[10px] bg-[var(--home-soft)] p-3 sm:max-w-[310px]">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[#E8E2D6] font-[family-name:var(--font-mono)] text-[11px] text-[#555]">
-              JTBD
-            </span>
+            <Image
+              src="/personal/competing-against-luck.webp"
+              alt="Cover of Competing Against Luck by Clayton M. Christensen"
+              width={40}
+              height={60}
+              className="h-[60px] w-[40px] shrink-0 rounded-[3px] object-cover shadow-[0_4px_12px_-4px_rgba(0,0,0,0.35)]"
+            />
             <span className="flex flex-col gap-0.5">
               <span className="text-sm">Competing Against Luck</span>
               <span className="home-muted text-[13px]">The book that shaped how I design</span>
