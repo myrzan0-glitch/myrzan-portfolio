@@ -246,7 +246,12 @@ export default function HomePage() {
             Born in Nukus, moved to Kazakhstan in 2008, now in London with my wife and our daughter Medina. Moving countries
             taught me to join any team fast. As a kid I wanted to build things. I still do.
           </p>
-          <div className="mt-4 flex items-center gap-3 rounded-[10px] bg-[var(--home-soft)] p-3 sm:max-w-[310px]">
+          <a
+            href="https://www.amazon.com/dp/0062435612"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-4 flex items-center gap-3 rounded-[10px] bg-[var(--home-soft)] p-3 ring-1 ring-transparent transition-shadow hover:ring-[var(--home-line)] sm:max-w-[310px]"
+          >
             <Image
               src="/personal/competing-against-luck.webp"
               alt="Cover of Competing Against Luck by Clayton M. Christensen"
@@ -258,7 +263,11 @@ export default function HomePage() {
               <span className="text-sm">Competing Against Luck</span>
               <span className="home-muted text-[13px]">The book that shaped how I design</span>
             </span>
-          </div>
+            <ArrowUpRight
+              className="home-muted ml-auto h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </a>
         </section>
 
         <div
