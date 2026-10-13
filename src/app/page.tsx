@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 
 import { CvButton } from "@/components/cv-button"
@@ -26,6 +27,7 @@ const photos = [
 const featured = [
   {
     n: "01",
+    slug: "bi-mobile-search",
     company: "BI Group · Mobile web",
     year: "2025",
     title: "Lifted mobile conversion 54% by redesigning search filters in six weeks",
@@ -36,6 +38,7 @@ const featured = [
   },
   {
     n: "02",
+    slug: "technodom-credit",
     company: "Technodom · Fintech",
     year: "2021",
     title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
@@ -46,6 +49,7 @@ const featured = [
   },
   {
     n: "03",
+    slug: "bi-video-consultation",
     company: "BI Group · Growth experiment",
     year: "2026",
     title: "Opened a new sales channel with a $100K remote sale and zero engineering",
@@ -157,7 +161,10 @@ export default function HomePage() {
           </div>
           {featured.map((w) => (
             <FadeIn key={w.n}>
-              <article className="group flex flex-col gap-3.5 border-b border-[var(--home-line)] py-8">
+              <Link
+                href={`/work/${w.slug}`}
+                className="group flex flex-col gap-3.5 border-b border-[var(--home-line)] py-8"
+              >
                 <div className="flex justify-between gap-3">
                   <span className="home-label">
                     {w.n} · {w.company}
@@ -185,7 +192,7 @@ export default function HomePage() {
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   />
                 </div>
-              </article>
+              </Link>
             </FadeIn>
           ))}
         </section>
