@@ -30,9 +30,9 @@ const featured = [
     slug: "bi-mobile-search",
     company: "BI Group · Mobile web",
     year: "2025",
-    title: "Lifted mobile conversion 54% by redesigning search filters in six weeks",
+    title: "Redesigned mobile search to a 54% conversion rate in six weeks",
     line: "Ran field research with buyers in a sales office, cut the filter panel down to the three that cover 87% of use, and validated with a split test before handoff.",
-    stats: ["54% conversion via filters", "Bounce 25% → 16.8%", "2M+ daily users"],
+    stats: ["54% conversion rate", "Bounce 25% → 16.8%", "2M+ daily users"],
     img: "/work/bi-final.webp",
     alt: "Redesigned BI Group mobile search with quick-filter chips and a map view"
   },
@@ -42,7 +42,7 @@ const featured = [
     company: "Technodom · Fintech",
     year: "2021",
     title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
-    line: "Partnered with five banks to pre-score every shopper in one step instead of one bank at a time. Became the company’s #1 revenue source.",
+    line: "Partnered with the banks to pre-score every shopper across all of them in one step, instead of one bank at a time. Became the company’s #1 revenue source.",
     stats: ["$4M+ monthly revenue", "+35% approvals", "#1 revenue stream"],
     img: "/work/td-solution.webp",
     alt: "Technodom credit flow showing offers from every partner bank at once"
@@ -52,9 +52,9 @@ const featured = [
     slug: "bi-video-consultation",
     company: "BI Group · Growth experiment",
     year: "2026",
-    title: "Opened a new sales channel with a $100K remote sale and zero engineering",
-    line: "Mapped the showroom journey with the sales team, found the three moments where buyers need to see to trust, and shipped video consultations in under two weeks.",
-    stats: ["$100K first sale", "< 2 weeks to launch", "0 engineers"],
+    title: "Turned a $500 experiment into a $100K sale and a funded product team",
+    line: "The product team said video calls would take too long to build. I shipped them in one week with Calendly, Teams and one sales manager. The first month closed a $100K apartment sale.",
+    stats: ["$100K first sale", "1 week to launch", "0 engineers"],
     img: "/work/video-consult.webp",
     alt: "Video consultation flow from the BI Group site to a booked call"
   }

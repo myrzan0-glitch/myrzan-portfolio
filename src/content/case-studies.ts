@@ -36,7 +36,7 @@ export const caseStudies: CaseStudy[] = [
       { label: "Platform", value: "Mobile web, 2M+ daily users" }
     ],
     outcomes: [
-      { value: "54%", label: "conversion via quick filters" },
+      { value: "54%", label: "conversion rate via quick filters" },
       { value: "25% → 16.8%", label: "bounce rate" },
       { value: "+156%", label: "page depth" },
       { value: "679K", label: "filter interactions, first month" }
@@ -126,7 +126,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Outcome",
         title: "Quick filters became the main way people search",
         body: [
-          "In June 2025 the new search served 261,944 sessions from 118,216 users. 54% of them converted through the quick filters, with 5.7 interactions per user. Bounce rate fell from 25% to 16.8% and page depth rose 156%.",
+          "In June 2025 the new search served 261,944 sessions from 118,216 users. The conversion rate through quick filters reached 54%, with 5.7 interactions per user. Bounce rate fell from 25% to 16.8% and page depth rose 156%.",
           "The next iteration adds staged A/B releases and event tagging so we can isolate which micro-changes drive the biggest gains."
         ]
       }
@@ -243,66 +243,76 @@ export const caseStudies: CaseStudy[] = [
     slug: "bi-video-consultation",
     company: "BI Group · Growth experiment",
     year: "2026",
-    title: "Opened a new sales channel with a $100K remote sale and zero engineering",
+    title: "A one-week experiment that turned $500 into a $100K sale and a funded product team",
     summary:
-      "High-value buyers in other cities couldn’t visit a showroom, and phone calls weren’t closing. Engineering was fully booked. I designed and launched video consultations with off-the-shelf tools in under two weeks.",
+      "The product team said video calls on the website would take too long to build. I proved the idea in one week with off-the-shelf tools and one sales manager. The first month closed a $100K sale, and the business put a team on it.",
     meta: [
-      { label: "Role", value: "Product Designer, idea to launch" },
-      { label: "Team", value: "PM, sales team" },
-      { label: "Timeline", value: "Under 2 weeks" },
-      { label: "Platform", value: "Web, sales operations" }
+      { label: "Role", value: "Product Designer, hypothesis to results" },
+      { label: "Team", value: "PM, one sales manager" },
+      { label: "Timeline", value: "1 week to build, 1 month to measure" },
+      { label: "Stack", value: "Calendly, Microsoft Teams, bi.group" }
     ],
     outcomes: [
       { value: "$100K", label: "first remote sale" },
-      { value: "< 2 weeks", label: "design to launch" },
-      { value: "0", label: "engineers needed" },
-      { value: "1", label: "new revenue channel" }
+      { value: "$500", label: "total experiment cost" },
+      { value: "1 in 4", label: "video requests became a sale" },
+      { value: "0", label: "engineers needed" }
     ],
     hero: {
       src: "/work/video-consult.webp",
-      alt: "Video consultation flow from the BI Group site to a booked call",
+      alt: "The flow: a video call button on the BI Group site, Calendly booking, then a Microsoft Teams call",
       w: 1600,
-      h: 750
+      h: 750,
+      caption: "Site entry point → Calendly booking styled in BI Group’s brand → Microsoft Teams consultation."
     },
     sections: [
       {
-        label: "Problem",
-        title: "Buyers who couldn’t visit weren’t buying",
+        label: "Hypothesis",
+        title: "At −40°C, nobody wants to drive to a sales office",
         body: [
-          "Apartments are a high-trust purchase. Buyers in other cities wanted to see the product and the people behind it, but couldn’t travel to a showroom, and phone calls weren’t enough to close.",
-          "This wasn’t on any roadmap, and engineering was fully allocated. If we wanted to test it, it had to ship without them."
+          "Astana winters reach −40°C. Buying an apartment at BI Group usually meant visiting a sales office, and phone calls rarely closed a deal. The hypothesis: if buyers could book a video consultation from the website, more of them would buy.",
+          "The product team declined to build it, estimating the development would take a long time. So it came to us as an experiment, with one rule: prove it without engineering."
         ]
       },
       {
-        label: "Approach",
-        title: "Map the showroom, find where trust is earned",
+        label: "Constraints",
+        title: "No engineers, one sales manager, existing tools only",
         body: [
-          "I sat with the sales team and mapped the in-person buying journey step by step, looking for the moments where seeing something in person is what builds trust. There were three.",
-          "I designed the remote flow around those three moments and nothing else."
+          "The sales office lent us one manager for the experiment, who already had a corporate Microsoft Teams account. That set the shape of the solution: we didn’t need to build calling, only a way for buyers to book it.",
+          "I compared booking tools and chose Calendly because it integrates with Teams out of the box, so every booking created a call link automatically."
+        ]
+      },
+      {
+        label: "Design",
+        title: "Two entry points and a booking flow that feels native",
+        body: [
+          "I mapped the in-person buying journey with sales to find the moments where buyers need to see something to trust it, then designed the remote flow around them. Video had to be easy to find without disrupting people who just wanted a phone call."
         ],
         points: [
-          "Mapped the in-person sales journey with sales managers",
-          "Identified three trust-critical moments",
-          "Designed the flow end to end: a site entry point, Calendly booking, then a Microsoft Teams call with sales"
-        ]
-      },
-      {
-        label: "Launch",
-        title: "Shipped as an experiment, run with sales",
-        body: [
-          "We launched as a pilot with one hypothesis: buyers will commit remotely if they can see what they’d see in a showroom. I coordinated launch and iteration directly with the sales team."
+          "A “Request a video call” button in the site header",
+          "A video option added to the existing call-back form",
+          "Calendly’s booking pop-up restyled in BI Group’s colours, so it reads as part of the site",
+          "Bookings land in the sales manager’s Teams calendar with a call link"
         ]
       },
       {
         label: "Outcome",
-        title: "A $100K sale within two weeks of launch",
+        title: "$100K from a $500 experiment",
         body: [
-          "The first remote sale closed within two weeks of launch: $100K, the platform’s first high-value remote transaction. It proved a new channel with zero engineering investment, and gave the business evidence to decide whether to build it properly."
+          "We built it scrappily in one week and measured after a month. Four buyers requested a video call, and one of them bought an apartment for about 50 million KZT, roughly $100,000. The only cost was the sales manager’s monthly salary, 250,000 KZT or about $500.",
+          "That sale did what a slide deck couldn’t. The business and the product team saw the value, took video consultations into development, and assigned a team to build it properly."
+        ]
+      },
+      {
+        label: "Reflection",
+        title: "What I’d do differently",
+        body: [
+          "Four requests is a small sample, and one sale proves potential, not a rate. With more time I would have run the pilot longer, tracked requests by entry point, and compared against phone-call conversion, so the product team could size the opportunity rather than just believe in it."
         ]
       }
     ],
     takeaway:
-      "The most valuable feature wasn’t on anyone’s roadmap. It came from listening to a sales problem and shipping the smallest thing that could prove it."
+      "When a team says an idea is too expensive to try, the fastest argument is a cheap version that works."
   }
 ]
 
