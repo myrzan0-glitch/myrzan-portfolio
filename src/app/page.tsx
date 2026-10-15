@@ -76,11 +76,44 @@ const rules = [
 ]
 
 const jobs = [
-  { years: "2023 – now", role: "Product Designer", company: "BI Group", line: "Own search, the design system and AI prototyping for a platform with 2M+ monthly users." },
-  { years: "2022 – 2023", role: "Product Designer", company: "Beeline", line: "Lifted mobile checkout conversion 17.5% for a telecom with 11M+ subscribers." },
-  { years: "2022", role: "Product Designer", company: "Petrel AI", line: "Cut manual work 40% in enterprise HSE and HR workflows. NDA." },
-  { years: "2020 – 2022", role: "Product Designer", company: "Technodom", line: "Designed the credit brokerage that made $4M in one month and became the #1 revenue stream." },
-  { years: "2020", role: "UI/UX Designer", company: "Vlife", line: "Designed a booking CMS end to end, plus app motion." }
+  {
+    years: "2023 – now",
+    role: "Product Designer",
+    company: "BI Group",
+    url: "https://bi.group",
+    about: "Property-tech developer ranked #1 by sales volume across the Middle East and CIS.",
+    line: "Own search, the design system and AI prototyping for a platform with 2M+ monthly users."
+  },
+  {
+    years: "2022 – 2023",
+    role: "Product Designer",
+    company: "Beeline",
+    url: "https://beeline.kz",
+    about: "Kazakhstan’s telecom operator, with an online shop for phones bundled with plans.",
+    line: "Lifted mobile checkout conversion 17.5% for a telecom with 11M+ subscribers."
+  },
+  {
+    years: "2022",
+    role: "Product Designer",
+    company: "Petrel AI",
+    about: "Enterprise software for a global uranium production company.",
+    line: "Cut manual work 40% in enterprise HSE and HR workflows. NDA."
+  },
+  {
+    years: "2020 – 2022",
+    role: "Product Designer",
+    company: "Technodom",
+    url: "https://technodom.kz",
+    about: "Kazakhstan’s largest electronics retailer, with 70+ stores and a major e-commerce platform.",
+    line: "Designed the credit brokerage that made $4M in one month and became the #1 revenue stream."
+  },
+  {
+    years: "2020",
+    role: "UI/UX Designer",
+    company: "Vlife",
+    about: "A startup building a service-booking platform.",
+    line: "Designed a booking CMS end to end, plus app motion."
+  }
 ]
 
 const contacts = [
@@ -247,9 +280,26 @@ export default function HomePage() {
               <span className="home-label sm:pt-[3px]">{j.years}</span>
               <div>
                 <p className="m-0 text-[15px] sm:text-base">
-                  {j.role} <span className="home-muted">at</span> {j.company}
+                  {j.role} <span className="home-muted">at</span>{" "}
+                  {j.url ? (
+                    <a
+                      href={j.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-0.5 underline decoration-[var(--home-line)] underline-offset-4 transition-colors hover:decoration-[var(--home-fg)]"
+                    >
+                      {j.company}
+                      <ArrowUpRight
+                        className="home-muted h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  ) : (
+                    j.company
+                  )}
                 </p>
-                <p className="home-muted mt-1 text-[13px] leading-[1.55] sm:text-sm">{j.line}</p>
+                <p className="mt-1 text-[13px] leading-[1.5] text-[var(--home-faint)]">{j.about}</p>
+                <p className="home-muted mt-1.5 text-[13px] leading-[1.55] sm:text-sm">{j.line}</p>
               </div>
             </div>
           ))}
