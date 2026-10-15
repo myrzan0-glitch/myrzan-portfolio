@@ -376,7 +376,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "bi-match-prototype",
     company: "BI Group · AI prototyping",
     year: "2025",
-    title: "Took a new discovery concept from idea to stakeholder decision in one day",
+    title: "Built BI Match in one day, from idea to stakeholder decision, and shipped it to production",
     summary:
       "Could apartment browsing convert better as preference-based matching instead of a list? Instead of writing a spec and waiting for a sprint, I built BI Match in our production stack with Claude Code and demoed it the same day.",
     meta: [
@@ -389,7 +389,7 @@ export const caseStudies: CaseStudy[] = [
       { value: "1 day", label: "concept to stakeholder decision" },
       { value: "0", label: "engineering hours taken from the roadmap" },
       { value: "Real", label: "API, components and data" },
-      { value: "In dev", label: "now being built by the team" }
+      { value: "Live", label: "now in production" }
     ],
     hero: {
       src: "/work/bi-match-prototype/hero.webp",
@@ -420,9 +420,9 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         label: "Outcome",
-        title: "A decision in hours instead of a roadmap slot",
+        title: "From a one-day prototype to a live product",
         body: [
-          "Stakeholders used a working product the same day the idea came up, and the concept is now in development. The point isn’t the AI tooling. A hypothesis that would normally wait weeks for engineering was tested in hours without pulling anyone off their work."
+          "Stakeholders used a working product the same day the idea came up. The team took it forward, and BI Match is now live in production. The point isn’t the AI tooling. A hypothesis that would normally wait weeks for engineering was tested in hours without pulling anyone off their work."
         ]
       }
     ],
