@@ -61,11 +61,11 @@ const featured = [
 ]
 
 const more = [
-  { title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2024", metric: "−83% QA time" },
-  { title: "AI prototyping in production code", where: "BI Group · 2025", metric: "1 day to decision" },
-  { title: "Checkout and brokerage", where: "Beeline · 2022", metric: "+17.5% conversion" },
-  { title: "Enterprise HSE and HR workflows", where: "Petrel AI · 2022 · NDA", metric: "−40% manual work" },
-  { title: "Service booking CMS", where: "Vlife · 2020", metric: "0 → 1" }
+  { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2024", metric: "−83% QA time" },
+  { slug: "bi-match-prototype", title: "BI Match: AI prototype in production code", where: "BI Group · 2025", metric: "1 day to decision" },
+  { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
+  { slug: "beeline-checkout-research", title: "Checkout research with real customers", where: "Beeline · 2023", metric: "2:43 → 1:37 per order" },
+  { slug: "beeline-design-system", title: "From one chaotic file to a design system", where: "Beeline · 2022", metric: "5 flows rebuilt" }
 ]
 
 const rules = [
@@ -202,13 +202,23 @@ export default function HomePage() {
             <span className="home-label">More work</span>
           </div>
           {more.map((m) => (
-            <div key={m.title} className="flex items-baseline justify-between gap-4 border-b border-[var(--home-line)] py-4">
+            <Link
+              key={m.slug}
+              href={`/work/${m.slug}`}
+              className="group flex items-baseline justify-between gap-4 border-b border-[var(--home-line)] py-4"
+            >
               <span className="flex flex-col gap-0.5">
-                <span className="text-[15px]">{m.title}</span>
+                <span className="text-[15px] underline-offset-4 group-hover:underline">{m.title}</span>
                 <span className="home-muted text-[13px]">{m.where}</span>
               </span>
-              <span className="home-muted shrink-0 font-[family-name:var(--font-mono)] text-xs">{m.metric}</span>
-            </div>
+              <span className="home-muted inline-flex shrink-0 items-center gap-1.5 font-[family-name:var(--font-mono)] text-xs">
+                {m.metric}
+                <ArrowUpRight
+                  className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </span>
+            </Link>
           ))}
         </section>
 

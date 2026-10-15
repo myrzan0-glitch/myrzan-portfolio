@@ -313,6 +313,331 @@ export const caseStudies: CaseStudy[] = [
     ],
     takeaway:
       "When a team says an idea is too expensive to try, the fastest argument is a cheap version that works."
+  },
+  {
+    slug: "bi-design-system",
+    company: "BI Group · Design system",
+    year: "2024",
+    title: "Rebuilt the design system around QA failures and cut QA time per component by 83%",
+    summary:
+      "The product had outgrown its components. I rebuilt the 12 patterns causing the most QA tickets on semantic tokens, made them WCAG 2.2 compliant, and shipped dark mode as a first-class theme.",
+    meta: [
+      { label: "Role", value: "Product Designer, system owner" },
+      { label: "Team", value: "Designers, front-end engineers, QA" },
+      { label: "Scope", value: "Components, tokens, accessibility, dark mode" },
+      { label: "Platform", value: "Web and mobile web" }
+    ],
+    outcomes: [
+      { value: "−83%", label: "QA time per component" },
+      { value: "50+", label: "semantic tokens" },
+      { value: "WCAG 2.2", label: "contrast compliance" },
+      { value: "Dark mode", label: "shipped product-wide" }
+    ],
+    hero: {
+      src: "/work/bi-design-system/hero.webp",
+      alt: "BI Group screens in light and dark themes next to the semantic colour token table",
+      w: 1544,
+      h: 720,
+      caption: "One token set, two themes: every colour is a semantic token with a light and a dark value."
+    },
+    sections: [
+      {
+        label: "Problem",
+        title: "Every release paid for the same inconsistencies",
+        body: [
+          "Inconsistent states, undocumented patterns and ad hoc colour decisions kept failing QA. Each feature release slowed down on bugs the team had already fixed somewhere else."
+        ]
+      },
+      {
+        label: "Approach",
+        title: "Prioritise by QA pain, not by what looks messy",
+        body: [
+          "I audited the full component library and ranked components by QA ticket volume. The 12 highest-friction patterns went first. I rebuilt them with semantic tokens, documented every state, and checked contrast against WCAG 2.2.",
+          "Dark mode wasn’t a skin. I designed the token architecture so light and dark are both first-class modes, which meant the whole product could switch without new QA work."
+        ],
+        points: [
+          "Audited and ranked components by QA ticket volume",
+          "Rebuilt 12 high-friction patterns with semantic tokens and documented states",
+          "Designed a token architecture with light and dark as equal modes",
+          "Paired with front-end engineers to check every component was easier to build than the one it replaced"
+        ]
+      },
+      {
+        label: "Outcome",
+        title: "Fewer defects, faster releases",
+        body: [
+          "QA time per component dropped 83%. A whole category of recurring visual bugs disappeared, and dark mode shipped product-wide without extra QA overhead."
+        ]
+      }
+    ],
+    takeaway: "A design system earns its value when engineering ships faster with fewer defects, not when the Figma file looks organised."
+  },
+  {
+    slug: "bi-match-prototype",
+    company: "BI Group · AI prototyping",
+    year: "2025",
+    title: "Took a new discovery concept from idea to stakeholder decision in one day",
+    summary:
+      "Could apartment browsing convert better as preference-based matching instead of a list? Instead of writing a spec and waiting for a sprint, I built BI Match in our production stack with Claude Code and demoed it the same day.",
+    meta: [
+      { label: "Role", value: "Product Designer, concept to code" },
+      { label: "Team", value: "Independent initiative" },
+      { label: "Timeline", value: "1 day" },
+      { label: "Stack", value: "Production API and components, Claude Code, GitHub" }
+    ],
+    outcomes: [
+      { value: "1 day", label: "concept to stakeholder decision" },
+      { value: "0", label: "engineering hours taken from the roadmap" },
+      { value: "Real", label: "API, components and data" },
+      { value: "In dev", label: "now being built by the team" }
+    ],
+    hero: {
+      src: "/work/bi-match-prototype/hero.webp",
+      alt: "AI-assisted prototyping: Figma connected to Claude through MCP, next to the BI Match screen",
+      w: 1600,
+      h: 748
+    },
+    sections: [
+      {
+        label: "Hypothesis",
+        title: "Browsing a list isn’t how people choose a home",
+        body: [
+          "Buyers know what life they want before they know which apartment. The growth hypothesis: a swipe-based matching experience around preferences could convert better than a traditional listing."
+        ]
+      },
+      {
+        label: "Approach",
+        title: "Prototype at production fidelity, not in Figma",
+        body: [
+          "I designed the interaction model and flow, then built the prototype in our real tech stack with Claude Code, using the same API, component library and data as production. It was functional enough to hand off through GitHub, not a throwaway demo."
+        ],
+        points: [
+          "Reframed listing browsing as swipe-based matching",
+          "Designed the full interaction model and user flow",
+          "Built it in the team’s production stack",
+          "Handed off working code through GitHub"
+        ]
+      },
+      {
+        label: "Outcome",
+        title: "A decision in hours instead of a roadmap slot",
+        body: [
+          "Stakeholders used a working product the same day the idea came up, and the concept is now in development. The point isn’t the AI tooling. A hypothesis that would normally wait weeks for engineering was tested in hours without pulling anyone off their work."
+        ]
+      }
+    ],
+    takeaway: "AI-assisted prototyping matters most when it lets you test ideas at production fidelity without blocking anyone else."
+  },
+  {
+    slug: "bi-scratch-card",
+    company: "BI Group · Growth campaign",
+    year: "2026",
+    title: "Designed and demoed an AI-personalised re-engagement campaign in a single day",
+    summary:
+      "We needed to bring dormant users back with something that felt personal, not generic. I designed a scratch card where each reward is generated from the user’s preferences and browsing, prototyped it, and demoed it to business owners that afternoon.",
+    meta: [
+      { label: "Role", value: "Product Designer, concept and prototype" },
+      { label: "Team", value: "Independent initiative" },
+      { label: "Timeline", value: "Same day" },
+      { label: "Outcome", value: "Greenlit for development" }
+    ],
+    outcomes: [
+      { value: "Same day", label: "concept to stakeholder approval" },
+      { value: "0", label: "engineering time to validate" },
+      { value: "Greenlit", label: "now in development" },
+      { value: "AI", label: "personalised reward per user" }
+    ],
+    hero: {
+      src: "/work/bi-scratch-card/hero.webp",
+      alt: "The scratch card concept next to the AI-assisted prototype on the BI Group site",
+      w: 1600,
+      h: 746,
+      caption: "From a quick concept to a working prototype on the real site, in one day."
+    },
+    sections: [
+      {
+        label: "Problem",
+        title: "Dormant users ignore generic campaigns",
+        body: [
+          "Re-engagement emails and banners looked the same for everyone. The team needed a mechanic that felt personal enough to bring people back."
+        ]
+      },
+      {
+        label: "Approach",
+        title: "A scratch card that knows what you like",
+        body: [
+          "I designed a scratch card mechanic where each card is generated by AI from the user’s preferences and browsing history, then built an interactive prototype and showed it to business owners the same afternoon."
+        ],
+        points: [
+          "Designed the scratch card mechanic with AI-personalised rewards",
+          "Built an interactive prototype for a same-day demo",
+          "Validated the concept without using engineering time"
+        ]
+      },
+      {
+        label: "Outcome",
+        title: "From “should we explore this?” to “when do we ship it?”",
+        body: [
+          "Because stakeholders could try a working concept, they judged the idea on its merits instead of debating whether it deserved engineering time. It was greenlit and is now in development as a growth campaign."
+        ]
+      }
+    ],
+    takeaway: "When you can demo a working concept the same day, the conversation moves from whether to explore it to when to ship it."
+  },
+  {
+    slug: "beeline-checkout-research",
+    company: "Beeline · Checkout research",
+    year: "2023",
+    title: "Found why buyers dropped out of checkout, and what to change, in two hall tests",
+    summary:
+      "After Beeline launched its credit broker, buyers started disappearing at the delivery step, after Beeline had already paid to score them. Two hall tests with real customers showed what order the steps should go in, and what the Next button was costing us.",
+    meta: [
+      { label: "Role", value: "Product Designer, research lead" },
+      { label: "Team", value: "Customer experience (CEM) team" },
+      { label: "Method", value: "2 hall tests, 23 and 12 respondents" },
+      { label: "Platform", value: "Shop Beeline, mobile checkout" }
+    ],
+    outcomes: [
+      { value: "86%", label: "preferred choosing the offer first" },
+      { value: "17 of 23", label: "didn’t understand how to finish a step" },
+      { value: "2:43 → 1:37", label: "average time with step-specific buttons" },
+      { value: "5", label: "competitor checkouts benchmarked" }
+    ],
+    hero: {
+      src: "/work/beeline-checkout-research/variant-labels.webp",
+      alt: "The winning checkout variant, where every step has its own button text, with test timings",
+      w: 1514,
+      h: 853,
+      caption: "The winning variant: every step says what it does. Average completion 1 min 37 s."
+    },
+    sections: [
+      {
+        label: "Problem",
+        title: "We were paying to score people who then left",
+        body: [
+          "At the end of 2022 Shop Beeline launched a credit broker, and it was making money. But the funnel showed buyers dropping out at step 3, delivery, after we had already paid for their credit scoring.",
+          "Hypothesis: if we swap steps 3 and 4, so buyers choose their credit offer before delivery, sales will go up."
+        ]
+      },
+      {
+        label: "Research",
+        title: "A hall test with real Beeline customers",
+        body: [
+          "With the customer experience team, I recruited 23 real Beeline customers who had bought electronics online, filtered by gender, age and income. Each placed an order in two checkout prototypes: the current one and one with steps 3 and 4 swapped.",
+          "Before designing, I benchmarked checkouts at Technodom, Sulpak, Ozon, Wildberries and Kaspi."
+        ],
+        image: {
+          src: "/work/beeline-checkout-research/competitors.webp",
+          alt: "Competitive analysis of checkout flows at Technodom, Sulpak, Ozon, Wildberries and Kaspi",
+          w: 1600,
+          h: 605
+        }
+      },
+      {
+        label: "Finding 1",
+        title: "Buyers want to pick the offer first",
+        body: [
+          "20 of 23 people, 86%, preferred choosing the payment offer before delivery. Only one preferred delivery first. As one respondent put it: “Suddenly I won’t find anything suitable, and then I won’t need delivery.”",
+          "Recommendation: put offer selection before the delivery method."
+        ]
+      },
+      {
+        label: "Finding 2",
+        title: "The Next button was the bigger problem",
+        body: [
+          "17 of 23 respondents didn’t understand how to complete a step. The generic “Next” button didn’t tell them anything. So I ran a second, timed hall test with 12 people across three age groups, comparing the current Next button with a version where every step has its own button text."
+        ],
+        points: [
+          "Current “Next” button: average 2 min 43 s, worst 5 min 19 s. “I don’t know what to press.”",
+          "Step-specific buttons: average 1 min 37 s, worst 2 min 3 s. “Everything is obvious.”"
+        ],
+        image: {
+          src: "/work/beeline-checkout-research/variant-next.webp",
+          alt: "The original checkout variant with a generic Next button and its test timings",
+          w: 1518,
+          h: 853,
+          caption: "The production variant with a generic Next button. Average completion 2 min 43 s."
+        }
+      },
+      {
+        label: "Recommendation",
+        title: "Offer first, and buttons that say what they do",
+        body: [
+          "Two changes went to the product team: move offer selection ahead of delivery, and replace the generic Next button with step-specific labels, keeping a floating button only once an offer is chosen. A small-looking problem turned out to be the one costing us the most."
+        ]
+      }
+    ],
+    takeaway: "Research earns its keep when it finds the problem nobody was testing for. We came to reorder steps and left fixing a button."
+  },
+  {
+    slug: "beeline-design-system",
+    company: "Beeline · Design operations",
+    year: "2022",
+    title: "Turned one chaotic Figma file into a system designers and developers could ship from",
+    summary:
+      "Shop Beeline sells phones bundled with mobile plans. When I joined, every page lived in one Figma file with no structure and no components. I rebuilt the e-commerce flow on a shared UI kit so the team could find, reuse and hand off work.",
+    meta: [
+      { label: "Role", value: "Product Designer" },
+      { label: "Team", value: "Designers, developers" },
+      { label: "Scope", value: "Main, listing, product, checkout and content pages" },
+      { label: "Foundation", value: "Initium design system" }
+    ],
+    outcomes: [
+      { value: "5", label: "flows rebuilt from the ground up" },
+      { value: "1", label: "shared UI kit" },
+      { value: "Faster", label: "designer onboarding" },
+      { value: "Smoother", label: "developer handoff" }
+    ],
+    hero: {
+      src: "/work/beeline-design-system/payment.webp",
+      alt: "The rebuilt payment method component in the Shop Beeline checkout",
+      w: 1200,
+      h: 978
+    },
+    sections: [
+      {
+        label: "Problem",
+        title: "Design porridge",
+        body: [
+          "Main page, listings, checkout: everything was in a single Figma file with no hierarchy, no reusable elements and no layout logic. Designers couldn’t find files, and developers couldn’t get specs."
+        ],
+        image: {
+          src: "/work/beeline-design-system/before-file.webp",
+          alt: "The original Figma file with every page mixed together",
+          w: 1264,
+          h: 773,
+          caption: "Before: every page and version in one canvas."
+        }
+      },
+      {
+        label: "Approach",
+        title: "Structure first, then components",
+        body: [
+          "I studied best practice for Figma file organisation and design-system hierarchy, then split the work into clear files for Main, Product listing, Product detail, Checkout and Content pages, each with a master scenario.",
+          "I rebuilt every flow from the ground up on a new UI kit based on the Initium design system, so styles, spacing and components were shared everywhere."
+        ],
+        image: {
+          src: "/work/beeline-design-system/pages.webp",
+          alt: "The new file structure with separate files per flow and pages per checkout step",
+          w: 1504,
+          h: 947
+        }
+      },
+      {
+        label: "Outcome",
+        title: "A file you can hand to anyone",
+        body: [
+          "After several iterations and team reviews, the final layouts went to development. The team got a clean, modular file structure, one design language, faster onboarding for new designers, and easier updates because components were reused instead of redrawn."
+        ],
+        image: {
+          src: "/work/beeline-design-system/ui-kit.webp",
+          alt: "The shared component library and product card components",
+          w: 1600,
+          h: 1538
+        }
+      }
+    ],
+    takeaway: "Rebuilding layouts isn’t moving rectangles. It changes how a team thinks: structure, systems and shared understanding."
   }
 ]
 
