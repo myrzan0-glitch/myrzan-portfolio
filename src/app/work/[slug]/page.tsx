@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
 import { ThemeSwitch } from "@/components/home/theme-switch"
+import { VideoLoop } from "@/components/video-loop"
 import { FadeIn } from "@/components/motion"
 import { caseStudies, getCaseStudy, type CaseImage } from "@/content/case-studies"
 
@@ -32,15 +33,19 @@ function Figure({ image, priority }: { image: CaseImage; priority?: boolean }) {
   return (
     <figure className="m-0">
       <div className="overflow-hidden rounded-xl border border-[var(--home-line)] bg-[var(--home-soft)]">
-        <Image
-          src={image.src}
-          alt={image.alt}
-          width={image.w}
-          height={image.h}
-          sizes="(max-width: 960px) 100vw, 960px"
-          className="h-auto w-full"
-          priority={priority}
-        />
+        {image.video ? (
+          <VideoLoop src={image.video} poster={image.src} label={image.alt} w={image.w} h={image.h} />
+        ) : (
+          <Image
+            src={image.src}
+            alt={image.alt}
+            width={image.w}
+            height={image.h}
+            sizes="(max-width: 960px) 100vw, 960px"
+            className="h-auto w-full"
+            priority={priority}
+          />
+        )}
       </div>
       {image.caption && <figcaption className="home-muted mt-3 text-[13px] leading-[1.5]">{image.caption}</figcaption>}
     </figure>

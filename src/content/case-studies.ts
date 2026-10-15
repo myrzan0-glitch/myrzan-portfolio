@@ -1,4 +1,4 @@
-export type CaseImage = { src: string; alt: string; w: number; h: number; caption?: string }
+export type CaseImage = { src: string; alt: string; w: number; h: number; caption?: string; video?: string }
 
 export type CaseSection = {
   label: string
@@ -335,6 +335,7 @@ export const caseStudies: CaseStudy[] = [
     ],
     hero: {
       src: "/work/bi-design-system/hero.webp",
+      video: "/work/bi-design-system/demo.mp4",
       alt: "BI Group screens in light and dark themes next to the semantic colour token table",
       w: 1544,
       h: 720,
@@ -393,6 +394,7 @@ export const caseStudies: CaseStudy[] = [
     ],
     hero: {
       src: "/work/bi-match-prototype/hero.webp",
+      video: "/work/bi-match-prototype/demo.mp4",
       alt: "AI-assisted prototyping: Figma connected to Claude through MCP, next to the BI Match screen",
       w: 1600,
       h: 748
@@ -449,6 +451,7 @@ export const caseStudies: CaseStudy[] = [
     ],
     hero: {
       src: "/work/bi-scratch-card/hero.webp",
+      video: "/work/bi-scratch-card/demo.mp4",
       alt: "The scratch card concept next to the AI-assisted prototype on the BI Group site",
       w: 1600,
       h: 746,
