@@ -28,9 +28,9 @@ export const caseStudies: CaseStudy[] = [
     year: "2025",
     title: "Rebuilt mobile search around the three filters buyers actually use",
     summary:
-      "75% of BI Group’s traffic is mobile, yet buyers were leaving search before they saw a single apartment. In six weeks I took the filter panel from research to production and made quick filters the main way people search.",
+      "75% of BI Group’s traffic is mobile, yet buyers were leaving search before they saw a single apartment. In six weeks I took the filter panel from field research to production, and bounce rate fell by a third.",
     meta: [
-      { label: "Role", value: "Product Designer, research to handoff" },
+      { label: "My role", value: "Owned the design: audit, field research, interaction design, usability test, handoff" },
       { label: "Team", value: "PM, engineers, QA" },
       { label: "Timeline", value: "6 weeks" },
       { label: "Platform", value: "Mobile web, 2M+ monthly users" }
@@ -53,7 +53,7 @@ export const caseStudies: CaseStudy[] = [
         title: "Search hid the controls people needed most",
         body: [
           "BI Group is one of the largest residential developers in the region, and its site is where most purchases start. On mobile, the filter panel sat under heavy whitespace, the Filters and Map buttons were easy to miss, and every option had the same weight.",
-          "The business goal was simple: more mobile buyers reaching a listing they care about. My job was to find out why they weren’t."
+          "The business goal was simple: more mobile buyers reaching a listing they care about. I owned the design end to end, working with the PM on the goal and with engineers and QA through to release."
         ],
         image: {
           src: "/work/bi-mobile-search/bi-audit.webp",
@@ -124,7 +124,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         label: "Outcome",
-        title: "Quick filters became the main way people search",
+        title: "Less bouncing, deeper browsing",
         body: [
           "In June 2025 the new search served 261,944 sessions from 118,216 users. The conversion rate through quick filters reached 54%, with 5.7 interactions per user. Bounce rate fell from 25% to 16.8% and page depth rose 156%.",
           "The next iteration adds staged A/B releases and event tagging so we can isolate which micro-changes drive the biggest gains."
@@ -141,9 +141,9 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Shoppers applying for credit were rejected bank by bank, re-entering their data every time. I reframed the problem with our banking partners and redesigned the flow so every bank pre-scores the shopper at once.",
     meta: [
-      { label: "Role", value: "Product Designer, end to end" },
+      { label: "My role", value: "Owned the design: discovery, flow redesign, verification, edge cases" },
       { label: "Team", value: "Engineers, banking partners, business" },
-      { label: "Timeline", value: "2021" },
+      { label: "Year", value: "2021" },
       { label: "Platform", value: "E-commerce, web and mobile" }
     ],
     outcomes: [
@@ -247,7 +247,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "The product team said video calls on the website would take too long to build. I proved the idea in one week with off-the-shelf tools and one sales manager. The first month closed a $100K sale, and the business put a team on it.",
     meta: [
-      { label: "Role", value: "Product Designer, hypothesis to results" },
+      { label: "My role", value: "Designer: journey mapping, tool choice, flow and UI, results" },
       { label: "Team", value: "PM, one sales manager" },
       { label: "Timeline", value: "1 week to build, 1 month to measure" },
       { label: "Stack", value: "Calendly, Microsoft Teams, bi.group" }
@@ -271,7 +271,7 @@ export const caseStudies: CaseStudy[] = [
         title: "At −40°C, nobody wants to drive to a sales office",
         body: [
           "Astana winters reach −40°C. Buying an apartment at BI Group usually meant visiting a sales office, and phone calls rarely closed a deal. The hypothesis: if buyers could book a video consultation from the website, more of them would buy.",
-          "The product team declined to build it, estimating the development would take a long time. So it came to us as an experiment, with one rule: prove it without engineering."
+          "The product team declined to build it, estimating the development would take a long time. So it came to the PM and me as an experiment, with one rule: prove it without engineering."
         ]
       },
       {
@@ -299,7 +299,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Outcome",
         title: "$100K from a $500 experiment",
         body: [
-          "We built it scrappily in one week and measured after a month. Four buyers requested a video call, and one of them bought an apartment for about 50 million KZT, roughly $100,000. The only cost was the sales manager’s monthly salary, 250,000 KZT or about $500.",
+          "The PM and I launched it in one week and measured after a month. Four buyers requested a video call, and one of them bought an apartment for about 50 million KZT, roughly $100,000. The only cost was the sales manager’s monthly salary, 250,000 KZT or about $500.",
           "That sale did what a slide deck couldn’t. The business and the product team saw the value, took video consultations into development, and assigned a team to build it properly."
         ]
       },
@@ -322,7 +322,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "The product had outgrown its components. I rebuilt the 12 patterns causing the most QA tickets on semantic tokens, made them WCAG 2.2 compliant, and shipped dark mode as a first-class theme.",
     meta: [
-      { label: "Role", value: "Product Designer, system owner" },
+      { label: "My role", value: "Led the rebuild: audit, tokens, components, dark mode" },
       { label: "Team", value: "Designers, front-end engineers, QA" },
       { label: "Scope", value: "Components, tokens, accessibility, dark mode" },
       { label: "Platform", value: "Web and mobile web" }
@@ -346,7 +346,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Problem",
         title: "Every release paid for the same inconsistencies",
         body: [
-          "Inconsistent states, undocumented patterns and ad hoc colour decisions kept failing QA. Each feature release slowed down on bugs the team had already fixed somewhere else."
+          "Inconsistent states, undocumented patterns and ad hoc colour decisions kept failing QA. Each feature release slowed down on bugs the team had already fixed somewhere else, and users saw the same component behave differently from page to page."
         ]
       },
       {
@@ -381,15 +381,15 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Could apartment browsing convert better as preference-based matching instead of a list? Instead of writing a spec and waiting for a sprint, I built BI Match in our production stack with Claude Code and demoed it the same day.",
     meta: [
-      { label: "Role", value: "Product Designer, concept to code" },
-      { label: "Team", value: "Independent initiative" },
-      { label: "Timeline", value: "1 day" },
+      { label: "My role", value: "Designer and builder: concept, interaction model, working prototype" },
+      { label: "Team", value: "My initiative, then the product team" },
+      { label: "Timeline", value: "1 day to decision" },
       { label: "Stack", value: "Production API and components, Claude Code, GitHub" }
     ],
     outcomes: [
       { value: "1 day", label: "concept to stakeholder decision" },
       { value: "0", label: "engineering hours taken from the roadmap" },
-      { value: "Real", label: "API, components and data" },
+      { value: "3 steps", label: "from preferences to a personal offer" },
       { value: "Live", label: "now in production" }
     ],
     hero: {
@@ -404,7 +404,19 @@ export const caseStudies: CaseStudy[] = [
         label: "Hypothesis",
         title: "Browsing a list isn’t how people choose a home",
         body: [
-          "Buyers know what life they want before they know which apartment. The growth hypothesis: a swipe-based matching experience around preferences could convert better than a traditional listing."
+          "Buyers know what life they want before they know which apartment, yet the site asked them to scroll a list. The growth hypothesis: matching buyers to residential complexes by lifestyle, through swiping, could convert better than a traditional listing."
+        ]
+      },
+      {
+        label: "Solution",
+        title: "BI Match: find a home that fits your lifestyle",
+        body: [
+          "BI Match turns search into three steps. Buyers set the parameters of their dream apartment, swipe through the floor plans they like, then leave their contacts to get a personal offer from sales."
+        ],
+        points: [
+          "Step 1: choose the parameters of your dream apartment",
+          "Step 2: swipe the floor plans you like",
+          "Step 3: leave your contacts and get a unique offer"
         ]
       },
       {
@@ -436,10 +448,10 @@ export const caseStudies: CaseStudy[] = [
     year: "2026",
     title: "Designed and demoed an AI-personalised re-engagement campaign in a single day",
     summary:
-      "We needed to bring dormant users back with something that felt personal, not generic. I designed a scratch card where each reward is generated from the user’s preferences and browsing, prototyped it, and demoed it to business owners that afternoon.",
+      "BI Group needed to bring dormant users back with something that felt personal, not generic. I designed a scratch card where each reward is generated from the user’s preferences and browsing, prototyped it, and demoed it to business owners that afternoon.",
     meta: [
-      { label: "Role", value: "Product Designer, concept and prototype" },
-      { label: "Team", value: "Independent initiative" },
+      { label: "My role", value: "Designer and builder: mechanic, AI personalisation, prototype, demo" },
+      { label: "Team", value: "My initiative, presented to business owners" },
       { label: "Timeline", value: "Same day" },
       { label: "Outcome", value: "Greenlit for development" }
     ],
@@ -447,7 +459,7 @@ export const caseStudies: CaseStudy[] = [
       { value: "Same day", label: "concept to stakeholder approval" },
       { value: "0", label: "engineering time to validate" },
       { value: "Greenlit", label: "now in development" },
-      { value: "AI", label: "personalised reward per user" }
+      { value: "1 per user", label: "AI-generated card from their preferences" }
     ],
     hero: {
       src: "/work/bi-scratch-card/hero.webp",
@@ -462,7 +474,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Problem",
         title: "Dormant users ignore generic campaigns",
         body: [
-          "Re-engagement emails and banners looked the same for everyone. The team needed a mechanic that felt personal enough to bring people back."
+          "Dormant users weren’t coming back, and a generic campaign wasn’t going to change that. The team needed a campaign mechanic that felt personal enough to bring people back."
         ]
       },
       {
@@ -472,6 +484,7 @@ export const caseStudies: CaseStudy[] = [
           "I designed a scratch card mechanic where each card is generated by AI from the user’s preferences and browsing history, then built an interactive prototype and showed it to business owners the same afternoon."
         ],
         points: [
+          "The user rubs off a protective layer, with a finger or mouse, to reveal a gift",
           "Designed the scratch card mechanic with AI-personalised rewards",
           "Built an interactive prototype for a same-day demo",
           "Validated the concept without using engineering time"
@@ -495,8 +508,8 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "After Beeline launched its credit broker, buyers started disappearing at the delivery step, after Beeline had already paid to score them. Two hall tests with real customers showed what order the steps should go in, and what the Next button was costing us.",
     meta: [
-      { label: "Role", value: "Product Designer, research lead" },
-      { label: "Team", value: "Customer experience (CEM) team" },
+      { label: "My role", value: "Ran the research: hypothesis, prototypes, hall tests, analysis" },
+      { label: "Team", value: "Customer experience (CEM) team, product team" },
       { label: "Method", value: "2 hall tests, 23 and 12 respondents" },
       { label: "Platform", value: "Shop Beeline, mobile checkout" }
     ],
@@ -581,7 +594,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Shop Beeline sells phones bundled with mobile plans. When I joined, every page lived in one Figma file with no structure and no components. I rebuilt the e-commerce flow on a shared UI kit so the team could find, reuse and hand off work.",
     meta: [
-      { label: "Role", value: "Product Designer" },
+      { label: "My role", value: "Designer: file architecture, UI kit, flow rebuild" },
       { label: "Team", value: "Designers, developers" },
       { label: "Scope", value: "Main, listing, product, checkout and content pages" },
       { label: "Foundation", value: "Initium design system" }
@@ -589,8 +602,8 @@ export const caseStudies: CaseStudy[] = [
     outcomes: [
       { value: "5", label: "flows rebuilt from the ground up" },
       { value: "1", label: "shared UI kit" },
-      { value: "Faster", label: "designer onboarding" },
-      { value: "Smoother", label: "developer handoff" }
+      { value: "1", label: "master scenario per flow for handoff" },
+      { value: "Initium", label: "design system as the foundation" }
     ],
     hero: {
       src: "/work/beeline-design-system/payment.webp",

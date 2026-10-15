@@ -85,7 +85,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             <h1 className="mt-4 text-[28px] font-medium leading-[1.15] sm:text-[36px]">{study.title}</h1>
             <p className="home-muted mt-4 text-[16px] leading-[1.6] sm:text-[18px]">{study.summary}</p>
 
-            <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-[var(--home-line)] pt-6 sm:grid-cols-4">
+            <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-[var(--home-line)] pt-6 sm:grid-cols-[1.7fr_1fr_1fr_1fr]">
               {study.meta.map((m) => (
                 <div key={m.label}>
                   <dt className="home-label">{m.label}</dt>
