@@ -40,7 +40,7 @@ const featured = [
     n: "02",
     slug: "technodom-credit",
     company: "Technodom · Fintech",
-    year: "2021",
+    year: "2022",
     title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
     line: "Partnered with the banks to pre-score every shopper across all of them in one step, instead of one bank at a time. Became the company’s #1 revenue source.",
     stats: ["$4M+ monthly revenue", "+35% approvals", "#1 revenue stream"],
@@ -61,8 +61,8 @@ const featured = [
 ]
 
 const more = [
-  { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2024", metric: "−83% QA time" },
-  { slug: "bi-match-prototype", title: "BI Match: AI prototype in production code", where: "BI Group · 2025", metric: "1 day → live in prod" },
+  { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2025", metric: "−83% QA time" },
+  { slug: "bi-match-prototype", title: "BI Match: AI prototype in production code", where: "BI Group · 2026", metric: "1 day → live in prod" },
   { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
   { slug: "beeline-checkout-research", title: "Checkout research with real customers", where: "Beeline · 2023", metric: "2:43 → 1:37 per order" },
   { slug: "beeline-design-system", title: "From one chaotic file to a design system", where: "Beeline · 2022", metric: "5 flows rebuilt" }

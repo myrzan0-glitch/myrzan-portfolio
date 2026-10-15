@@ -136,14 +136,14 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "technodom-credit",
     company: "Technodom · Fintech",
-    year: "2021",
+    year: "2022",
     title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
     summary:
       "Shoppers applying for credit were rejected bank by bank, re-entering their data every time. I reframed the problem with our banking partners and redesigned the flow so every bank pre-scores the shopper at once.",
     meta: [
       { label: "My role", value: "Owned the design: discovery, flow redesign, verification, edge cases" },
       { label: "Team", value: "Engineers, banking partners, business" },
-      { label: "Year", value: "2021" },
+      { label: "Year", value: "2022" },
       { label: "Platform", value: "E-commerce, web and mobile" }
     ],
     outcomes: [
@@ -317,7 +317,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "bi-design-system",
     company: "BI Group · Design system",
-    year: "2024",
+    year: "2025",
     title: "Rebuilt the design system around QA failures and cut QA time per component by 83%",
     summary:
       "The product had outgrown its components. I rebuilt the 12 patterns causing the most QA tickets on semantic tokens, made them WCAG 2.2 compliant, and shipped dark mode as a first-class theme.",
@@ -376,7 +376,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "bi-match-prototype",
     company: "BI Group · AI prototyping",
-    year: "2025",
+    year: "2026",
     title: "Built BI Match in one day, from idea to stakeholder decision, and shipped it to production",
     summary:
       "Could apartment browsing convert better as preference-based matching instead of a list? Instead of writing a spec and waiting for a sprint, I built BI Match in our production stack with Claude Code and demoed it the same day.",
