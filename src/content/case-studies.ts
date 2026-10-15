@@ -504,11 +504,11 @@ export const caseStudies: CaseStudy[] = [
       { value: "5", label: "competitor checkouts benchmarked" }
     ],
     hero: {
-      src: "/work/beeline-checkout-research/variant-labels.webp",
-      alt: "The winning checkout variant, where every step has its own button text, with test timings",
-      w: 1514,
-      h: 853,
-      caption: "The winning variant: every step says what it does. Average completion 1 min 37 s."
+      src: "/work/beeline-checkout-research/competitors.webp",
+      alt: "Competitive analysis of checkout flows at Technodom, Sulpak, Ozon, Wildberries and Kaspi",
+      w: 1600,
+      h: 605,
+      caption: "Benchmarking checkouts at Technodom, Sulpak, Ozon, Wildberries and Kaspi before testing."
     },
     sections: [
       {
@@ -525,13 +525,7 @@ export const caseStudies: CaseStudy[] = [
         body: [
           "With the customer experience team, I recruited 23 real Beeline customers who had bought electronics online, filtered by gender, age and income. Each placed an order in two checkout prototypes: the current one and one with steps 3 and 4 swapped.",
           "Before designing, I benchmarked checkouts at Technodom, Sulpak, Ozon, Wildberries and Kaspi."
-        ],
-        image: {
-          src: "/work/beeline-checkout-research/competitors.webp",
-          alt: "Competitive analysis of checkout flows at Technodom, Sulpak, Ozon, Wildberries and Kaspi",
-          w: 1600,
-          h: 605
-        }
+        ]
       },
       {
         label: "Finding 1",
@@ -564,7 +558,14 @@ export const caseStudies: CaseStudy[] = [
         title: "Offer first, and buttons that say what they do",
         body: [
           "Two changes went to the product team: move offer selection ahead of delivery, and replace the generic Next button with step-specific labels, keeping a floating button only once an offer is chosen. A small-looking problem turned out to be the one costing us the most."
-        ]
+        ],
+        image: {
+          src: "/work/beeline-checkout-research/variant-labels.webp",
+          alt: "The winning checkout variant, where every step has its own button text, with test timings",
+          w: 1514,
+          h: 853,
+          caption: "The winning variant: every step says what it does. Average completion 1 min 37 s."
+        }
       }
     ],
     takeaway: "Research earns its keep when it finds the problem nobody was testing for. We came to reorder steps and left fixing a button."
