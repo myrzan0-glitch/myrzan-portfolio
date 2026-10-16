@@ -387,9 +387,9 @@ export const caseStudies: CaseStudy[] = [
     slug: "bi-design-system",
     company: "BI Group · Design system",
     year: "2025",
-    title: "Rebuilt the design system around QA failures and cut QA time per component by 83%",
+    title: "Rebuilt the design system around QA failures and cut design-related QA cycles by 83%",
     summary:
-      "The product had outgrown its components. I rebuilt the 12 patterns causing the most QA tickets on semantic tokens, made them WCAG 2.2 compliant, and shipped dark mode as a first-class theme.",
+      "The product had outgrown its components. I rebuilt a studio-made UI kit into a design system of 30+ components on semantic tokens, starting with the 12 patterns causing the most QA tickets, made it WCAG 2.2 compliant, and shipped dark mode as a first-class theme.",
     meta: [
       { label: "My role", value: "Led the rebuild: audit, tokens, components, dark mode" },
       { label: "Team", value: "Designers, front-end engineers, QA" },
@@ -397,8 +397,8 @@ export const caseStudies: CaseStudy[] = [
       { label: "Platform", value: "Web and mobile web" }
     ],
     outcomes: [
-      { value: "−83%", label: "QA time per component" },
-      { value: "50+", label: "semantic tokens" },
+      { value: "−83%", label: "design-related QA cycles" },
+      { value: "30+", label: "components on 50+ semantic tokens" },
       { value: "WCAG 2.2", label: "contrast compliance" },
       { value: "Dark mode", label: "shipped product-wide" }
     ],
@@ -422,7 +422,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Approach",
         title: "Prioritise by QA pain, not by what looks messy",
         body: [
-          "I audited the full component library and ranked components by QA ticket volume. The 12 highest-friction patterns went first. I rebuilt them with semantic tokens, documented every state, and checked contrast against WCAG 2.2.",
+          "I audited the full component library and ranked components by QA ticket volume. The 12 highest-friction patterns went first, then the rest of the 30+ components. I rebuilt them with semantic tokens, documented every state, and checked contrast against WCAG 2.2.",
           "Dark mode wasn’t a skin. I designed the token architecture so light and dark are both first-class modes, which meant the whole product could switch without new QA work."
         ],
         points: [
@@ -436,7 +436,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Outcome",
         title: "Fewer defects, faster releases",
         body: [
-          "QA time per component dropped 83%. A whole category of recurring visual bugs disappeared, and dark mode shipped product-wide without extra QA overhead."
+          "Design-related engineering QA cycles dropped 83%. A whole category of recurring visual bugs disappeared, and dark mode shipped product-wide without extra QA overhead."
         ]
       }
     ],

@@ -43,7 +43,7 @@ const featured = [
     year: "2022",
     title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
     line: "Partnered with the banks to pre-score every shopper across all of them in one step, instead of one bank at a time. Became the company’s #1 revenue source.",
-    stats: ["$4M+ monthly revenue", "+35% approvals", "#1 revenue stream"],
+    stats: ["$4M+ monthly revenue", "+35% credit conversions", "#1 revenue stream"],
     img: "/work/td-solution.webp",
     alt: "Technodom credit flow showing offers from every partner bank at once"
   },
@@ -73,7 +73,7 @@ const featured = [
 ]
 
 const more = [
-  { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2025", metric: "−83% QA time" },
+  { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2025", metric: "−83% QA cycles" },
   { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
   { slug: "beeline-checkout-research", title: "Checkout research with real customers", where: "Beeline · 2023", metric: "2:43 → 1:37 per order" },
   { slug: "beeline-design-system", title: "From one chaotic file to a design system", where: "Beeline · 2022", metric: "5 flows rebuilt" }
@@ -94,7 +94,7 @@ const jobs = [
     url: "https://nbu.uz",
     via: "via Expera",
     about: "Uzbekistan’s national bank, serving 3.3M individual clients.",
-    line: "Designing the bank’s unified front-office system for opening accounts, deposits and loans. I own the legal-entity branch."
+    line: "Designing the bank’s unified front-office system for opening accounts, deposits and loans. I own the legal-entity branch, and help the design system team with AI-assisted prototyping through a Storybook MCP I built."
   },
   {
     years: "2023 – 2026",
