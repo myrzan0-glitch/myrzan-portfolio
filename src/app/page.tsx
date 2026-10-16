@@ -77,12 +77,21 @@ const rules = [
 
 const jobs = [
   {
-    years: "2023 – now",
+    years: "2026 – now",
+    role: "Product Designer",
+    company: "National Bank of Uzbekistan",
+    url: "https://nbu.uz",
+    via: "via Expera",
+    about: "Uzbekistan’s national bank, serving 3.3M+ individual clients.",
+    line: "Designing the bank’s unified front-office system for opening accounts, deposits and loans. I own the legal-entity branch."
+  },
+  {
+    years: "2023 – 2026",
     role: "Product Designer",
     company: "BI Group",
     url: "https://bi.group",
     about: "Property-tech developer ranked #1 by sales volume across the Middle East and CIS.",
-    line: "Own search, the design system and AI prototyping for a platform with 2M+ monthly users."
+    line: "Owned search, the design system and AI prototyping for a platform with 2M+ monthly users."
   },
   {
     years: "2022 – 2023",
@@ -150,6 +159,18 @@ export default function HomePage() {
                 For six years I&apos;ve led mobile, fintech and e-commerce products used by millions of people every day. I
                 start with context: where the business is going and why customers choose us. Then I research, design and
                 prototype in production until the metric moves.
+              </p>
+              <p className="home-muted mt-4 text-[15px] leading-[1.55]">
+                Now designing the front-office system of the{" "}
+                <a
+                  href="https://nbu.uz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--home-fg)] underline decoration-[var(--home-line)] underline-offset-4 transition-colors hover:decoration-[var(--home-fg)]"
+                >
+                  National Bank of Uzbekistan
+                </a>
+                .
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4">
                 <CvButton />
@@ -297,6 +318,7 @@ export default function HomePage() {
                   ) : (
                     j.company
                   )}
+                  {"via" in j && j.via && <span className="home-muted"> · {j.via}</span>}
                 </p>
                 <p className="mt-1 text-[13px] leading-[1.5] text-[var(--home-faint)]">{j.about}</p>
                 <p className="home-muted mt-1.5 text-[13px] leading-[1.55] sm:text-sm">{j.line}</p>
