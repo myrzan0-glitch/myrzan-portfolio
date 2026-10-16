@@ -315,65 +315,6 @@ export const caseStudies: CaseStudy[] = [
       "When a team says an idea is too expensive to try, the fastest argument is a cheap version that works."
   },
   {
-    slug: "bi-design-system",
-    company: "BI Group · Design system",
-    year: "2025",
-    title: "Rebuilt the design system around QA failures and cut QA time per component by 83%",
-    summary:
-      "The product had outgrown its components. I rebuilt the 12 patterns causing the most QA tickets on semantic tokens, made them WCAG 2.2 compliant, and shipped dark mode as a first-class theme.",
-    meta: [
-      { label: "My role", value: "Led the rebuild: audit, tokens, components, dark mode" },
-      { label: "Team", value: "Designers, front-end engineers, QA" },
-      { label: "Scope", value: "Components, tokens, accessibility, dark mode" },
-      { label: "Platform", value: "Web and mobile web" }
-    ],
-    outcomes: [
-      { value: "−83%", label: "QA time per component" },
-      { value: "50+", label: "semantic tokens" },
-      { value: "WCAG 2.2", label: "contrast compliance" },
-      { value: "Dark mode", label: "shipped product-wide" }
-    ],
-    hero: {
-      src: "/work/bi-design-system/hero.webp",
-      video: "/work/bi-design-system/demo.mp4",
-      alt: "BI Group screens in light and dark themes next to the semantic colour token table",
-      w: 1544,
-      h: 720,
-      caption: "One token set, two themes: every colour is a semantic token with a light and a dark value."
-    },
-    sections: [
-      {
-        label: "Problem",
-        title: "Every release paid for the same inconsistencies",
-        body: [
-          "Inconsistent states, undocumented patterns and ad hoc colour decisions kept failing QA. Each feature release slowed down on bugs the team had already fixed somewhere else, and users saw the same component behave differently from page to page."
-        ]
-      },
-      {
-        label: "Approach",
-        title: "Prioritise by QA pain, not by what looks messy",
-        body: [
-          "I audited the full component library and ranked components by QA ticket volume. The 12 highest-friction patterns went first. I rebuilt them with semantic tokens, documented every state, and checked contrast against WCAG 2.2.",
-          "Dark mode wasn’t a skin. I designed the token architecture so light and dark are both first-class modes, which meant the whole product could switch without new QA work."
-        ],
-        points: [
-          "Audited and ranked components by QA ticket volume",
-          "Rebuilt 12 high-friction patterns with semantic tokens and documented states",
-          "Designed a token architecture with light and dark as equal modes",
-          "Paired with front-end engineers to check every component was easier to build than the one it replaced"
-        ]
-      },
-      {
-        label: "Outcome",
-        title: "Fewer defects, faster releases",
-        body: [
-          "QA time per component dropped 83%. A whole category of recurring visual bugs disappeared, and dark mode shipped product-wide without extra QA overhead."
-        ]
-      }
-    ],
-    takeaway: "A design system earns its value when engineering ships faster with fewer defects, not when the Figma file looks organised."
-  },
-  {
     slug: "bi-match-prototype",
     company: "BI Group · AI prototyping",
     year: "2026",
@@ -441,6 +382,65 @@ export const caseStudies: CaseStudy[] = [
       }
     ],
     takeaway: "AI-assisted prototyping matters most when it lets you test ideas at production fidelity without blocking anyone else."
+  },
+  {
+    slug: "bi-design-system",
+    company: "BI Group · Design system",
+    year: "2025",
+    title: "Rebuilt the design system around QA failures and cut QA time per component by 83%",
+    summary:
+      "The product had outgrown its components. I rebuilt the 12 patterns causing the most QA tickets on semantic tokens, made them WCAG 2.2 compliant, and shipped dark mode as a first-class theme.",
+    meta: [
+      { label: "My role", value: "Led the rebuild: audit, tokens, components, dark mode" },
+      { label: "Team", value: "Designers, front-end engineers, QA" },
+      { label: "Scope", value: "Components, tokens, accessibility, dark mode" },
+      { label: "Platform", value: "Web and mobile web" }
+    ],
+    outcomes: [
+      { value: "−83%", label: "QA time per component" },
+      { value: "50+", label: "semantic tokens" },
+      { value: "WCAG 2.2", label: "contrast compliance" },
+      { value: "Dark mode", label: "shipped product-wide" }
+    ],
+    hero: {
+      src: "/work/bi-design-system/hero.webp",
+      video: "/work/bi-design-system/demo.mp4",
+      alt: "BI Group screens in light and dark themes next to the semantic colour token table",
+      w: 1544,
+      h: 720,
+      caption: "One token set, two themes: every colour is a semantic token with a light and a dark value."
+    },
+    sections: [
+      {
+        label: "Problem",
+        title: "Every release paid for the same inconsistencies",
+        body: [
+          "Inconsistent states, undocumented patterns and ad hoc colour decisions kept failing QA. Each feature release slowed down on bugs the team had already fixed somewhere else, and users saw the same component behave differently from page to page."
+        ]
+      },
+      {
+        label: "Approach",
+        title: "Prioritise by QA pain, not by what looks messy",
+        body: [
+          "I audited the full component library and ranked components by QA ticket volume. The 12 highest-friction patterns went first. I rebuilt them with semantic tokens, documented every state, and checked contrast against WCAG 2.2.",
+          "Dark mode wasn’t a skin. I designed the token architecture so light and dark are both first-class modes, which meant the whole product could switch without new QA work."
+        ],
+        points: [
+          "Audited and ranked components by QA ticket volume",
+          "Rebuilt 12 high-friction patterns with semantic tokens and documented states",
+          "Designed a token architecture with light and dark as equal modes",
+          "Paired with front-end engineers to check every component was easier to build than the one it replaced"
+        ]
+      },
+      {
+        label: "Outcome",
+        title: "Fewer defects, faster releases",
+        body: [
+          "QA time per component dropped 83%. A whole category of recurring visual bugs disappeared, and dark mode shipped product-wide without extra QA overhead."
+        ]
+      }
+    ],
+    takeaway: "A design system earns its value when engineering ships faster with fewer defects, not when the Figma file looks organised."
   },
   {
     slug: "bi-scratch-card",

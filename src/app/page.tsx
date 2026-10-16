@@ -57,12 +57,23 @@ const featured = [
     stats: ["$100K first sale", "1 week to launch", "0 engineers"],
     img: "/work/video-consult.webp",
     alt: "Video consultation flow from the BI Group site to a booked call"
+  },
+  {
+    n: "04",
+    slug: "bi-match-prototype",
+    company: "BI Group · AI prototyping",
+    year: "2026",
+    title: "Built BI Match in one day with AI, from idea to stakeholder decision, then shipped it",
+    line: "Matched buyers to homes by lifestyle through swiping. I built the prototype in our production stack with Claude Code, demoed it the same day, and it’s now live.",
+    stats: ["1 day to decision", "0 roadmap hours used", "Live in production"],
+    img: "/work/bi-match-prototype/hero.webp",
+    contain: true,
+    alt: "BI Match: Figma connected to Claude through MCP, next to the BI Match screen"
   }
 ]
 
 const more = [
   { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2025", metric: "−83% QA time" },
-  { slug: "bi-match-prototype", title: "BI Match: AI prototype in production code", where: "BI Group · 2026", metric: "1 day → live in prod" },
   { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
   { slug: "beeline-checkout-research", title: "Checkout research with real customers", where: "Beeline · 2023", metric: "2:43 → 1:37 per order" },
   { slug: "beeline-design-system", title: "From one chaotic file to a design system", where: "Beeline · 2022", metric: "5 flows rebuilt" }
@@ -211,7 +222,7 @@ export default function HomePage() {
         <section id="work" className={`${column} pt-20 sm:pt-24`}>
           <div className="home-rule">
             <span className="home-label">Selected work</span>
-            <span className="home-label">3 case studies</span>
+            <span className="home-label">4 case studies</span>
           </div>
           {featured.map((w) => (
             <FadeIn key={w.n}>
@@ -243,7 +254,7 @@ export default function HomePage() {
                     alt={w.alt}
                     fill
                     sizes="(max-width: 640px) 100vw, 640px"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                    className={`${"contain" in w && w.contain ? "bg-[#1b1b1b] object-contain" : "object-cover"} transition-transform duration-700 ease-out group-hover:scale-[1.02]`}
                   />
                 </div>
               </Link>
