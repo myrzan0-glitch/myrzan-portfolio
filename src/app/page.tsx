@@ -78,7 +78,7 @@ const rules = [
 const jobs = [
   {
     years: "2026 – now",
-    role: "Product Designer",
+    role: "Senior Product Designer",
     company: "National Bank of Uzbekistan",
     url: "https://nbu.uz",
     via: "via Expera",
