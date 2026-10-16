@@ -93,7 +93,7 @@ const jobs = [
     company: "National Bank of Uzbekistan",
     url: "https://nbu.uz",
     via: "via Expera",
-    about: "Uzbekistan’s national bank, serving 3.3M+ individual clients.",
+    about: "Uzbekistan’s national bank, serving 3.3M individual clients.",
     line: "Designing the bank’s unified front-office system for opening accounts, deposits and loans. I own the legal-entity branch."
   },
   {
