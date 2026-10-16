@@ -72,6 +72,27 @@ const featured = [
   }
 ]
 
+const side = [
+  {
+    name: "wallet.myrzan.com",
+    href: "https://wallet.myrzan.com",
+    title: "Any card, code or link in your phone’s wallet",
+    line: "A free tool that turns a loyalty card, Wi-Fi network or link into an Apple Wallet or Google Wallet pass. Barcodes are read in the browser, card data is never stored, and it speaks Uzbek, Russian, Kazakh and English.",
+    tags: ["Next.js", "Apple PassKit", "Google Wallet API"],
+    img: "/side/wallet-app.webp",
+    alt: "wallet.myrzan.com: a pass creator form next to a live Apple Wallet preview"
+  },
+  {
+    name: "izipass.myrzan.com",
+    href: "https://izipass.myrzan.com",
+    title: "Paid events for Uzbekistan, without the paperwork",
+    line: "Organisers set up an event in minutes. Guests pay them directly, receipts arrive in Telegram for one-tap approval, tickets go to Apple or Google Wallet, and check-in at the door works offline by scanning QR codes.",
+    tags: ["Next.js", "Postgres", "Telegram bot"],
+    img: "/side/izipass-app.webp",
+    alt: "izipass.myrzan.com landing page with event ticket cards around the headline"
+  }
+]
+
 const more = [
   { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2025", metric: "−83% QA cycles" },
   { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
@@ -285,6 +306,44 @@ export default function HomePage() {
               </span>
             </Link>
           ))}
+        </section>
+
+        <section className={`${column} pt-16 sm:pt-[72px]`}>
+          <div className="home-rule">
+            <span className="home-label">Side projects</span>
+            <span className="home-label">Designed and built by me</span>
+          </div>
+          <div className="mt-6 grid gap-8 sm:grid-cols-2 sm:gap-6">
+            {side.map((p) => (
+              <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" className="group flex flex-col gap-3">
+                <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-[var(--home-line)] bg-[var(--home-soft)]">
+                  <Image
+                    src={p.img}
+                    alt={p.alt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 300px"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <span className="home-label inline-flex items-center gap-1 !normal-case !tracking-normal">
+                  {p.name}
+                  <ArrowUpRight
+                    className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </span>
+                <span className="text-[15px] font-medium leading-[1.35]">{p.title}</span>
+                <span className="home-muted text-[13px] leading-[1.55]">{p.line}</span>
+                <span className="flex flex-wrap gap-1.5">
+                  {p.tags.map((t) => (
+                    <span key={t} className="home-chip">
+                      {t}
+                    </span>
+                  ))}
+                </span>
+              </a>
+            ))}
+          </div>
         </section>
 
         <section className={`${column} pt-20 sm:pt-[88px]`}>
