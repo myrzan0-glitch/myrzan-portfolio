@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Geist, Geist_Mono } from "next/font/google"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 
@@ -7,15 +7,21 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 
-const display = Inter({
+const display = Geist({
   subsets: ["latin"],
   variable: "--font-display"
 })
 
-const body = Inter({
+const body = Geist({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   variable: "--font-body"
+})
+
+const mono = Geist_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono"
 })
 
 export const metadata: Metadata = {
@@ -52,12 +58,13 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background text-foreground antialiased",
           display.variable,
-          body.variable
+          body.variable,
+          mono.variable
         )}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
         >
           <a

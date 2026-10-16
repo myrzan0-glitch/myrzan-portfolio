@@ -1,259 +1,427 @@
-import Link from "next/link"
 import Image from "next/image"
-import { ArrowUpRight, Linkedin, Mail, Send } from "lucide-react"
+import Link from "next/link"
+import { ArrowUpRight } from "lucide-react"
 
-import { NotionContent } from "@/components/notion-block-renderer"
-import { FloatingSectionNav } from "@/components/floating-section-nav"
+import { CvButton } from "@/components/cv-button"
+import { HeroBackground } from "@/components/hero-background"
+import { CopyEmail, EMAIL } from "@/components/home/copy-email"
+import { LondonClock } from "@/components/home/london-clock"
+import { ThemeSwitch } from "@/components/home/theme-switch"
 import { FadeIn } from "@/components/motion"
-import { getSelectedWorkContent } from "@/lib/notion"
 
-const experience = [
+const fan = [
+  { src: "/work/bi-final.webp", w: 230, h: 260, r: "-7deg", y: "18px", z: 1 },
+  { src: "/work/td-solution.webp", w: 280, h: 210, r: "3deg", y: "-6px", z: 2 },
+  { src: "/work/video-consult.webp", w: 280, h: 210, r: "-2deg", y: "10px", z: 3 },
+  { src: "/work/ds-poster.webp", w: 230, h: 260, r: "6deg", y: "-10px", z: 2 }
+]
+
+const photos = [
+  { src: "/personal/me-london.webp", alt: "Myrzan in London at Christmas", r: "-8deg", y: "14px", z: 1 },
+  { src: "/personal/medina-park.webp", alt: "Medina in sunglasses in a London park", r: "4deg", y: "-8px", z: 2 },
+  { src: "/personal/wife-medina.webp", alt: "Myrzan's wife holding Medina in a café", r: "-2deg", y: "10px", z: 4 },
+  { src: "/personal/me-medina.webp", alt: "Myrzan holding Medina", r: "6deg", y: "-6px", z: 3 },
+  { src: "/personal/family-walk.webp", alt: "Family on a city walk, black and white", r: "-5deg", y: "12px", z: 2 }
+]
+
+const featured = [
   {
-    years: "2023 – Present",
-    title: "Product Designer @ BI Group",
-    href: "https://bi.group/"
+    n: "01",
+    slug: "bi-mobile-search",
+    company: "BI Group · Mobile web",
+    year: "2025",
+    title: "Redesigned mobile search to a 54% conversion rate in six weeks",
+    line: "Ran field research with buyers in a sales office, cut the filter panel down to the three that cover 87% of use, and validated with a split test before handoff.",
+    stats: ["54% conversion rate", "Bounce 25% → 16.8%", "2M+ monthly users"],
+    img: "/work/bi-final.webp",
+    alt: "Redesigned BI Group mobile search with quick-filter chips and a map view"
   },
   {
-    years: "2022 – 2023",
-    title: "Product Designer @ Beeline",
-    href: "https://apps.apple.com/kz/app/janymda-beeline-%D0%BA%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD/id711280776"
+    n: "02",
+    slug: "technodom-credit",
+    company: "Technodom · Fintech",
+    year: "2022",
+    title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
+    line: "Partnered with the banks to pre-score every shopper across all of them in one step, instead of one bank at a time. Became the company’s #1 revenue source.",
+    stats: ["$4M+ monthly revenue", "+35% credit conversions", "#1 revenue stream"],
+    img: "/work/td-solution.webp",
+    alt: "Technodom credit flow showing offers from every partner bank at once"
   },
   {
-    years: "2022",
-    title: "Product Designer @ Petrel AI (NDA)"
+    n: "03",
+    slug: "bi-video-consultation",
+    company: "BI Group · Growth experiment",
+    year: "2026",
+    title: "Turned a $500 experiment into a $100K sale and a funded product team",
+    line: "The product team said video calls would take too long to build. I shipped them in one week with Calendly, Teams and one sales manager. The first month closed a $100K apartment sale.",
+    stats: ["$100K first sale", "1 week to launch", "0 engineers"],
+    img: "/work/video-consult.webp",
+    alt: "Video consultation flow from the BI Group site to a booked call"
   },
   {
-    years: "2020 – 2022",
-    title: "Product Designer @ Technodom",
-    href: "https://apps.apple.com/gb/app/technodom-kz-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82-%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD/id1435756761"
-  },
-  {
-    years: "2020",
-    title: "UI/UX Designer @ Vlife",
-    href: "https://apps.apple.com/kz/app/vlife-%D0%B0%D0%B7%D1%81-%D0%BF%D0%B0%D1%80%D1%82%D0%BD%D0%B5%D1%80%D1%8B-%D0%B1%D0%B0%D0%BB%D0%BB%D1%8B/id1527733098"
+    n: "04",
+    slug: "bi-match-prototype",
+    company: "BI Group · AI prototyping",
+    year: "2026",
+    title: "Built BI Match in one day with AI, from idea to stakeholder decision, then shipped it",
+    line: "Matched buyers to homes by lifestyle through swiping. I built the prototype in our production stack with Claude Code, demoed it the same day, and it’s now live.",
+    stats: ["1 day to decision", "0 roadmap hours used", "Live in production"],
+    img: "/work/bi-match-prototype/hero.webp",
+    contain: true,
+    alt: "BI Match: Figma connected to Claude through MCP, next to the BI Match screen"
   }
 ]
 
-const selectedWorkPageId = "31725685-1722-8035-ac20-cd8311aec051"
+const more = [
+  { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2025", metric: "−83% QA cycles" },
+  { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
+  { slug: "beeline-checkout-research", title: "Checkout research with real customers", where: "Beeline · 2023", metric: "2:43 → 1:37 per order" },
+  { slug: "beeline-design-system", title: "From one chaotic file to a design system", where: "Beeline · 2022", metric: "5 flows rebuilt" }
+]
 
-export const dynamic = "force-dynamic"
+const rules = [
+  { n: "01", t: "Context before pixels", b: "I open every project with one-to-ones across product, engineering and business, so each design decision traces back to a goal." },
+  { n: "02", t: "Jobs to be done", b: "I design for the job the customer hires the product to do, and I measure success by whether that job gets done." },
+  { n: "03", t: "Clear design ownership", b: "I gather input widely and align with users and partners, then I make the call and own the outcome." },
+  { n: "04", t: "Fluent in code", b: "Former front-end engineer. I prototype on our production Storybook through AI, so engineering builds from real components, not specs." }
+]
 
-async function getNotionContent() {
-  try {
-    return await getSelectedWorkContent(selectedWorkPageId)
-  } catch {
-    return []
+const jobs = [
+  {
+    years: "2026 – now",
+    role: "Senior Product Designer",
+    company: "National Bank of Uzbekistan",
+    url: "https://nbu.uz",
+    via: "via Expera",
+    about: "Uzbekistan’s national bank, serving 3.3M individual clients.",
+    line: "Designing the bank’s unified front-office system for opening accounts, deposits and loans. I own the legal-entity branch, and help the design system team with AI-assisted prototyping through a Storybook MCP I built."
+  },
+  {
+    years: "2023 – 2026",
+    role: "Product Designer",
+    company: "BI Group",
+    url: "https://bi.group",
+    about: "Property-tech developer ranked #1 by sales volume across the Middle East and CIS.",
+    line: "Owned search, the design system and AI prototyping for a platform with 2M+ monthly users."
+  },
+  {
+    years: "2022 – 2023",
+    role: "Product Designer",
+    company: "Beeline",
+    url: "https://beeline.kz",
+    about: "Kazakhstan’s telecom operator, with an online shop for phones bundled with plans.",
+    line: "Lifted mobile checkout conversion 17.5% for a telecom with 11M+ subscribers."
+  },
+  {
+    years: "2022",
+    role: "Product Designer",
+    company: "Petrel AI",
+    about: "Enterprise software for a global uranium production company.",
+    line: "Cut manual work 40% in enterprise HSE and HR workflows. NDA."
+  },
+  {
+    years: "2020 – 2022",
+    role: "Product Designer",
+    company: "Technodom",
+    url: "https://technodom.kz",
+    about: "Kazakhstan’s largest electronics retailer, with 70+ stores and a major e-commerce platform.",
+    line: "Designed the credit brokerage that made $4M in one month and became the #1 revenue stream."
+  },
+  {
+    years: "2020",
+    role: "UI/UX Designer",
+    company: "Vlife",
+    about: "A startup building a service-booking platform.",
+    line: "Designed a booking CMS end to end, plus app motion."
   }
-}
+]
 
-export default async function HomePage() {
-  const notionContent = await getNotionContent()
+const contacts = [
+  { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
+  { label: "LinkedIn", value: "/in/myrzanio", href: "https://linkedin.com/in/myrzanio" },
+  { label: "Telegram", value: "@myrzanio", href: "https://t.me/myrzanio" },
+  { label: "CV", value: "PDF", href: "/cv-myrzan-izimbetov.pdf" }
+]
 
+const column = "mx-auto w-full max-w-[640px] px-5 sm:px-6"
+
+export default function HomePage() {
   return (
-    <div className="relative min-h-screen bg-black text-white">
-      <Link
-        href="#main"
-        className="absolute left-5 top-5 z-40 flex h-[46px] items-center text-sm tracking-tight text-white/90 transition hover:text-white sm:left-8 sm:top-6"
-      >
-        Myrzan Izimbetov
-      </Link>
-      <FloatingSectionNav />
+    <div className="home-root">
+      <main id="main">
+        <section id="intro" className="relative isolate">
+          <HeroBackground />
 
-      <main id="main" className="mx-auto max-w-7xl px-6 pb-40 pt-20 sm:px-8 sm:pt-24 md:pb-24 md:pt-28">
-        <section id="intro">
-          <FadeIn>
-            <div className="flex items-start justify-between gap-12 py-[4.75rem] sm:py-16 md:py-20">
-              <div>
-                <h1 className="text-[2rem] font-medium leading-[2.35rem] tracking-tight text-white">
-                  Myrzan Izimbetov
-                </h1>
-                <p className="mt-1 text-base text-white/55 tracking-tight">
-                  Product Designer · 6 years · $4M+ monthly revenue impact
-                </p>
-                <p className="mt-5 text-lg leading-7 text-white/86 sm:mt-6 sm:max-w-xl">
-                  I design mobile products that move metrics —{" "}
-                  from search and payments to growth experiments{" "}
-                  shipped to production with AI.
-                </p>
-                <p className="mt-4 text-sm text-white/55">
-                  London, UK · Open to work
-                </p>
-                <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-                  <Link
-                    href="mailto:izimbetov.myrzan@gmail.com"
-                    className="text-sm text-white/55 transition hover:text-white/80"
-                  >
-                    izimbetov.myrzan@gmail.com
-                  </Link>
-                  <Link
-                    href="https://linkedin.com/in/myrzanio"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-white/55 transition hover:text-white/80"
-                  >
-                    linkedin.com/in/myrzanio
-                  </Link>
-                  <Link
-                    href="https://t.me/myrzanio"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-white/55 transition hover:text-white/80"
-                  >
-                    t.me/myrzanio
-                  </Link>
-                </div>
-                <a
-                  href="/cv-myrzan-izimbetov.pdf"
-                  download
-                  className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
-                >
-                  Download CV
-                </a>
-              </div>
-
-              {/* Avatar — desktop only */}
-              <div className="group relative hidden h-60 w-60 shrink-0 cursor-default overflow-hidden rounded-2xl sm:block">
-                <Image
-                  src="/avatar-default.webp"
-                  alt="Myrzan Izimbetov"
-                  fill
-                  className="object-cover transition-opacity duration-300 group-hover:opacity-0"
-                  priority
-                />
-                <Image
-                  src="/avatar-hover.webp"
-                  alt="Myrzan Izimbetov"
-                  aria-hidden="true"
-                  fill
-                  loading="lazy"
-                  className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                />
-              </div>
-            </div>
-          </FadeIn>
-        </section>
-
-        <section id="projects" className="mt-12 scroll-mt-24 pt-8 sm:mt-16 sm:pt-10 md:mt-20">
-          <FadeIn>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-sm text-white/55">Selected Work</p>
-              </div>
-            </div>
-          </FadeIn>
-
-          {notionContent.length > 0 && (
-            <FadeIn delay={0.05}>
-              <div className="mt-8 space-y-8">
-                <NotionContent blocks={notionContent} />
-              </div>
-            </FadeIn>
-          )}
-        </section>
-
-        <section
-          id="about"
-          className="mt-10 grid scroll-mt-24 gap-10 pt-8 sm:mt-12 sm:pt-10 lg:mt-14 lg:grid-cols-[0.95fr_1.05fr]"
-        >
-          <FadeIn delay={0.05}>
-            <div className="max-w-2xl">
-              <div>
-                <p className="text-sm text-white/55">About</p>
-                <p className="mt-3 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  I&apos;m a product designer based in London with 6+ years designing
-                  high-traffic mobile products.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  Most recently at BI Group — a real estate platform with 2M+ daily
-                  users — where I ran growth experiments, rebuilt the design system,
-                  and shipped AI-assisted prototypes directly to production.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  Before that: fintech at Beeline (11M+ subscribers), e-commerce
-                  credit flows at Technodom ($4M+ MRR), and enterprise ERP at Petrel AI.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  My work combines product thinking, rapid experimentation, and system design across the full path from research to implementation.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  I use AI-assisted workflows for prototyping, front-end experimentation, and faster iteration, while keeping product judgment and design decisions firmly human-led.
-                </p>
-              </div>
-
-              <div className="mt-10">
-                <p className="text-sm text-white/55">Contact</p>
-                <div className="mt-3 space-y-2 text-base leading-7 text-white/90 sm:text-lg sm:leading-8">
-                  <p>
-                    <Link
-                      href="mailto:izimbetov.myrzan@gmail.com"
-                      className="inline-flex items-center gap-2 hover:text-white"
-                    >
-                      <Mail className="h-4 w-4 shrink-0 text-white/65" />
-                      <span>izimbetov.myrzan@gmail.com</span>
-                    </Link>
-                  </p>
-                  <p>
-                    <Link
-                      href="https://www.linkedin.com/in/myrzanio/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:text-white"
-                    >
-                      <Linkedin className="h-4 w-4 shrink-0 text-white/65" />
-                      <span>linkedin.com/in/myrzanio</span>
-                    </Link>
-                  </p>
-                  <p>
-                    <Link
-                      href="https://t.me/myrzanio"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:text-white"
-                    >
-                      <Send className="h-4 w-4 shrink-0 text-white/65" />
-                      <span>t.me/myrzanio</span>
-                    </Link>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-
-          <FadeIn>
-            <div className="space-y-8">
-              {experience.map((item) => (
-                <div key={`${item.years}-${item.title}`}>
-                  <p className="text-sm text-white/55">{item.years}</p>
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group mt-1 inline-flex items-center gap-1.5 text-base leading-6 tracking-tight text-white sm:text-lg"
-                    >
-                      <span>{item.title}</span>
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70 transition group-hover:text-white" />
-                    </Link>
-                  ) : (
-                    <p className="mt-1 text-base leading-6 tracking-tight sm:text-lg">
-                      {item.title}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </section>
-
-        <footer className="mt-10 pb-24 pt-6 text-sm text-white/45 md:mt-12 md:pb-0">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span>© {new Date().getFullYear()} Myrzan Izimbetov</span>
-            <Link href="#main" className="hover:text-white/80">
-              Back to top
-            </Link>
+          <div className={`${column} flex items-center justify-between pt-5 sm:pt-7`}>
+            <span className="home-label">
+              <LondonClock />
+            </span>
+            <ThemeSwitch />
           </div>
-        </footer>
+
+          <FadeIn>
+            <div className={`${column} pb-4 pt-16 sm:pt-24`}>
+              <h1 className="m-0 text-[17px] font-medium">Myrzan Izimbetov</h1>
+              <p className="home-muted mt-0.5 text-[15px]">Product Designer · London</p>
+              <p className="mt-7 text-[19px] leading-[1.5] sm:text-[21px]">
+                I own problems end to end, from discovery to shipped code.
+              </p>
+              <p className="home-muted mt-2.5 text-[16px] leading-[1.55] sm:text-[21px] sm:leading-[1.5]">
+                For six years I&apos;ve led mobile, fintech and e-commerce products used by millions of people every day. I
+                start with context: where the business is going and why customers choose us. Then I research, design and
+                prototype in production until the metric moves.
+              </p>
+              <p className="home-muted mt-4 text-[15px] leading-[1.55]">
+                Now designing the front-office system of the{" "}
+                <a
+                  href="https://nbu.uz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--home-fg)] underline decoration-[var(--home-line)] underline-offset-4 transition-colors hover:decoration-[var(--home-fg)]"
+                >
+                  National Bank of Uzbekistan
+                </a>
+                .
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4">
+                <CvButton />
+                <CopyEmail />
+              </div>
+              <p className="mt-7 inline-flex items-center gap-2 text-sm">
+                <span className="h-[7px] w-[7px] rounded-full bg-[var(--home-green)] shadow-[0_0_0_4px_var(--home-green-soft)]" />
+                <span className="home-muted">Open to product design roles in Big Tech</span>
+              </p>
+            </div>
+          </FadeIn>
+
+          <div
+            aria-label="Work preview"
+            className="work-fan mx-auto mt-10 flex max-w-[980px] items-center overflow-x-auto px-5 pb-8 pt-6 [scrollbar-width:none] sm:mt-14 sm:h-[300px] sm:justify-center sm:overflow-visible sm:pb-0 sm:pt-0 [&::-webkit-scrollbar]:hidden"
+          >
+            {fan.map((card, i) => (
+              <div
+                key={card.src}
+                className="fan-card relative shrink-0 overflow-hidden rounded-[10px] max-sm:-ml-3 max-sm:!h-[180px] max-sm:!w-[170px] sm:-ml-[30px]"
+                style={
+                  {
+                    width: card.w,
+                    height: card.h,
+                    zIndex: card.z,
+                    marginLeft: i === 0 ? 0 : undefined,
+                    "--r": card.r,
+                    "--y": card.y
+                  } as React.CSSProperties
+                }
+              >
+                <Image src={card.src} alt="" fill sizes="280px" className="object-cover" priority={i < 2} />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="work" className={`${column} pt-20 sm:pt-24`}>
+          <div className="home-rule">
+            <span className="home-label">Selected work</span>
+            <span className="home-label">4 case studies</span>
+          </div>
+          {featured.map((w) => (
+            <FadeIn key={w.n}>
+              <Link
+                href={`/work/${w.slug}`}
+                className="group flex flex-col gap-3.5 border-b border-[var(--home-line)] py-8"
+              >
+                <div className="flex justify-between gap-3">
+                  <span className="home-label">
+                    {w.n} · {w.company}
+                  </span>
+                  <span className="home-label">{w.year}</span>
+                </div>
+                <div className="flex items-start justify-between gap-4">
+                  <h2 className="m-0 text-[19px] font-medium leading-[1.3] sm:text-[22px]">{w.title}</h2>
+                  <ArrowUpRight className="mt-1 h-[18px] w-[18px] shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                </div>
+                <p className="home-muted m-0 text-[15px] leading-[1.55]">{w.line}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {w.stats.map((s) => (
+                    <span key={s} className="home-chip">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+                <div className="relative mt-1.5 aspect-[16/9] overflow-hidden rounded-xl border border-[var(--home-line)] bg-[var(--home-soft)]">
+                  <Image
+                    src={w.img}
+                    alt={w.alt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 640px"
+                    className={`${"contain" in w && w.contain ? "bg-[#1b1b1b] object-contain" : "object-cover"} transition-transform duration-700 ease-out group-hover:scale-[1.02]`}
+                  />
+                </div>
+              </Link>
+            </FadeIn>
+          ))}
+        </section>
+
+        <section className={`${column} pt-16 sm:pt-[72px]`}>
+          <div className="home-rule">
+            <span className="home-label">More work</span>
+          </div>
+          {more.map((m) => (
+            <Link
+              key={m.slug}
+              href={`/work/${m.slug}`}
+              className="group flex items-baseline justify-between gap-4 border-b border-[var(--home-line)] py-4"
+            >
+              <span className="flex flex-col gap-0.5">
+                <span className="text-[15px] underline-offset-4 group-hover:underline">{m.title}</span>
+                <span className="home-muted text-[13px]">{m.where}</span>
+              </span>
+              <span className="home-muted inline-flex shrink-0 items-center gap-1.5 font-[family-name:var(--font-mono)] text-xs">
+                {m.metric}
+                <ArrowUpRight
+                  className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </span>
+            </Link>
+          ))}
+        </section>
+
+        <section className={`${column} pt-20 sm:pt-[88px]`}>
+          <div className="home-rule">
+            <span className="home-label">How I work</span>
+          </div>
+          {rules.map((r) => (
+            <div key={r.n} className="grid gap-1 py-4 sm:grid-cols-[110px_1fr] sm:gap-4 sm:py-[18px]">
+              <span className="home-label sm:pt-[3px]">{r.n}</span>
+              <div>
+                <p className="m-0 text-[15px] sm:text-base">{r.t}</p>
+                <p className="home-muted mt-1 text-[13px] leading-[1.55] sm:text-sm">{r.b}</p>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        <section className={`${column} pt-20 sm:pt-[88px]`}>
+          <div className="home-rule">
+            <span className="home-label">Experience</span>
+            <span className="home-label">6 years</span>
+          </div>
+          {jobs.map((j) => (
+            <div key={j.company} className="grid gap-1 py-4 sm:grid-cols-[110px_1fr] sm:gap-4 sm:py-[18px]">
+              <span className="home-label sm:pt-[3px]">{j.years}</span>
+              <div>
+                <p className="m-0 text-[15px] sm:text-base">
+                  {j.role} <span className="home-muted">at</span>{" "}
+                  {j.url ? (
+                    <a
+                      href={j.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-0.5 underline decoration-[var(--home-line)] underline-offset-4 transition-colors hover:decoration-[var(--home-fg)]"
+                    >
+                      {j.company}
+                      <ArrowUpRight
+                        className="home-muted h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  ) : (
+                    j.company
+                  )}
+                  {"via" in j && j.via && <span className="home-muted"> · {j.via}</span>}
+                </p>
+                <p className="mt-1 text-[13px] leading-[1.5] text-[var(--home-faint)]">{j.about}</p>
+                <p className="home-muted mt-1.5 text-[13px] leading-[1.55] sm:text-sm">{j.line}</p>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        <section className={`${column} pt-20 sm:pt-[88px]`}>
+          <div className="home-rule">
+            <span className="home-label">Personal</span>
+          </div>
+          <p className="home-muted mt-[18px] text-[15px] leading-[1.6]">
+            Born in Nukus, moved to Kazakhstan in 2008, now in London with my wife and our daughter Medina. Moving countries
+            taught me to join any team fast. As a kid I wanted to build things. I still do.
+          </p>
+          <a
+            href="https://www.amazon.com/dp/0062435612"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-4 flex items-start gap-3 rounded-[10px] bg-[var(--home-soft)] p-3 ring-1 ring-transparent transition-shadow hover:ring-[var(--home-line)] sm:max-w-[440px]"
+          >
+            <Image
+              src="/personal/competing-against-luck.webp"
+              alt="Cover of Competing Against Luck by Clayton M. Christensen"
+              width={40}
+              height={60}
+              className="h-[60px] w-[40px] shrink-0 rounded-[3px] object-cover shadow-[0_4px_12px_-4px_rgba(0,0,0,0.35)]"
+            />
+            <span className="flex flex-col gap-0.5">
+              <span className="text-sm">Competing Against Luck</span>
+              <span className="home-label !text-[10px]">Clayton M. Christensen</span>
+              <span className="home-muted mt-1 text-[13px] leading-[1.5]">
+                People don&rsquo;t buy products, they hire them to make progress. It&rsquo;s why I start every project
+                with the customer&rsquo;s job, not the feature list.
+              </span>
+            </span>
+            <ArrowUpRight
+              className="home-muted ml-auto h-4 w-4 shrink-0 self-start transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </a>
+        </section>
+
+        <div
+          aria-label="Personal photos"
+          className="work-fan mx-auto mt-10 flex max-w-[860px] items-center overflow-x-auto px-5 pb-8 pt-6 [scrollbar-width:none] sm:h-[300px] sm:justify-center sm:overflow-visible sm:pb-0 sm:pt-0 [&::-webkit-scrollbar]:hidden"
+        >
+          {photos.map((photo, i) => (
+            <div
+              key={photo.src}
+              className="fan-card relative h-[220px] w-[150px] shrink-0 overflow-hidden rounded-[10px] max-sm:-ml-3 max-sm:h-[190px] max-sm:w-[128px] sm:-ml-[26px]"
+              style={
+                {
+                  zIndex: photo.z,
+                  marginLeft: i === 0 ? 0 : undefined,
+                  "--r": photo.r,
+                  "--y": photo.y
+                } as React.CSSProperties
+              }
+            >
+              <Image src={photo.src} alt={photo.alt} fill sizes="150px" className="object-cover" />
+            </div>
+          ))}
+        </div>
+
+        <section id="contact" className={`${column} pt-20 sm:pt-[88px]`}>
+          <div className="home-rule">
+            <span className="home-label">Contact</span>
+          </div>
+          {contacts.map((k) => (
+            <a
+              key={k.label}
+              href={k.href}
+              target={k.href.startsWith("http") ? "_blank" : undefined}
+              rel={k.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              className="group flex min-h-12 items-center justify-between py-2"
+            >
+              <span className="text-[15px]">{k.label}</span>
+              <span className="home-muted inline-flex items-center gap-1.5 text-[13px] sm:text-sm">
+                {k.value}
+                <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+              </span>
+            </a>
+          ))}
+        </section>
       </main>
+
+      <footer className={`${column} home-label flex justify-between pb-12 pt-20`}>
+        <span>London, UK</span>
+        <span>© {new Date().getFullYear()} Myrzan Izimbetov</span>
+      </footer>
     </div>
   )
 }
