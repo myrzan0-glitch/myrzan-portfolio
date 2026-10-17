@@ -80,7 +80,7 @@ const side = [
     line: "A free tool that turns a loyalty card, Wi-Fi network or link into an Apple Wallet or Google Wallet pass. Barcodes are read in the browser, card data is never stored, and it speaks Uzbek, Russian, Kazakh and English.",
     tags: ["Next.js", "Apple PassKit", "Google Wallet API"],
     img: "/side/wallet-app.webp",
-    alt: "wallet.myrzan.com: a pass creator form next to a live Apple Wallet preview"
+    alt: "wallet.myrzan.com: a plastic loyalty card flying into a phone’s Wallet, next to Wi-Fi and link passes"
   },
   {
     name: "izipass.myrzan.com",
@@ -89,7 +89,7 @@ const side = [
     line: "Organisers set up an event in minutes. Guests pay them directly, receipts arrive in Telegram for one-tap approval, tickets go to Apple or Google Wallet, and check-in at the door works offline by scanning QR codes.",
     tags: ["Next.js", "Postgres", "Telegram bot"],
     img: "/side/izipass-app.webp",
-    alt: "izipass.myrzan.com landing page with event ticket cards around the headline"
+    alt: "izipass.myrzan.com: an approved event ticket on a phone, a Telegram receipt to approve and Wallet passes around it"
   }
 ]
 
