@@ -7,6 +7,7 @@ import { HeroBackground } from "@/components/hero-background"
 import { CopyEmail, EMAIL } from "@/components/home/copy-email"
 import { LondonClock } from "@/components/home/london-clock"
 import { ThemeSwitch } from "@/components/home/theme-switch"
+import { SideScene } from "@/components/home/side-scene"
 import { FadeIn } from "@/components/motion"
 
 const fan = [
@@ -80,6 +81,7 @@ const side = [
     line: "A free tool that turns a loyalty card, Wi-Fi network or link into an Apple Wallet or Google Wallet pass. Barcodes are read in the browser, card data is never stored, and it speaks Uzbek, Russian, Kazakh and English.",
     tags: ["Next.js", "Apple PassKit", "Google Wallet API"],
     img: "/side/wallet-app.webp",
+    scene: "wallet" as const,
     alt: "wallet.myrzan.com: a plastic loyalty card flying into a phone’s Wallet, next to Wi-Fi and link passes"
   },
   {
@@ -89,6 +91,7 @@ const side = [
     line: "Organisers set up an event in minutes. Guests pay them directly, receipts arrive in Telegram for one-tap approval, tickets go to Apple or Google Wallet, and check-in at the door works offline by scanning QR codes.",
     tags: ["Next.js", "Postgres", "Telegram bot"],
     img: "/side/izipass-app.webp",
+    scene: "izipass" as const,
     alt: "izipass.myrzan.com: an approved event ticket on a phone, a Telegram receipt to approve and Wallet passes around it"
   }
 ]
@@ -317,13 +320,7 @@ export default function HomePage() {
             {side.map((p) => (
               <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" className="group flex flex-col gap-3">
                 <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-[var(--home-line)] bg-[var(--home-soft)]">
-                  <Image
-                    src={p.img}
-                    alt={p.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 300px"
-                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                  />
+                  <SideScene kind={p.scene} poster={p.img} alt={p.alt} sizes="(max-width: 640px) 100vw, 300px" />
                 </div>
                 <span className="home-label inline-flex items-center gap-1 !normal-case !tracking-normal">
                   {p.name}
