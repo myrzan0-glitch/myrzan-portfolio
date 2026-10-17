@@ -316,11 +316,11 @@ export default function HomePage() {
             <span className="home-label">Side projects</span>
             <span className="home-label">Designed and built by me</span>
           </div>
-          <div className="mt-6 grid gap-8 sm:grid-cols-2 sm:gap-6">
+          <div className="mt-6 flex flex-col gap-12">
             {side.map((p) => (
               <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" className="group flex flex-col gap-3">
                 <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-[var(--home-line)] bg-[var(--home-soft)]">
-                  <SideScene kind={p.scene} poster={p.img} alt={p.alt} sizes="(max-width: 640px) 100vw, 300px" />
+                  <SideScene kind={p.scene} poster={p.img} alt={p.alt} sizes="(max-width: 640px) 100vw, 640px" />
                 </div>
                 <span className="home-label inline-flex items-center gap-1 !normal-case !tracking-normal">
                   {p.name}

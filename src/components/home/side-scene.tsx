@@ -66,83 +66,55 @@ const WALLET: Film = {
   accent: "#2563eb",
   steps: [
     { at: 0, text: "Scan any card in the browser" },
-    { at: 3.2, text: "Preview it for Apple and Google Wallet" },
-    { at: 6.6, text: "Wi‑Fi and links work too" }
+    { at: 3.4, text: "It becomes an Apple or Google Wallet pass" },
+    { at: 7.8, text: "Wi‑Fi and links work too" }
   ],
+  // One thing at a time, large enough to read inside a small card.
   actors: [
-    // 0 · the creator form
-    {
-      tex: "w-form",
-      h: 8.4,
-      pose: (t) => ({ x: mix(-4.0, -6, k(t, 5.6, 6.4)), y: 0.1 + float(t, 0, 0.08), z: -0.6, ry: 0.22, o: shown(t, 0, 0.8, 5.6, 6.4) })
-    },
-    // 1 · a plastic loyalty card: in, scanned, then off to become a pass
+    // 0 · the plastic loyalty card being scanned
     {
       tex: "w-plastic",
-      h: 3.4,
-      pose: (t) => {
-        const land = k(t, 0.3, 1.3)
-        const go = k(t, 3.0, 4.0)
-        return {
-          x: mix(mix(7, -3.3, land), 3.4, go),
-          y: mix(mix(5.5, -1.7, land), 0.3, go) + float(t, 1, 0.06),
-          z: mix(1.4, 0.4, go),
-          rx: mix(-0.25, 0, go),
-          rz: mix(mix(-0.6, -0.1, land), 0, go),
-          s: mix(1, 1.15, go),
-          o: shown(t, 0.3, 0.9, 3.6, 4.1)
-        }
-      }
+      h: 6.2,
+      pose: (t) => ({
+        x: 0,
+        y: mix(-8, 0.1, k(t, 0, 0.8)) + float(t, 1, 0.06),
+        rx: -0.12,
+        ry: mix(0.5, 0, k(t, 0, 0.8)) + (Math.PI / 2) * k(t, 3.0, 3.6),
+        rz: -0.05,
+        o: shown(t, 0, 0.4, 3.5, 3.6)
+      })
     },
-    // 2 · the pass: Apple preview, flips to Google, flips back, then joins the stack
-    {
-      tex: "w-card-apple",
-      h: 6.4,
-      order: 10,
-      pose: (t) => {
-        const stack = k(t, 6.6, 7.6)
-        return {
-          x: mix(3.4, 3.6, stack),
-          y: mix(0.4, -1.2, stack) + float(t, 2),
-          z: 0.4,
-          ry: Math.PI * (k(t, 5.0, 5.8) - k(t, 8.6, 9.4)),
-          s: mix(0.9, 1, k(t, 3.6, 4.2)),
-          o: shown(t, 3.6, 4.2, 11.2, 12)
-        }
-      }
-    },
-    // 3 · Google preview: the back of the same pass
-    { tex: "w-card-google", h: 6.2, pose: () => ({ x: 0, y: 0, o: 1 }), order: 11 },
-    // 4 · Add to Wallet buttons: under the pass, then on the left
-    {
-      tex: "w-add",
-      h: 1.5,
-      order: 12,
-      pose: (t) => {
-        const left = k(t, 6.4, 7.4)
-        return {
-          x: mix(3.4, -3.8, left),
-          y: mix(-3.6, -0.2, left) + float(t, 3, 0.05),
-          z: 0.6,
-          s: mix(1, 1.45, left),
-          o: shown(t, 4.2, 4.8, 11.2, 12) * (1 - 0.6 * k(t, 5.9, 6.4) * (1 - k(t, 6.8, 7.3)))
-        }
-      }
-    },
-    // 5, 6 · Wi‑Fi and link passes slide into a Wallet-style stack behind the card
+    // 1 · link pass, fans out on the right
     {
       tex: "w-link",
-      h: 6.2,
-      pose: (t) => ({ x: 3.6, y: mix(9, 2.0, k(t, 7.0, 8.0)) + float(t, 4), z: -0.6, o: shown(t, 7.0, 7.4, 11.2, 12) })
+      h: 7,
+      pose: (t) => ({ x: mix(10, 4.7, k(t, 8.1, 8.9)), y: -0.1 + float(t, 4), z: -0.3, rz: -0.08, s: 0.85, o: shown(t, 8.1, 8.4, 11.2, 12) })
     },
+    // 2 · the pass: turns out of the plastic card, flips to Google and back, then sits in the middle of the fan
+    {
+      tex: "w-card-apple",
+      h: 8,
+      order: 10,
+      pose: (t) => ({
+        x: 0,
+        y: float(t, 2),
+        z: 0.3,
+        ry: mix(-Math.PI / 2, 0, k(t, 3.6, 4.2)) + Math.PI * (k(t, 5.4, 6.1) - k(t, 7.0, 7.7)),
+        s: mix(1, 0.85, k(t, 7.8, 8.6)),
+        o: shown(t, 3.6, 3.7, 11.2, 12)
+      })
+    },
+    // 3 · Google preview: the back of the same pass
+    { tex: "w-card-google", h: 7.8, pose: () => ({ x: 0, y: 0, o: 1 }), order: 11 },
+    // 4 · Wi‑Fi pass, fans out on the left
     {
       tex: "w-wifi",
-      h: 6.4,
-      pose: (t) => ({ x: 3.6, y: mix(9, 0.9, k(t, 7.4, 8.4)) + float(t, 5), z: -0.3, o: shown(t, 7.4, 7.8, 11.2, 12) })
+      h: 7.2,
+      pose: (t) => ({ x: mix(-10, -4.7, k(t, 7.9, 8.7)), y: -0.1 + float(t, 5), z: -0.3, rz: 0.08, s: 0.85, o: shown(t, 7.9, 8.2, 11.2, 12) })
     }
   ],
-  rings: [{ at: 9.8, x: -3.8, y: 0.15, color: "#2563eb" }],
-  scans: [{ from: 1.4, to: 2.8, actor: 1, color: "#ef4444" }]
+  rings: [],
+  scans: [{ from: 1.0, to: 2.7, actor: 0, color: "#ef4444" }]
 }
 
 const IZIPASS: Film = {
@@ -152,91 +124,78 @@ const IZIPASS: Film = {
   accent: "oklch(0.646 0.222 41.116)",
   steps: [
     { at: 0, text: "Guests register on the event page" },
-    { at: 2.9, text: "Pay the organizer, upload the receipt" },
-    { at: 6.0, text: "The organizer approves in Telegram" },
-    { at: 8.6, text: "Ticket lands in Apple or Google Wallet" },
+    { at: 2.7, text: "Pay the organizer, upload the receipt" },
+    { at: 5.8, text: "The organizer approves in Telegram" },
+    { at: 8.4, text: "Ticket lands in Apple or Google Wallet" },
     { at: 11.0, text: "Check-in at the door with one scan" }
   ],
+  // One thing at a time, large enough to read inside a small card.
   actors: [
-    // 0 · registration card
+    // 0 · registration card with its Register button
     {
       tex: "i-register",
-      h: 5.2,
-      pose: (t) => ({
-        x: mix(0, -5.5, k(t, 2.8, 3.6)),
-        y: 0.4 + float(t, 0, 0.08),
-        z: mix(0, -2, k(t, 2.8, 3.6)),
-        ry: mix(0, 0.18, k(t, 2.8, 3.6)),
-        o: shown(t, 0, 0.7, 2.8, 3.5)
-      })
+      h: 5.6,
+      pose: (t) => ({ x: mix(0, -9, k(t, 2.4, 3.0)), y: 0.1 + float(t, 0, 0.06), s: mix(0.92, 1, k(t, 0, 0.6)), o: shown(t, 0, 0.5, 2.5, 3.0) })
     },
     // 1 · pay the organizer
     {
       tex: "i-pay",
-      h: 7.6,
-      pose: (t) => ({ x: -3.3, y: 0.1 + float(t, 1, 0.08), z: mix(-1, 0, k(t, 2.8, 3.6)), ry: 0.18, o: shown(t, 2.8, 3.6, 6.0, 6.6) })
+      h: 8.6,
+      pose: (t) => ({ x: mix(9, -2.6, k(t, 2.6, 3.3)), y: float(t, 1, 0.06), ry: 0.12, o: shown(t, 2.6, 3.0, 5.6, 6.0) })
     },
-    // 2 · the receipt screenshot flies into the pay card
+    // 2 · the receipt screenshot slides in next to it, then drops into the card
     {
       tex: "i-receipt",
-      h: 3.6,
-      pose: (t) => {
-        const fly = k(t, 4.1, 5.2)
-        return {
-          x: mix(5.5, -2.6, fly),
-          y: mix(-4.5, -1.2, fly),
-          z: 1.2,
-          rz: mix(0.5, 0.05, fly),
-          s: mix(1, 0.55, k(t, 5.2, 5.8)),
-          o: shown(t, 4.1, 4.5, 5.5, 5.9)
-        }
-      }
+      h: 6.4,
+      pose: (t) => ({
+        x: mix(mix(9, 3.8, k(t, 3.5, 4.3)), -2.4, k(t, 4.9, 5.6)),
+        y: mix(-0.3, -1.2, k(t, 4.9, 5.6)),
+        z: 1,
+        rz: mix(0.2, 0.05, k(t, 3.5, 4.3)),
+        s: mix(1, 0.35, k(t, 4.9, 5.6)),
+        o: shown(t, 3.5, 3.8, 5.3, 5.6)
+      })
     },
-    // 3 · waiting for approval
-    {
-      tex: "i-waiting",
-      h: 7.6,
-      pose: (t) => ({ x: -3.3, y: 0.1 + float(t, 2, 0.08), z: -0.2, ry: 0.18, o: shown(t, 6.0, 6.6, 8.4, 9.0) })
-    },
-    // 4 · izipass bot message in Telegram
+    // 3 · izipass bot message in Telegram
     {
       tex: "i-telegram",
-      h: 4.2,
-      pose: (t) => ({ x: 3.6, y: 1.2 + float(t, 3, 0.07), z: 0.6, s: mix(0.7, 1, k(t, 6.0, 6.6)), o: shown(t, 6.0, 6.5, 8.4, 9.0) })
+      h: 5.8,
+      pose: (t) => ({ x: 0, y: 0.2 + float(t, 3, 0.06), z: 0.5, s: mix(0.8, 1, k(t, 5.8, 6.4)), o: shown(t, 5.8, 6.2, 8.1, 8.5) })
     },
-    // 5 · the approved ticket
+    // 4 · the approved ticket
     {
       tex: "i-ticket",
-      h: 8.2,
-      pose: (t) => ({ x: -3.2, y: 0.1 + float(t, 4, 0.08), z: 0, ry: mix(-Math.PI / 2, 0.16, k(t, 8.6, 9.5)), o: shown(t, 8.6, 9.0, 13.2, 14) })
+      h: 8.6,
+      pose: (t) => ({ x: -3.0, y: float(t, 4, 0.06), ry: mix(-Math.PI / 2, 0.12, k(t, 8.4, 9.2)), o: shown(t, 8.4, 8.8, 13.2, 14) })
     },
-    // 6 · the Wallet pass leaves the ticket
+    // 5 · its Wallet pass flies out to the right
     {
       tex: "i-pass",
-      h: 4.6,
+      h: 6.6,
       pose: (t) => {
-        const out = k(t, 9.6, 10.8)
+        const out = k(t, 9.4, 10.6)
         return {
-          x: mix(-3, 3.4, out),
-          y: mix(0, 1.0, out) + float(t, 5),
-          z: mix(-0.5, 1.2, out),
-          ry: mix(0, Math.PI * 2, out) + Math.sin(t * 0.9) * 0.18 * out,
-          rz: mix(0, -0.08, out),
-          o: shown(t, 9.6, 10.0, 13.2, 14)
+          x: mix(-3, 3.8, out),
+          y: mix(0, mix(0.2, 0.9, k(t, 10.8, 11.4)), out) + float(t, 5),
+          z: mix(-0.5, 1, out),
+          ry: mix(0, Math.PI * 2, out) + Math.sin(t * 0.9) * 0.15 * out,
+          rz: -0.06 * out,
+          s: mix(1, 0.85, k(t, 10.8, 11.4)),
+          o: shown(t, 9.4, 9.8, 13.2, 14)
         }
       }
     },
-    // 7 · checked in at the door
+    // 6 · checked in at the door
     {
       tex: "i-checkin",
-      h: 1.5,
-      pose: (t) => ({ x: 3.6, y: mix(-5.5, -2.5, k(t, 11.0, 11.7)), z: 1.4, s: 1.25, o: shown(t, 11.0, 11.5, 13.2, 14) })
+      h: 2,
+      pose: (t) => ({ x: 3.6, y: mix(-6, -3.0, k(t, 11.0, 11.6)), z: 1.6, o: shown(t, 11.0, 11.4, 13.2, 14) })
     }
   ],
   rings: [
-    { at: 1.7, x: 0, y: -1.15, color: "#171717" },
-    { at: 7.4, x: 2.03, y: -0.17, color: "#2aabee" },
-    { at: 11.9, x: 1.21, y: -2.35, color: "#16a34a" }
+    { at: 1.6, x: 0, y: -1.33, color: "#171717" },
+    { at: 7.2, x: -2.17, y: -1.7, color: "#2aabee" },
+    { at: 12.0, x: 1.05, y: -2.85, color: "#16a34a" }
   ],
   scans: []
 }
@@ -506,7 +465,7 @@ export function SideScene({ kind, poster, alt, sizes }: { kind: Kind; poster: st
       />
       {ready && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex flex-col justify-between p-2.5 sm:p-3">
-          <span className="max-w-full w-fit truncate whitespace-nowrap rounded-full border border-black/10 bg-white/90 px-2.5 py-1 text-[10px] font-medium leading-none text-neutral-900 shadow-sm backdrop-blur sm:text-[11px]">
+          <span className="max-w-full w-fit truncate whitespace-nowrap rounded-full border border-black/10 bg-white/90 px-2.5 py-1 text-[11px] font-medium leading-none text-neutral-900 shadow-sm backdrop-blur sm:text-xs">
             <span className="tabular-nums text-neutral-500">
               {step + 1}/{film.steps.length}
             </span>{" "}
