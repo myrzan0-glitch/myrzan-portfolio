@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
+import { grid } from "@/components/home/grid"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import type { CaseStudy, Chapter, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
 
@@ -14,7 +15,7 @@ import { HeroStage, LayersStage, RowStage } from "./stages"
  * next steps close the page.
  */
 
-const wrap = "mx-auto w-full max-w-[1200px] px-5 sm:px-6"
+const wrap = grid
 
 const tones: Record<Tone, string> = {
   accent: "var(--story-accent)",
@@ -98,6 +99,8 @@ function Cards({ cards }: { cards: NonNullable<Chapter["cards"]> }) {
     </ol>
   )
 }
+
+const statusTones = { ok: "var(--story-ok)", calc: "var(--story-mark)", no: "var(--story-warn)" }
 
 function VisualPanel({ visual, wide }: { visual: Visual; wide?: boolean }) {
   switch (visual.kind) {
@@ -199,6 +202,72 @@ function VisualPanel({ visual, wide }: { visual: Visual; wide?: boolean }) {
             </div>
           ))}
           <div className={facts}>
+            {visual.facts.map((f) => (
+              <span key={f}>{f}</span>
+            ))}
+          </div>
+        </figure>
+      )
+    case "attempts":
+      return (
+        <figure
+          role="img"
+          aria-label={visual.description}
+          className="m-0 flex flex-col justify-center gap-3.5 rounded-[14px] bg-[var(--home-panel)] p-5 sm:p-10"
+        >
+          {visual.groups.map((group, g) => (
+            <React.Fragment key={group.label}>
+              {g > 0 && <div className="my-1 h-px bg-[var(--home-line)]" />}
+              <span className="home-label">{group.label}</span>
+              {group.rows.map((row) => (
+                <div key={row.lead + row.steps[0].text} className="grid items-center gap-1.5 text-[13px] sm:grid-cols-[64px_1fr] sm:gap-3">
+                  <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-faint)]">{row.lead}</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {row.steps.map((step, i) => (
+                      <React.Fragment key={step.text}>
+                        {i > 0 && <span className="text-[var(--home-faint)]">→</span>}
+                        <span
+                          className={`whitespace-nowrap rounded-full px-2.5 py-1.5 ${
+                            step.tone === "no" ? "bg-[var(--story-warn)] text-white" : step.tone === "yes" ? "bg-[var(--story-mark)] text-white" : "bg-[var(--home-bg)]"
+                          }`}
+                        >
+                          {step.text}
+                        </span>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </figure>
+      )
+    case "fan":
+      return (
+        <figure
+          role="img"
+          aria-label={visual.description}
+          className="m-0 flex flex-col justify-center gap-3.5 rounded-[14px] bg-[var(--home-panel)] p-5 sm:p-10"
+        >
+          <span className="home-label">{visual.label}</span>
+          <div className="grid items-center gap-3.5 sm:grid-cols-[auto_1fr] sm:gap-[22px]">
+            <div className="rounded-xl bg-[var(--story-mark)] px-4 py-3.5 text-[14px] leading-[1.35] text-white">
+              {visual.source}
+              <small className="mt-1 block font-[family-name:var(--font-mono)] text-[10.5px] opacity-80">{visual.sourceNote}</small>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              {visual.answers.map((a) => (
+                <div key={a.name} className="flex items-center justify-between gap-3 rounded-[10px] bg-[var(--home-bg)] px-3 py-2.5 text-[13px]">
+                  {a.name}
+                  <span className="inline-flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px]" style={{ color: statusTones[a.tone] }}>
+                    <i className="h-[7px] w-[7px] rounded-full bg-current" />
+                    {a.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-muted)]">
             {visual.facts.map((f) => (
               <span key={f}>{f}</span>
             ))}

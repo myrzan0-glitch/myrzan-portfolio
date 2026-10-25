@@ -130,6 +130,7 @@
   --story-spend: #e5671c;
   /* Problems marked on old screens, and the page's accent for highlights, tags and meters */
   --story-warn: #e0472f;
+  --story-ok: #1f9d55;
   --story-mark: var(--story-accent);
 }
 
@@ -153,6 +154,7 @@
   --story-farm: #b49cff;
   --story-spend: #ff8a45;
   --story-warn: #ff7a62;
+  --story-ok: #4cc38a;
 }
 
 /* Per-story accents, set on the case study's root */
@@ -289,5 +291,147 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Selected work covers (components/home/work-cover.tsx). Each is a 1280 × 1024 artboard sized in
+ * cqw, so 1cqw is 12.8 artboard pixels. A device on a flat ground plays the case's real screens:
+ * a slow camera zoom, screens that cross-fade, and a ring where the user taps. 8 s per loop.
+ */
+.cover {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border-radius: 14px;
+  container-type: inline-size;
+}
+.cover-cam {
+  position: absolute;
+  animation-duration: 8s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+.cover-phone-cam {
+  left: 33.83cqw;
+  top: 6.09cqw;
+  width: 32.34cqw;
+  height: 67.81cqw;
+}
+.cover-phone {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 0.234cqw;
+  border-radius: 4.84cqw;
+  background: linear-gradient(145deg, #9a9aa0, #2b2b2e 38%, #66666c 62%, #1d1d20);
+  box-shadow: 0 5.47cqw 9.38cqw -3.13cqw rgba(0, 0, 0, 0.6), 0 2.03cqw 3.44cqw -2.03cqw rgba(0, 0, 0, 0.5);
+}
+.cover-light .cover-phone {
+  box-shadow: 0 5.47cqw 9.38cqw -3.13cqw rgba(0, 0, 0, 0.3), 0 2.03cqw 3.44cqw -2.03cqw rgba(0, 0, 0, 0.3);
+}
+.cover-bezel {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0.703cqw;
+  border-radius: 4.61cqw;
+  background: #050505;
+}
+.cover-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 3.91cqw;
+  background: #000;
+}
+.cover-tap {
+  position: absolute;
+  width: 3.44cqw;
+  height: 3.44cqw;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 0.23cqw solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.28);
+  opacity: 0;
+  animation: 8s ease-out infinite;
+}
+
+/* BI Group and Technodom: a slow zoom into the quick filters, and into the bank offers. */
+.cover-bi-cam {
+  transform-origin: 50% 59%;
+  animation-name: cover-bi-cam;
+}
+.cover-td-cam {
+  transform-origin: 50% 57.8%;
+  animation-name: cover-td-cam;
+}
+@keyframes cover-bi-cam {
+  0%, 12% { transform: scale(1); }
+  42%, 70% { transform: scale(1.75); }
+  94%, 100% { transform: scale(1); }
+}
+@keyframes cover-td-cam {
+  0%, 12% { transform: scale(1); }
+  42%, 70% { transform: scale(1.6); }
+  94%, 100% { transform: scale(1); }
+}
+
+/* Ōzen: Start farming, the farming fill, then a zoom into Claim 480. */
+.cover-oz-cam {
+  transform-origin: 50% 76.8%;
+  animation-name: cover-oz-cam;
+}
+.cover-oz-farming,
+.cover-oz-claim {
+  opacity: 0;
+  animation: 8s ease-in-out infinite;
+}
+.cover-oz-farming { animation-name: cover-oz-farming; }
+.cover-oz-claim { animation-name: cover-oz-claim; }
+.cover-oz-tap1,
+.cover-oz-tap2 {
+  left: 44.36%;
+  top: 75%;
+}
+.cover-oz-tap1 { animation-name: cover-oz-tap1; }
+.cover-oz-tap2 { animation-name: cover-oz-tap2; }
+@keyframes cover-oz-cam {
+  0%, 60% { transform: scale(1); }
+  70%, 86% { transform: scale(1.8); }
+  95%, 100% { transform: scale(1); }
+}
+@keyframes cover-oz-farming {
+  0%, 25% { opacity: 0; }
+  29%, 58% { opacity: 1; }
+  62%, 100% { opacity: 0; }
+}
+@keyframes cover-oz-claim {
+  0%, 56% { opacity: 0; }
+  60%, 92% { opacity: 1; }
+  97%, 100% { opacity: 0; }
+}
+@keyframes cover-oz-tap1 {
+  0%, 20% { opacity: 0; transform: scale(0.6); }
+  22% { opacity: 1; transform: scale(1); }
+  27%, 100% { opacity: 0; transform: scale(1.6); }
+}
+@keyframes cover-oz-tap2 {
+  0%, 79% { opacity: 0; transform: scale(0.6); }
+  81% { opacity: 1; transform: scale(1); }
+  86%, 100% { opacity: 0; transform: scale(1.6); }
+}
+
+/* Without motion, each cover rests on its key screen. */
+@media (prefers-reduced-motion: reduce) {
+  .cover-cam,
+  .cover-tap,
+  .cover-oz-farming {
+    animation: none;
+  }
+  .cover-oz-claim {
+    animation: none;
+    opacity: 1;
   }
 }
