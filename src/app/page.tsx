@@ -11,13 +11,6 @@ import { SideScene } from "@/components/home/side-scene"
 import { WorkCover, type CoverKind } from "@/components/home/work-cover"
 import { FadeIn } from "@/components/motion"
 
-const fan = [
-  { src: "/work/bi-final.webp", w: 230, h: 260, r: "-7deg", y: "18px", z: 1 },
-  { src: "/work/td-solution.webp", w: 280, h: 210, r: "3deg", y: "-6px", z: 2 },
-  { src: "/work/video-consult.webp", w: 280, h: 210, r: "-2deg", y: "10px", z: 3 },
-  { src: "/work/ds-poster.webp", w: 230, h: 260, r: "6deg", y: "-10px", z: 2 }
-]
-
 const photos = [
   { src: "/personal/me-london.webp", alt: "Myrzan in London at Christmas", r: "-8deg", y: "14px", z: 1 },
   { src: "/personal/medina-park.webp", alt: "Medina in sunglasses in a London park", r: "4deg", y: "-8px", z: 2 },
@@ -210,30 +203,6 @@ export default function HomePage() {
               </p>
             </div>
           </FadeIn>
-
-          <div
-            aria-label="Work preview"
-            className="work-fan mx-auto mt-10 flex max-w-[980px] items-center overflow-x-auto px-5 pb-8 pt-6 [scrollbar-width:none] sm:mt-14 sm:h-[300px] sm:justify-center sm:overflow-visible sm:pb-0 sm:pt-0 [&::-webkit-scrollbar]:hidden"
-          >
-            {fan.map((card, i) => (
-              <div
-                key={card.src}
-                className="fan-card relative shrink-0 overflow-hidden rounded-[10px] max-sm:-ml-3 max-sm:!h-[180px] max-sm:!w-[170px] sm:-ml-[30px]"
-                style={
-                  {
-                    width: card.w,
-                    height: card.h,
-                    zIndex: card.z,
-                    marginLeft: i === 0 ? 0 : undefined,
-                    "--r": card.r,
-                    "--y": card.y
-                  } as React.CSSProperties
-                }
-              >
-                <Image src={card.src} alt="" fill sizes="280px" className="object-cover" priority={i < 2} />
-              </div>
-            ))}
-          </div>
         </section>
 
         <section id="work" className="mx-auto w-full max-w-[1180px] px-5 pt-20 sm:px-6 sm:pt-24">

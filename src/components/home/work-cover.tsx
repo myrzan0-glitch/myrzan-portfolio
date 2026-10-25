@@ -2,8 +2,9 @@ import Image from "next/image"
 
 /**
  * Home page covers for the selected case studies: one device on a flat ground, playing a short
- * loop of the case's real screens. Laid out on a 1280 × 1024 artboard and sized in `cqw`, so the
- * whole cover scales with its card; the motion lives in globals.css (`.cover-*`).
+ * loop of the case's real screens; the video consultation keeps its original banner. Laid out on
+ * a 1280 × 1024 artboard and sized in `cqw`, so the whole cover scales with its card; the motion
+ * lives in globals.css (`.cover-*`).
  */
 
 export type CoverKind = "bi" | "ozen" | "technodom" | "video"
@@ -64,27 +65,16 @@ export function WorkCover({ kind }: { kind: CoverKind }) {
         </div>
       )
     case "video":
+      // The original banner, as a still: the site's button, Calendly, then the Teams meeting.
       return (
-        <div className="cover" style={{ background: "#0e0e0f" }}>
-          <div className="cover-cam cover-window cover-vc-cam">
-            <div className="cover-window-bar">
-              <i style={{ background: "#ff5f57" }} />
-              <i style={{ background: "#febc2e" }} />
-              <i style={{ background: "#28c840" }} />
-              <span>bi.group</span>
-            </div>
-            <div className="cover-window-page">
-              <Screen src="/work/bi-video-consultation/cover/site.webp" alt="BI Group website with the Video consultation button in the header" />
-            </div>
-            <span aria-hidden="true" className="cover-vc-dim" />
-            <div className="cover-vc-cal">
-              <Image src="/work/bi-video-consultation/cover/calendly.webp" alt="" fill sizes="200px" />
-            </div>
-            <div className="cover-vc-teams">
-              <Image src="/work/bi-video-consultation/cover/teams.webp" alt="" fill sizes="300px" />
-            </div>
-            <Tap className="cover-vc-tap" />
-          </div>
+        <div className="cover" style={{ background: "#1e1e1e" }}>
+          <Image
+            src="/work/video-consult.webp"
+            alt="Video consultation flow from the BI Group site to Calendly to a booked Teams call"
+            fill
+            sizes="(max-width: 640px) 100vw, 580px"
+            className="object-contain"
+          />
         </div>
       )
   }
