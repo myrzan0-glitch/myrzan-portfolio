@@ -321,65 +321,6 @@ export function layersScene(el: HTMLElement, screen: string, parts: LayerPart[],
   })
 }
 
-export type LoopStep = { screen: string; name: string; tap?: [number, number] }
-
-/** Loop: one phone, screens swap in place with a tap ring, like a screen recording. */
-export function loopScene(el: HTMLElement, steps: LoopStep[], accent: string, onStep: (i: number) => void, playing: boolean) {
-  const HOLD = 2.8
-  const FADE = 0.35
-  return mount(el, 9.8, 0.75, playing, (stage) => {
-    const group = stage.phone(steps[0].screen)
-    stage.scene.add(group)
-    const current = group.userData.screen as THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>
-    const next = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), stage.material(steps[0].screen))
-    next.position.z = 0.006
-    next.material.opacity = 0
-    next.renderOrder = 3
-    group.add(next)
-    const ring = new THREE.Mesh(
-      new THREE.RingGeometry(0.16, 0.21, 48),
-      new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0, depthWrite: false })
-    )
-    ring.position.z = 0.01
-    ring.renderOrder = 4
-    group.add(ring)
-    // Load every step up front so the cross-fade never shows an empty frame.
-    steps.forEach((s) => stage.texture(s.screen))
-
-    let index = 0
-    let t = 0
-    let clock = 0
-    const show = (i: number) => {
-      index = i
-      current.material.map = stage.texture(steps[i].screen)
-      onStep(i)
-    }
-    show(0)
-    stage.update = (dt) => {
-      t += dt
-      clock += dt
-      const step = steps[index]
-      const k = clamp((t - 1.2) / 0.8)
-      if (step.tap && k > 0 && k < 1) {
-        ring.position.x = (step.tap[0] / SW - 0.5) * PW
-        ring.position.y = (0.5 - step.tap[1] / SH) * PH
-        ring.scale.setScalar(0.5 + k * 1.3)
-        ring.material.opacity = (1 - k) * 0.95
-      } else ring.material.opacity = 0
-      // Cross-fade into the next screen at the end of the hold.
-      const nextIndex = (index + 1) % steps.length
-      next.material.map = stage.texture(steps[nextIndex].screen)
-      next.material.opacity = clamp((t - (HOLD - FADE)) / FADE)
-      if (t >= HOLD) {
-        t = 0
-        show(nextIndex)
-        next.material.opacity = 0
-      }
-      lean(stage, group, { x: 0, y: -0.18 }, clock, 0.35)
-    }
-  })
-}
-
 /** A band to highlight on a row phone, in 390 × 844 screen pixels; `x` defaults to the full width. */
 export type RowBand = { y: [number, number]; x?: [number, number]; problem?: boolean }
 /** `on` sets the label in the accent colour: the new design, as opposed to the old one or an example. */
@@ -387,13 +328,14 @@ export type RowPhone = { screen: string; label: string; short?: string; on?: boo
 
 /**
  * Row: phones side by side, all visible at once, for before and after or a set of examples.
- * Four or more sit in one row on wide frames and two per row on tall ones. Highlight bands stay
+ * Up to three always share a row; four or more sit in one row on wide frames and two per row on
+ * tall ones, with a lone last phone centred. Highlight bands stay
  * hidden until `setMarked(true)`, then fade in with a slow pulse travelling along the row.
  */
 export function rowScene(el: HTMLElement, phones: RowPhone[], tags: HTMLElement[], colors: { mark: string; problem: string }, playing: boolean) {
   const GAP = 2.6
   const ROW = BH + 0.9
-  const columns = (aspect: number) => (phones.length > 2 && aspect < 1 ? 2 : phones.length)
+  const columns = (aspect: number) => (phones.length > 3 && aspect < 1 ? 2 : phones.length)
   return mount(el, 9, 0.75, playing, (stage) => {
     stage.fit = (aspect) => {
       const cols = columns(aspect)
@@ -438,13 +380,15 @@ export function rowScene(el: HTMLElement, phones: RowPhone[], tags: HTMLElement[
       items.forEach((item, i) => {
         const c = i % cols
         const r = Math.floor(i / cols)
-        item.p.position.set((c - (cols - 1) / 2) * GAP, ((rows - 1) / 2 - r) * ROW - 0.2, 0)
+        const inRow = Math.min(cols, phones.length - r * cols)
+        item.p.position.set((c - (inRow - 1) / 2) * GAP, ((rows - 1) / 2 - r) * ROW - 0.2, 0)
         item.p.rotation.y = rows === 1 ? -(c - (cols - 1) / 2) * 0.07 : 0
         const k = 0.5 + 0.5 * Math.sin(clock * 1.6 - i * 0.9)
         item.bands.forEach((m) => (m.material.opacity = shown * (0.75 + 0.25 * k)))
         const tag = tags[i]
         if (!tag) return
-        const label = stage.camera.aspect < 1 && item.phone.short ? item.phone.short : item.phone.label
+        // Short tags on tall or narrow panels, where full ones would run into each other.
+        const label = (stage.camera.aspect < 1 || w < 640) && item.phone.short ? item.phone.short : item.phone.label
         if (tag.textContent !== label) tag.textContent = label
         item.p.updateMatrixWorld()
         v.set(0, BH / 2 + 0.12, 0)

@@ -7,7 +7,7 @@ import { grid } from "@/components/home/grid"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import type { CaseStudy, Chapter, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
 
-import { HeroStage, LayersStage, LoopStage, RowStage } from "./stages"
+import { HeroStage, LayersStage, RowStage } from "./stages"
 
 /**
  * Story case study: one claim per chapter. The text on the left argues a design decision and the
@@ -141,8 +141,6 @@ function VisualPanel({ visual, wide }: { visual: Visual; wide?: boolean }) {
           <figcaption className={note}>{visual.note}</figcaption>
         </figure>
       )
-    case "loop":
-      return <LoopStage steps={visual.steps} label={visual.label} />
     case "row":
       return (
         <figure className="m-0">
