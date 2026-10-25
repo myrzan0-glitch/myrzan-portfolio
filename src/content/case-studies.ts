@@ -51,8 +51,14 @@ export type Story = {
 export type ChapterText = { title: string; body: string[] }
 
 export type Chapter = ChapterText & {
+  /** `full` puts the text above a full-width visual instead of beside it. */
+  layout?: "full"
   visual?: Visual
   results?: { value: string; label: string; note: string }[]
+  /** Result cards in a row under the text; `meter` draws before and after as bars, in percent. */
+  metrics?: { value: string; label: string; note: string; meter?: { was?: number; now: number } }[]
+  /** Numbered cards in a row under the text. */
+  next?: { title: string; body: string }[]
   /** A second text column in place of a visual, numbered as its own chapter. */
   alongside?: ChapterText
 }
@@ -81,9 +87,35 @@ export type Visual =
       /** Screens shown in place, one after another, with a tap ring where the user taps. */
       steps: { screen: string; name: string; tap?: [number, number] }[]
     }
+  | {
+      kind: "row"
+      label: string
+      /** Phones side by side, all visible at once; the switch under them outlines each `bands` area. */
+      items: { screen: string; label: string; short?: string; bands?: { y: [number, number]; x?: [number, number] }[] }[]
+      mark: string
+      note: string
+    }
+  | {
+      kind: "attempts"
+      /** Read aloud in place of the diagram. */
+      description: string
+      /** Labelled groups of rows; each row is a chain of steps, `no` in red and `yes` in the accent. */
+      groups: { label: string; rows: { lead: string; steps: { text: string; tone?: "no" | "yes" }[] }[] }[]
+    }
+  | {
+      kind: "fan"
+      label: string
+      description: string
+      /** One request on the left, every answer on the right. */
+      source: string
+      sourceNote: string
+      answers: { name: string; status: string; tone: "ok" | "calc" | "no" }[]
+      facts: string[]
+    }
   | ({ kind: "image" } & CaseImage)
 
 const ozen = (name: string) => `/work/ozen-telegram-music/screens/${name}.webp`
+const td = (name: string) => `/work/technodom-credit/screens/${name}.webp`
 
 export const caseStudies: CaseStudy[] = [
   {
@@ -346,110 +378,233 @@ export const caseStudies: CaseStudy[] = [
     }
   },
   {
+    kind: "story",
     slug: "technodom-credit",
     company: "Technodom · Fintech",
     year: "2022",
-    title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
+    title: "Technodom: one ID number, every bank at once",
     summary:
-      "Shoppers applying for credit were rejected bank by bank, re-entering their data every time. I reframed the problem with our banking partners and redesigned the flow so every bank pre-scores the shopper at once.",
-    meta: [
-      { label: "My role", value: "Owned the design: discovery, flow redesign, verification, edge cases" },
-      { label: "Team", value: "Engineers, banking partners, business" },
-      { label: "Year", value: "2022" },
-      { label: "Platform", value: "E-commerce, web and mobile" }
-    ],
-    outcomes: [
-      { value: "$4M+", label: "monthly revenue" },
-      { value: "+35%", label: "credit conversions" },
-      { value: "#1", label: "revenue stream at Technodom" },
-      { value: "1", label: "session instead of repeat attempts" }
-    ],
+      "Shoppers buying on credit were rejected bank by bank, retyping their details every time. Asking every partner bank at once turned online credit into Technodom’s top revenue stream, at more than $4M a month.",
     hero: {
-      src: "/work/td-solution.webp",
-      alt: "Technodom credit flow showing offers from every partner bank at once",
+      src: "/work/technodom-credit/hero.webp",
+      alt: "Five Technodom screens: offers from every bank with their status, the credit checkout, a chosen offer, a credit limit with other banks below it, and offers sorted by term",
       w: 1600,
-      h: 836
+      h: 820
     },
-    sections: [
-      {
-        label: "Context",
-        title: "Kazakhstan’s largest electronics retailer, selling on credit",
-        body: [
-          "Technodom runs 70+ stores and one of the country’s biggest e-commerce platforms. Credit and instalments are built into checkout, so the credit flow sits directly on the revenue line."
-        ],
-        image: {
-          src: "/work/technodom-credit/td-store.webp",
-          alt: "A Technodom store entrance",
-          w: 1280,
-          h: 960
+    story: {
+      subtitle:
+        "Shoppers buying on credit were rejected bank by bank, retyping their details every time. Asking every partner bank at once turned online credit into Technodom’s top revenue stream, at more than $4M a month.",
+      heroScreens: [td("checkout"), td("offer-picked"), td("limit")],
+      heroLabel: "Three Technodom screens: checkout with credit terms, offers from every partner bank, and a refusal that suggests other banks",
+      role: [
+        { label: "Role", value: "Product designer · 2022" },
+        {
+          label: "Contribution",
+          value:
+            "Owned the design end to end: discovery, the new credit flow, verification and every edge case. Worked with engineers, the business and Technodom’s partner banks through release."
+        },
+        { label: "Platform", value: "Mobile app and web checkout" }
+      ],
+      chapters: [
+        {
+          title: "A loop that punished people for applying",
+          body: [
+            "Technodom is Kazakhstan’s largest electronics retailer, and a big share of what it sells is bought on credit or in instalments, right at checkout. That flow sits directly on the revenue line.",
+            "It worked one bank at a time. Pick a bank, type your details, get sent to the bank, wait, get rejected, start again with the next one. **Every attempt cost the shopper their details again, and nobody could tell them which bank would say yes.** Many gave up at the very last step of the purchase."
+          ],
+          visual: {
+            kind: "attempts",
+            description:
+              "The old flow: three attempts, each with a form, a redirect and a wait; two rejections before the shopper gives up. The new flow: the ID number once, every bank answers, the shopper picks the best offer",
+            groups: [
+              {
+                label: "Before · one bank at a time",
+                rows: [
+                  { lead: "Try 1", steps: [{ text: "Pick bank A" }, { text: "Type details" }, { text: "Redirect, wait" }, { text: "Rejected", tone: "no" }] },
+                  { lead: "Try 2", steps: [{ text: "Pick bank B" }, { text: "Type details again" }, { text: "Redirect, wait" }, { text: "Rejected", tone: "no" }] },
+                  { lead: "Try 3", steps: [{ text: "Pick bank C" }, { text: "Type details again" }, { text: "Gives up", tone: "no" }] }
+                ]
+              },
+              {
+                label: "After · every bank at once",
+                rows: [{ lead: "Once", steps: [{ text: "Type ID number once" }, { text: "All partner banks answer" }, { text: "Pick the best offer", tone: "yes" }] }]
+              }
+            ]
+          }
+        },
+        {
+          title: "The fix was in the system, not the screens",
+          body: [
+            "Analytics and interviews pointed to three causes: typing the same details again and again, no idea what each bank offered, and no sense of the odds of approval.",
+            "Then a conversation with our partner banks gave us the way out. **Most of them already had pre-scoring APIs that return a preliminary decision from an ID number alone.** So the job stopped being “make credit look nicer” and became “ask every bank at once and let the shopper choose”."
+          ],
+          visual: {
+            kind: "fan",
+            label: "Pre-scoring · one request, every bank",
+            description: "One ID number goes to every partner bank at once; each answers with approved, still calculating or refused",
+            source: "ID number (IIN)",
+            sourceNote: "typed once, with SMS consent",
+            answers: [
+              { name: "Halyk Bank", status: "Approved", tone: "ok" },
+              { name: "Home Credit Bank", status: "Approved", tone: "ok" },
+              { name: "Bank RBK", status: "Calculating", tone: "calc" },
+              { name: "Fast Cash", status: "Approved", tone: "ok" },
+              { name: "Freedom Finance Credit", status: "Refused", tone: "no" }
+            ],
+            facts: ["Answers arrive as each bank responds", "Rates, terms and monthly payment side by side"]
+          }
+        },
+        {
+          title: "Choose the terms, not the bank",
+          body: [
+            "The old checkout started with “which bank?”, a question shoppers couldn’t answer. The new one starts with the questions they can: **credit or instalments, and for how long.**",
+            "The bank row stops being a choice and becomes a promise: “we’ll show you every bank’s offer, you choose the best”. Below it, a name, a surname and an ID number. That’s all the banks need to pre-score."
+          ],
+          visual: {
+            kind: "layers",
+            label: "The checkout pulled apart into layers, with the new parts marked: term, every partner bank, and the ID number",
+            screen: td("checkout"),
+            parts: [
+              { y: [0, 87], name: "Header", own: false },
+              { y: [87, 202], name: "Credit or instalments", own: false },
+              { y: [202, 310], name: "Term first", own: true },
+              { y: [310, 529], name: "Every bank", own: true },
+              { y: [529, 739], name: "ID number, once", own: true },
+              { y: [739, 844], name: "Continue", own: false }
+            ],
+            note: "Blue: what changed. The shopper never picks a bank up front."
+          }
+        },
+        {
+          title: "Verify once, consent once",
+          body: [
+            "Banks need two things before they can score anyone: proof that the phone is yours, and your consent to a credit bureau check.",
+            "The first SMS confirms the phone. New shoppers set a password, so the application lives in their account. The second SMS is the consent, and **one consent covers every partner bank**: the full text lists each one, already ticked, so nobody signs five times."
+          ],
+          layout: "full",
+          visual: {
+            kind: "row",
+            label: "Four screens: the SMS code, setting a password, the consent code, and the consent text listing every partner bank",
+            items: [
+              { screen: td("sms-done"), label: "Phone", bands: [{ y: [266, 334], x: [61, 329] }] },
+              { screen: td("password"), label: "Password", bands: [{ y: [455, 663] }] },
+              { screen: td("consent-code"), label: "Consent", bands: [{ y: [338, 429] }] },
+              { screen: td("consent"), label: "Every bank", bands: [{ y: [547, 834] }] }
+            ],
+            mark: "Show changes",
+            note: "Phone → password → consent → every bank on one consent."
+          }
+        },
+        {
+          title: "Every bank answers on one screen",
+          body: [
+            "Offers arrive as each bank responds, and each one wears its status: **Approved**, **Calculating** or **Refused**. Nobody stares at a spinner wondering if anything is happening.",
+            "Every card shows the same three facts, the bank, the product and the monthly payment, so offers compare at a glance. Pick one, tap Continue, and the shopper is handed to that bank to finish."
+          ],
+          layout: "full",
+          visual: {
+            kind: "row",
+            label: "Three screens: the offers list with approved, calculating and refused statuses, Halyk Bank chosen, and the hand-off to the bank",
+            items: [
+              { screen: td("offers-all"), label: "Statuses", bands: [{ y: [249, 734], x: [276, 381] }] },
+              { screen: td("offer-picked"), label: "Choice", bands: [{ y: [245, 323] }, { y: [500, 557] }] },
+              { screen: td("handoff"), label: "Hand-off to bank", short: "Hand-off", bands: [{ y: [157, 471], x: [152, 377] }] }
+            ],
+            mark: "Show changes",
+            note: "Statuses → choice → hand-off to the bank."
+          }
+        },
+        {
+          title: "Sort by what you can afford",
+          body: [
+            "Shoppers think in monthly payments, not in banks. So the two filters above the list are the two questions that change the payment: the form of credit and the term.",
+            "The sheet **says how many offers you’ll get before you apply it**: “Show 6 offers” at 3 months becomes “Show 2 offers” at 24. And the payment drops from 15,660 to 5,123 tenge a month, right on the card."
+          ],
+          layout: "full",
+          visual: {
+            kind: "row",
+            label: "Three screens: the term sheet at 3 months showing 6 offers, at 24 months showing 2, and the list with two offers at 5,123 tenge a month",
+            items: [
+              { screen: td("term-3"), label: "3 months", bands: [{ y: [704, 760] }] },
+              { screen: td("term-24"), label: "24 months", bands: [{ y: [635, 682] }, { y: [704, 760] }] },
+              { screen: td("sorted"), label: "2 offers", bands: [{ y: [247, 405] }] }
+            ],
+            mark: "Show changes",
+            note: "The count updates before you commit; the payment updates on the card."
+          }
+        },
+        {
+          title: "A “no” is never a dead end",
+          body: [
+            "In the old flow a rejection ended the purchase. Now every refusal says what happened and what to do next, on the same screen.",
+            "If a bank can only lend part of the price, the screen says how much. If it refuses, **the other banks’ approved offers are right below it**, with “Back to cart” as the fallback. And when the bank sends a reason, the shopper sees it in plain words: an overdue debt, the age limit, or a request to try a smaller amount."
+          ],
+          layout: "full",
+          visual: {
+            kind: "row",
+            label: "Three screens: a credit limit lower than the price, a refusal with other banks’ offers below, and refusal reasons on each offer",
+            items: [
+              { screen: td("limit"), label: "Limit below the price", short: "Limit", bands: [{ y: [105, 320] }, { y: [338, 676] }] },
+              { screen: td("refused"), label: "Refused by the bank", short: "Refused", bands: [{ y: [252, 672] }, { y: [756, 795] }] },
+              {
+                screen: td("reasons"),
+                label: "Reason for refusal",
+                short: "Reasons",
+                bands: [
+                  { y: [310, 401], x: [78, 368] },
+                  { y: [478, 535], x: [78, 368] },
+                  { y: [613, 654], x: [78, 368] }
+                ]
+              }
+            ],
+            mark: "Show next steps",
+            note: "Limit → refusal → reasons. Show next steps marks what the shopper can do on each."
+          }
+        },
+        {
+          title: "Designed with engineering and the banks",
+          body: [
+            "I worked with engineers to bring several pre-scoring APIs behind one screen, and with the banks on what each status and refusal reason could honestly say.",
+            "Every failure got its own state, not a generic error: a wrong code, a code that failed to send, a bank that timed out. **Each one says what went wrong and offers the next step**, a retry or a new code. Speed, accessibility and data compliance were requirements from the first sketch, not polish at the end."
+          ],
+          visual: {
+            kind: "row",
+            label: "Two error states: a wrong SMS code with a link to resend, and a failed check with a retry button",
+            items: [
+              { screen: td("wrongcode"), label: "Wrong code", bands: [{ y: [379, 418] }] },
+              { screen: td("failed"), label: "Check failed", bands: [{ y: [379, 418] }] }
+            ],
+            mark: "Show next steps",
+            note: "Wrong code and failed check, each with one way forward."
+          }
+        },
+        {
+          title: "Results",
+          body: [
+            "Applying for credit went from repeated attempts to one transparent session, and online brokerage became the company’s biggest source of revenue."
+          ],
+          layout: "full",
+          metrics: [
+            { value: "$4M+", label: "Monthly revenue", note: "through the new credit flow" },
+            { value: "+35%", label: "Credit conversions", note: "applications that ended in a purchase", meter: { was: 74, now: 100 } },
+            { value: "#1", label: "Revenue stream at Technodom", note: "online brokerage" },
+            { value: "1", label: "Session", note: "instead of repeat attempts, bank by bank" }
+          ]
+        },
+        {
+          title: "What I’d do differently",
+          body: [
+            "The biggest win came from outside the screens: a conversation with the banks changed what was possible. Next time I’d go further, faster."
+          ],
+          layout: "full",
+          next: [
+            { title: "Talk to partners first", body: "Start with the banks’ APIs and limits before drawing a single flow." },
+            { title: "Tag every decision point", body: "Track how shoppers choose: by payment, by bank or by the first green badge." },
+            { title: "Test the comparison", body: "A/B test offer layouts and use what wins to rank offers by default." }
+          ]
         }
-      },
-      {
-        label: "Problem",
-        title: "A loop that punished people for applying",
-        body: [
-          "Shoppers picked a bank, entered their ID number, were redirected, got rejected, and started again with the next bank. Each attempt meant re-entering data with no idea which bank might approve them.",
-          "The result was high abandonment and millions in credit sales lost at the last step of checkout."
-        ],
-        image: {
-          src: "/work/technodom-credit/td-loop.webp",
-          alt: "Diagram of the old flow: choose a bank, enter ID, get rejected, repeat",
-          w: 1600,
-          h: 944,
-          caption: "The old flow: one bank at a time, until approval or give-up."
-        }
-      },
-      {
-        label: "Insight",
-        title: "The fix was in the system, not the screens",
-        body: [
-          "Analytics and user interviews pointed to three root causes: repeated input, no transparency, and no sense of approval odds. Then conversations with our banking partners surfaced the unlock: most of them already supported pre-scoring APIs that return a preliminary decision from an ID number alone.",
-          "That reframed the brief. The job wasn’t to make credit look nicer. It was to help shoppers secure financing quickly and with confidence."
-        ]
-      },
-      {
-        label: "Solution",
-        title: "One ID number, every bank, all offers at once",
-        body: [
-          "I reversed the logic. Instead of shoppers testing banks one by one, the system pre-scores them across all partner banks in a single step and shows every eligible offer side by side."
-        ],
-        points: [
-          "Single data entry: the ID number, once",
-          "Simultaneous pre-scoring across all partner banks",
-          "Transparent comparison of rates, limits and terms",
-          "One-tap confirmation, then a hand-off to the chosen bank"
-        ],
-        image: {
-          src: "/work/technodom-credit/td-verify.webp",
-          alt: "Comparison table of bank offers with rates, terms and approval status, plus two-step verification",
-          w: 1600,
-          h: 932,
-          caption: "Offer comparison and two-step SMS verification."
-        }
-      },
-      {
-        label: "Execution",
-        title: "Designed with engineering and the banks, not handed over",
-        body: [
-          "I worked with engineers to integrate multiple pre-scoring APIs, designed secure two-step verification by SMS, and built fallback flows for exceptional cases. Speed, accessibility and data compliance were requirements at every stage, not polish at the end."
-        ]
-      },
-      {
-        label: "Outcome",
-        title: "Online credit became the company’s top revenue source",
-        body: [
-          "Credit conversions rose 35%, the flow generated $4M+ in monthly revenue, and online brokerage became Technodom’s #1 revenue stream. Applying for credit went from repeated attempts to one transparent session.",
-          "With more time I would A/B test comparison layouts and instrument each decision point to understand how shoppers choose between offers."
-        ],
-        image: {
-          src: "/work/technodom-credit/td-results.webp",
-          alt: "Results: $4M monthly revenue, 35% funded transactions, the #1 revenue source",
-          w: 1600,
-          h: 853
-        }
-      }
-    ],
-    takeaway: "Solving user frustration at the system level, with partners outside the company, produced gains no screen redesign could."
+      ]
+    }
   },
   {
     slug: "bi-video-consultation",

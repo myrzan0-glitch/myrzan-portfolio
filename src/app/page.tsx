@@ -61,15 +61,14 @@ const featured = [
   },
   {
     n: "04",
-    slug: "bi-match-prototype",
-    company: "BI Group · AI prototyping",
-    year: "2026",
-    title: "Built BI Match in one day with AI, from idea to stakeholder decision, then shipped it",
-    line: "Matched buyers to homes by lifestyle through swiping. I built the prototype in our production stack with Claude Code, demoed it the same day, and it’s now live.",
-    stats: ["1 day to decision", "0 roadmap hours used", "Live in production"],
-    img: "/work/bi-match-prototype/hero.webp",
-    contain: true,
-    alt: "BI Match: Figma connected to Claude through MCP, next to the BI Match screen"
+    slug: "technodom-credit",
+    company: "Technodom · Fintech",
+    year: "2022",
+    title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
+    line: "Partnered with the banks to pre-score every shopper across all of them in one step, instead of one bank at a time. Became the company’s #1 revenue source.",
+    stats: ["$4M+ monthly revenue", "+35% credit conversions", "#1 revenue stream"],
+    img: "/work/technodom-credit/hero.webp",
+    alt: "Technodom screens: offers from every partner bank with their status, the credit checkout and a refusal that suggests other banks"
   }
 ]
 
@@ -97,7 +96,7 @@ const side = [
 ]
 
 const more = [
-  { slug: "technodom-credit", title: "Multi-bank credit flow", where: "Technodom · 2022", metric: "$4M+ monthly revenue" },
+  { slug: "bi-match-prototype", title: "BI Match, built in a day with AI", where: "BI Group · 2026", metric: "Live in production" },
   { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2025", metric: "−83% QA cycles" },
   { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
   { slug: "beeline-checkout-research", title: "Checkout research with real customers", where: "Beeline · 2023", metric: "2:43 → 1:37 per order" },

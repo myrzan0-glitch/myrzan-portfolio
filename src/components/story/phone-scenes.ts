@@ -51,9 +51,16 @@ type Stage = {
 
 /**
  * Sets up the renderer, camera and texture cache for a panel and runs `build` on it.
- * `dist` is the camera distance at 4:3; `fit` is the aspect below which the camera backs off.
+ * `dist` is the camera distance at 4:3; `fit` is the aspect below which the camera backs off,
+ * or a function that returns the distance for an aspect.
  */
-function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, build: (s: Stage) => void): Scene {
+function mount(
+  el: HTMLElement,
+  dist: number,
+  fit: number | ((aspect: number) => number),
+  playing: boolean,
+  build: (s: Stage) => void
+): Scene {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
   renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1))
   const canvas = renderer.domElement
@@ -87,6 +94,19 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
             x.filter = "blur(16px)"
             x.fillStyle = "rgba(0,0,0,0.5)"
             x.fillRect(32, 34, 96, 236)
+          })
+        )
+      } else if (src === "band") {
+        // A highlight: a rounded outline with a soft fill, stretched over any area and tinted.
+        t = new THREE.CanvasTexture(
+          drawn(256, 64, (x) => {
+            x.fillStyle = "rgba(255,255,255,0.22)"
+            roundRect(x, 4, 4, 248, 56, 14)
+            x.fill()
+            x.lineWidth = 7
+            x.strokeStyle = "#fff"
+            roundRect(x, 4, 4, 248, 56, 14)
+            x.stroke()
           })
         )
       } else {
@@ -131,7 +151,7 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
     if (!w || !h) return
     renderer.setSize(w, h, false)
     camera.aspect = w / h
-    camera.position.set(0, 0, dist * Math.max(1, fit / camera.aspect))
+    camera.position.set(0, 0, typeof fit === "number" ? dist * Math.max(1, fit / camera.aspect) : fit(camera.aspect))
     camera.lookAt(0, 0, 0)
     camera.updateProjectionMatrix()
     dirty = true
@@ -346,4 +366,104 @@ export function loopScene(el: HTMLElement, steps: LoopStep[], accent: string, on
       lean(stage, group, { x: 0, y: -0.18 }, clock, 0.35)
     }
   })
+}
+
+export type RowItem = {
+  screen: string
+  label: string
+  /** Label on narrow panels. */
+  short?: string
+  /** Areas to outline, in screen pixels; `x` defaults to almost the full width. */
+  bands?: { y: [number, number]; x?: [number, number] }[]
+}
+
+export type RowScene = Scene & {
+  setMarked: (marked: boolean) => void
+  setColor: (color: string) => void
+}
+
+/**
+ * Row: phones side by side, all visible at once, each labelled by a tag above it. Outlines over
+ * the key areas stay hidden until `setMarked(true)`, so the designs read clean first. Three or
+ * more phones fall into two columns on tall panels.
+ */
+export function rowScene(el: HTMLElement, items: RowItem[], tags: HTMLElement[], color: string, playing: boolean): RowScene {
+  const GAP = 2.6
+  const ROW = BH + 0.9
+  const VIEW = 2 * Math.tan((30 * Math.PI) / 360)
+  const columns = (aspect: number) => (items.length > 2 && aspect < 1 ? 2 : items.length)
+  const distance = (aspect: number) => {
+    const cols = columns(aspect)
+    const rows = Math.ceil(items.length / cols)
+    return Math.max(9, (cols * GAP + 0.5) / (VIEW * aspect), (rows * ROW + 0.5) / VIEW)
+  }
+  let marked = false
+  let shown = 0
+  const outlines: THREE.MeshBasicMaterial[] = []
+
+  const scene = mount(el, 9, distance, playing, (stage) => {
+    const group = new THREE.Group()
+    stage.scene.add(group)
+    const phones = items.map((item) => {
+      const p = stage.phone(item.screen)
+      group.add(p)
+      const bands = (item.bands ?? []).map((band) => {
+        const [x0, x1] = band.x ?? [10, SW - 10]
+        const [y0, y1] = band.y
+        const material = stage.material("band")
+        material.color.set(color)
+        material.opacity = 0
+        outlines.push(material)
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(((x1 - x0) / SW) * PW, ((y1 - y0) / SH) * PH), material)
+        m.position.set(((x0 + x1) / 2 / SW - 0.5) * PW, (0.5 - (y0 + y1) / 2 / SH) * PH, 0.01)
+        m.renderOrder = 3
+        p.add(m)
+        return material
+      })
+      return { p, bands }
+    })
+    const v = new THREE.Vector3()
+    let clock = 0
+    let last = performance.now()
+    stage.update = (dt) => {
+      clock += dt
+      // The outlines fade on real time, so the switch works while the animation is paused.
+      const now = performance.now()
+      const real = Math.min(0.05, Math.max(0, (now - last) / 1000))
+      last = now
+      shown += (Number(marked) - shown) * Math.min(1, real * 8)
+      const cols = columns(stage.camera.aspect)
+      const rows = Math.ceil(items.length / cols)
+      lean(stage, group, { x: 0, y: 0 }, clock, 0.18)
+      group.updateMatrixWorld()
+      const w = el.clientWidth
+      const h = el.clientHeight
+      phones.forEach(({ p, bands }, i) => {
+        const c = i % cols
+        const r = Math.floor(i / cols)
+        p.position.set((c - (cols - 1) / 2) * GAP, ((rows - 1) / 2 - r) * ROW - 0.2, 0)
+        p.rotation.y = rows === 1 ? -(c - (cols - 1) / 2) * 0.07 : 0
+        // A slow, soft pulse on the outlines, travelling along the row.
+        const k = 0.5 + 0.5 * Math.sin(clock * 1.6 - i * 0.9)
+        bands.forEach((b) => (b.opacity = shown * (0.75 + 0.25 * k)))
+        const tag = tags[i]
+        if (!tag) return
+        const label = stage.camera.aspect < 1 && items[i].short ? items[i].short! : items[i].label
+        if (tag.textContent !== label) tag.textContent = label
+        p.updateMatrixWorld()
+        v.set(0, BH / 2 + 0.12, 0)
+        p.localToWorld(v).project(stage.camera)
+        // Keep the tag inside the panel on narrow screens.
+        const left = Math.min(w - tag.offsetWidth - 6, Math.max(6, ((v.x + 1) / 2) * w - tag.offsetWidth / 2))
+        tag.style.transform = `translate(${left}px, ${((1 - v.y) / 2) * h - tag.offsetHeight}px)`
+      })
+    }
+  })
+  return {
+    ...scene,
+    setMarked: (m) => {
+      marked = m
+    },
+    setColor: (c) => outlines.forEach((m) => m.color.set(c))
+  }
 }

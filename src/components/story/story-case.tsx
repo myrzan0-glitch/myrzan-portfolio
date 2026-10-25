@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import type { CaseStudy, Chapter, ChapterText, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
 
-import { HeroStage, LayersStage, LoopStage } from "./stages"
+import { HeroStage, LayersStage, LoopStage, RowStage } from "./stages"
 
 /**
  * Story case study: one claim per chapter. The text on the left argues a design decision, the
@@ -39,9 +39,9 @@ function Rich({ text }: { text: string }) {
   )
 }
 
-function Text({ n, chapter, children }: { n: number; chapter: ChapterText; children?: React.ReactNode }) {
+function Text({ n, chapter, full, children }: { n: number; chapter: ChapterText; full?: boolean; children?: React.ReactNode }) {
   return (
-    <div className="min-w-0 md:sticky md:top-8">
+    <div className={`min-w-0 ${full ? "max-w-[620px]" : "md:sticky md:top-8"}`}>
       <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-faint)]">({n})</span>
       <h2 className="mt-2 text-[24px] font-medium leading-[1.15] tracking-[-0.02em] [text-wrap:balance] sm:text-[30px]">{chapter.title}</h2>
       {chapter.body.map((p) => (
@@ -67,6 +67,47 @@ function Results({ results }: { results: NonNullable<Chapter["results"]> }) {
     </div>
   )
 }
+
+function Metrics({ metrics }: { metrics: NonNullable<Chapter["metrics"]> }) {
+  return (
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      {metrics.map((m) => (
+        <div key={m.label} className="flex flex-col gap-2.5 rounded-[14px] bg-[var(--home-panel)] p-[18px] sm:p-6">
+          <strong className="text-[40px] font-normal leading-none tracking-[-0.03em] tabular-nums sm:text-[56px]">{m.value}</strong>
+          <span className="home-label !text-[var(--home-fg)]">{m.label}</span>
+          {m.meter?.was !== undefined && (
+            <div className="h-1.5 overflow-hidden rounded-[3px] bg-[var(--home-bg)]">
+              <i className="block h-full rounded-[3px] bg-[var(--home-faint)] opacity-50" style={{ width: `${m.meter.was}%` }} />
+            </div>
+          )}
+          {m.meter && (
+            <div className="h-1.5 overflow-hidden rounded-[3px] bg-[var(--home-bg)]">
+              <i className="block h-full rounded-[3px] bg-[var(--story-accent)]" style={{ width: `${m.meter.now}%` }} />
+            </div>
+          )}
+          <small className="mt-auto pt-1.5 font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-faint)]">{m.note}</small>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function Next({ next }: { next: NonNullable<Chapter["next"]> }) {
+  return (
+    <ol className="m-0 grid list-none gap-3 p-0 md:grid-cols-3">
+      {next.map((item, i) => (
+        <li key={item.title} className="flex flex-col gap-2.5 rounded-[14px] border border-[var(--home-line)] p-[18px] sm:p-6">
+          <span className="home-label">{String(i + 1).padStart(2, "0")}</span>
+          <b className="text-[18px] font-medium tracking-[-0.01em]">{item.title}</b>
+          <p className="home-muted m-0 text-[14px] leading-[1.6]">{item.body}</p>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+const statusTones = { ok: "var(--story-ok)", calc: "var(--story-accent)", no: "var(--story-warn)" }
+const chip = "whitespace-nowrap rounded-full px-2.5 py-1.5"
 
 function VisualPanel({ visual }: { visual: Visual }) {
   switch (visual.kind) {
@@ -111,6 +152,76 @@ function VisualPanel({ visual }: { visual: Visual }) {
       )
     case "loop":
       return <LoopStage steps={visual.steps} label={visual.label} />
+    case "row":
+      return <RowStage items={visual.items} label={visual.label} mark={visual.mark} note={visual.note} />
+    case "attempts":
+      return (
+        <figure
+          role="img"
+          aria-label={visual.description}
+          className="m-0 flex flex-col justify-center gap-3.5 rounded-[14px] bg-[var(--home-panel)] p-5 sm:p-10"
+        >
+          {visual.groups.map((group, g) => (
+            <React.Fragment key={group.label}>
+              {g > 0 && <div className="my-1 h-px bg-[var(--home-line)]" />}
+              <span className="home-label">{group.label}</span>
+              {group.rows.map((row) => (
+                <div key={row.lead + row.steps[0].text} className="grid items-center gap-1.5 text-[13px] sm:grid-cols-[64px_1fr] sm:gap-3">
+                  <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-faint)]">{row.lead}</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {row.steps.map((step, i) => (
+                      <React.Fragment key={step.text}>
+                        {i > 0 && <span className="text-[var(--home-faint)]">→</span>}
+                        <span
+                          className={`${chip} ${step.tone ? "text-white" : "bg-[var(--home-bg)]"}`}
+                          style={step.tone ? { background: step.tone === "no" ? "var(--story-warn)" : "var(--story-accent)" } : undefined}
+                        >
+                          {step.text}
+                        </span>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </figure>
+      )
+    case "fan":
+      return (
+        <figure
+          role="img"
+          aria-label={visual.description}
+          className="m-0 flex flex-col justify-center gap-3.5 rounded-[14px] bg-[var(--home-panel)] p-5 sm:p-10"
+        >
+          <span className="home-label">{visual.label}</span>
+          <div className="grid items-center gap-3.5 sm:grid-cols-[auto_1fr] sm:gap-[22px]">
+            <div className="rounded-xl bg-[var(--story-accent)] px-4 py-3.5 text-[14px] leading-[1.35] text-white">
+              {visual.source}
+              <small className="mt-1 block font-[family-name:var(--font-mono)] text-[10.5px] opacity-80">{visual.sourceNote}</small>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              {visual.answers.map((a) => (
+                <div key={a.name} className="flex items-center justify-between gap-3 rounded-[10px] bg-[var(--home-bg)] px-3 py-2.5 text-[13px]">
+                  {a.name}
+                  <span
+                    className="inline-flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px]"
+                    style={{ color: statusTones[a.tone] }}
+                  >
+                    <i className="h-[7px] w-[7px] rounded-full bg-current" />
+                    {a.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-muted)]">
+            {visual.facts.map((f) => (
+              <span key={f}>{f}</span>
+            ))}
+          </div>
+        </figure>
+      )
     case "image":
       return (
         <figure className="m-0">
@@ -163,18 +274,25 @@ export function StoryCase({ study, next }: { study: Study; next: CaseStudy }) {
           </dl>
         </div>
 
-        {story.chapters.map((chapter) => (
-          <section
-            key={chapter.title}
-            className={`${wrap} mt-24 grid items-start gap-6 md:mt-36 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-14`}
-          >
-            <Text n={++n} chapter={chapter}>
-              {chapter.results && <Results results={chapter.results} />}
-            </Text>
-            {chapter.visual && <VisualPanel visual={chapter.visual} />}
-            {chapter.alongside && <Text n={++n} chapter={chapter.alongside} />}
-          </section>
-        ))}
+        {story.chapters.map((chapter) => {
+          const full = chapter.layout === "full"
+          return (
+            <section
+              key={chapter.title}
+              className={`${wrap} mt-24 grid items-start md:mt-36 ${
+                full ? "gap-8" : "gap-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-14"
+              }`}
+            >
+              <Text n={++n} chapter={chapter} full={full}>
+                {chapter.results && <Results results={chapter.results} />}
+              </Text>
+              {chapter.visual && <VisualPanel visual={chapter.visual} />}
+              {chapter.metrics && <Metrics metrics={chapter.metrics} />}
+              {chapter.next && <Next next={chapter.next} />}
+              {chapter.alongside && <Text n={++n} chapter={chapter.alongside} />}
+            </section>
+          )
+        })}
 
         <nav aria-label="Next case study" className={`${wrap} mt-28`}>
           <Link
