@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
+import { grid } from "@/components/home/grid"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import type { CaseStudy, Chapter, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
 
@@ -14,7 +15,7 @@ import { HeroStage, LayersStage, LoopStage, RowStage } from "./stages"
  * next steps close the page.
  */
 
-const wrap = "mx-auto w-full max-w-[1200px] px-5 sm:px-6"
+const wrap = grid
 
 const tones: Record<Tone, string> = {
   accent: "var(--story-accent)",

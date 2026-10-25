@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { ArrowUp, ArrowUpRight, Check, Copy } from "lucide-react"
 
 import { EMAIL } from "@/components/home/copy-email"
+import { grid } from "@/components/home/grid"
 import { LondonClock } from "@/components/home/london-clock"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 
@@ -106,7 +107,7 @@ function Column({ title, className = "", children }: { title: string; className?
 export function SiteFooter() {
   return (
     <footer className="mt-28 border-t border-[var(--home-line)] bg-[var(--home-soft)]">
-      <div className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 pb-12 pt-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20">
+      <div className={`${grid} grid gap-12 pb-12 pt-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20`}>
         <div>
           <p className="m-0 max-w-[420px] text-[24px] font-medium leading-[1.2] tracking-[-0.02em] sm:text-[28px]">
             Let&rsquo;s work together.
@@ -143,14 +144,16 @@ export function SiteFooter() {
           </Column>
         </div>
       </div>
-      <div className="mx-auto flex w-full max-w-[1280px] flex-wrap items-center justify-between gap-3 border-t border-[var(--home-line)] px-5 py-6 sm:px-6">
-        <span className="home-label">
-          © {new Date().getFullYear()} Myrzan Izimbetov · Built with a lot of coffee
-        </span>
-        <a href="#main" className="home-label inline-flex items-center gap-1 transition-colors hover:!text-[var(--home-fg)]">
-          Back to top
-          <ArrowUp className="h-3 w-3" aria-hidden="true" />
-        </a>
+      <div className={grid}>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--home-line)] py-6">
+          <span className="home-label">
+            © {new Date().getFullYear()} Myrzan Izimbetov · Built with a lot of coffee
+          </span>
+          <a href="#main" className="home-label inline-flex items-center gap-1 transition-colors hover:!text-[var(--home-fg)]">
+            Back to top
+            <ArrowUp className="h-3 w-3" aria-hidden="true" />
+          </a>
+        </div>
       </div>
     </footer>
   )

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
+import { grid } from "@/components/home/grid"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import { VideoLoop } from "@/components/video-loop"
 import { FadeIn } from "@/components/motion"
@@ -65,7 +66,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   return (
     <div className="home-root">
       <main id="main" className="pb-20">
-        <div className={`${column} flex items-center justify-between pt-5 sm:pt-7`}>
+        <div className={`${grid} flex items-center justify-between pt-5 sm:pt-7`}>
           <Link
             href="/#work"
             className="home-label inline-flex items-center gap-1.5 !text-[var(--home-fg)] transition-opacity hover:opacity-70"

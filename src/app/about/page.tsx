@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import { ArrowRight, ArrowUpRight } from "lucide-react"
 
+import { grid } from "@/components/home/grid"
 import { SiteFooter, SiteNav } from "@/components/home/site-nav"
 import { jobs, photos, rules } from "@/content/profile"
 
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   description: "Product designer in London: how I work, where I’ve worked, and life outside work."
 }
 
-const wrap = "mx-auto w-full max-w-[1280px] px-5 sm:px-6"
+const wrap = grid
 const card = "relative overflow-hidden rounded-2xl bg-[var(--home-soft)] p-5 ring-1 ring-[var(--home-line)]"
 
 export default function AboutPage() {

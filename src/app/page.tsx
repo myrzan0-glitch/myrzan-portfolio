@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react"
 import { CvButton } from "@/components/cv-button"
 import { HeroBackground } from "@/components/hero-background"
 import { CopyEmail } from "@/components/home/copy-email"
+import { grid } from "@/components/home/grid"
 import { SiteFooter, SiteNav } from "@/components/home/site-nav"
 import { WorkCover, type CoverKind } from "@/components/home/work-cover"
 import { FadeIn } from "@/components/motion"
@@ -55,7 +56,8 @@ const more = [
   { slug: "beeline-design-system", title: "From one chaotic file to a design system", where: "Beeline · 2022", metric: "5 flows rebuilt" }
 ]
 
-const column = "mx-auto w-full max-w-[640px] px-5 sm:px-6"
+// Everything sits on the one page grid; the intro keeps a readable measure inside it.
+const column = grid
 
 export default function HomePage() {
   return (
@@ -68,41 +70,43 @@ export default function HomePage() {
 
           <FadeIn>
             <div className={`${column} pb-4 pt-16 sm:pt-24`}>
-              <h1 className="m-0 text-[17px] font-medium">Myrzan Izimbetov</h1>
-              <p className="home-muted mt-0.5 text-[15px]">Product Designer · London</p>
-              <p className="mt-7 text-[19px] leading-[1.5] sm:text-[21px]">
-                I own problems end to end, from discovery to shipped code.
-              </p>
-              <p className="home-muted mt-2.5 text-[16px] leading-[1.55] sm:text-[21px] sm:leading-[1.5]">
-                For six years I&apos;ve led mobile, fintech and e-commerce products used by millions of people every day. I
-                start with context: where the business is going and why customers choose us. Then I research, design and
-                prototype in production until the metric moves.
-              </p>
-              <p className="home-muted mt-4 text-[15px] leading-[1.55]">
-                Now designing the front-office system of the{" "}
-                <a
-                  href="https://nbu.uz"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[var(--home-fg)] underline decoration-[var(--home-line)] underline-offset-4 transition-colors hover:decoration-[var(--home-fg)]"
-                >
-                  National Bank of Uzbekistan
-                </a>
-                .
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4">
-                <CvButton />
-                <CopyEmail />
+              <div className="max-w-[640px]">
+                <h1 className="m-0 text-[17px] font-medium">Myrzan Izimbetov</h1>
+                <p className="home-muted mt-0.5 text-[15px]">Product Designer · London</p>
+                <p className="mt-7 text-[19px] leading-[1.5] sm:text-[21px]">
+                  I own problems end to end, from discovery to shipped code.
+                </p>
+                <p className="home-muted mt-2.5 text-[16px] leading-[1.55] sm:text-[21px] sm:leading-[1.5]">
+                  For six years I&apos;ve led mobile, fintech and e-commerce products used by millions of people every day. I
+                  start with context: where the business is going and why customers choose us. Then I research, design and
+                  prototype in production until the metric moves.
+                </p>
+                <p className="home-muted mt-4 text-[15px] leading-[1.55]">
+                  Now designing the front-office system of the{" "}
+                  <a
+                    href="https://nbu.uz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--home-fg)] underline decoration-[var(--home-line)] underline-offset-4 transition-colors hover:decoration-[var(--home-fg)]"
+                  >
+                    National Bank of Uzbekistan
+                  </a>
+                  .
+                </p>
+                <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4">
+                  <CvButton />
+                  <CopyEmail />
+                </div>
+                <p className="mt-7 inline-flex items-center gap-2 text-sm">
+                  <span className="h-[7px] w-[7px] rounded-full bg-[var(--home-green)] shadow-[0_0_0_4px_var(--home-green-soft)]" />
+                  <span className="home-muted">Open to product design roles in Big Tech</span>
+                </p>
               </div>
-              <p className="mt-7 inline-flex items-center gap-2 text-sm">
-                <span className="h-[7px] w-[7px] rounded-full bg-[var(--home-green)] shadow-[0_0_0_4px_var(--home-green-soft)]" />
-                <span className="home-muted">Open to product design roles in Big Tech</span>
-              </p>
             </div>
           </FadeIn>
         </section>
 
-        <section id="work" className="mx-auto w-full max-w-[1180px] px-5 pt-20 sm:px-6 sm:pt-24">
+        <section id="work" className={`${grid} pt-20 sm:pt-24`}>
           <div className="home-rule">
             <span className="home-label">Selected work</span>
             <span className="home-label">4 case studies</span>

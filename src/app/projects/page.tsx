@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { ArrowRight } from "lucide-react"
 
 import { SideScene } from "@/components/home/side-scene"
+import { grid } from "@/components/home/grid"
 import { SiteFooter, SiteNav } from "@/components/home/site-nav"
 import { petProjects } from "@/content/profile"
 
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   description: "Products I designed and built myself: wallet.myrzan.com and izipass.myrzan.com."
 }
 
-const wrap = "mx-auto w-full max-w-[1280px] px-5 sm:px-6"
+const wrap = grid
 
 export default function ProjectsPage() {
   return (
