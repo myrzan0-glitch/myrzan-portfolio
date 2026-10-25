@@ -128,8 +128,10 @@
   --story-coin: #d9950c;
   --story-farm: #8b6cf0;
   --story-spend: #e5671c;
+  /* Problems marked on old screens, and the page's accent for highlights, tags and meters */
   --story-warn: #e0472f;
   --story-ok: #1f9d55;
+  --story-mark: var(--story-accent);
 }
 
 .dark {
@@ -153,6 +155,15 @@
   --story-spend: #ff8a45;
   --story-warn: #ff7a62;
   --story-ok: #4cc38a;
+}
+
+/* Per-story accents, set on the case study's root */
+.story-bi {
+  --story-mark: #2f5bea;
+}
+
+.dark .story-bi {
+  --story-mark: #6f8dff;
 }
 
 @layer components {
@@ -280,21 +291,5 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-/* Story panels: the zoom button shows on hover where there is hover, and always on touch screens. */
-.story-zoom {
-  transition: opacity 160ms, transform 160ms;
-}
-@media (hover: hover) {
-  .story-zoom {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  .story-panel:hover .story-zoom,
-  .story-zoom:focus-visible {
-    opacity: 1;
-    transform: none;
   }
 }

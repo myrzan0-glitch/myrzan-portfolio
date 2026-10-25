@@ -34,6 +34,8 @@ const BH = (PH * BEZEL.h) / SH
 
 export type Scene = {
   setPlaying: (playing: boolean) => void
+  /** Shows or hides a row's highlight bands. */
+  setMarked?: (marked: boolean) => void
   dispose: () => void
 }
 
@@ -47,20 +49,18 @@ type Stage = {
   phone: (src: string) => THREE.Group
   /** Called every frame while visible; `dt` is 0 while paused. */
   update?: (dt: number) => void
+  /** World units the frame must show across and down at an aspect; overrides the fixed distance. */
+  fit?: (aspect: number) => [number, number]
+  setMarked?: (marked: boolean) => void
+  /** Asks for one more frame, e.g. after a change made while paused or off screen. */
+  redraw: () => void
 }
 
 /**
  * Sets up the renderer, camera and texture cache for a panel and runs `build` on it.
- * `dist` is the camera distance at 4:3; `fit` is the aspect below which the camera backs off,
- * or a function that returns the distance for an aspect.
+ * `dist` is the camera distance at 4:3; `fit` is the aspect below which the camera backs off.
  */
-function mount(
-  el: HTMLElement,
-  dist: number,
-  fit: number | ((aspect: number) => number),
-  playing: boolean,
-  build: (s: Stage) => void
-): Scene {
+function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, build: (s: Stage) => void): Scene {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
   renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1))
   const canvas = renderer.domElement
@@ -88,16 +88,8 @@ function mount(
             x.fill()
           })
         )
-      } else if (src === "shadow") {
-        t = new THREE.CanvasTexture(
-          drawn(160, 300, (x) => {
-            x.filter = "blur(16px)"
-            x.fillStyle = "rgba(0,0,0,0.5)"
-            x.fillRect(32, 34, 96, 236)
-          })
-        )
       } else if (src === "band") {
-        // A highlight: a rounded outline with a soft fill, stretched over any area and tinted.
+        // A highlight: a rounded outline with a soft fill, tinted by the material colour.
         t = new THREE.CanvasTexture(
           drawn(256, 64, (x) => {
             x.fillStyle = "rgba(255,255,255,0.22)"
@@ -107,6 +99,14 @@ function mount(
             x.strokeStyle = "#fff"
             roundRect(x, 4, 4, 248, 56, 14)
             x.stroke()
+          })
+        )
+      } else if (src === "shadow") {
+        t = new THREE.CanvasTexture(
+          drawn(160, 300, (x) => {
+            x.filter = "blur(16px)"
+            x.fillStyle = "rgba(0,0,0,0.5)"
+            x.fillRect(32, 34, 96, 236)
           })
         )
       } else {
@@ -141,6 +141,10 @@ function mount(
       g.add(shadow, body, screen)
       g.userData.screen = screen
       return g
+    },
+    redraw: () => {
+      dirty = true
+      update()
     }
   }
   build(stage)
@@ -151,7 +155,11 @@ function mount(
     if (!w || !h) return
     renderer.setSize(w, h, false)
     camera.aspect = w / h
-    camera.position.set(0, 0, typeof fit === "number" ? dist * Math.max(1, fit / camera.aspect) : fit(camera.aspect))
+    if (stage.fit) {
+      const view = 2 * Math.tan((camera.fov * Math.PI) / 360)
+      const [across, down] = stage.fit(camera.aspect)
+      camera.position.set(0, 0, Math.max(dist, across / (view * camera.aspect), down / view))
+    } else camera.position.set(0, 0, dist * Math.max(1, fit / camera.aspect))
     camera.lookAt(0, 0, 0)
     camera.updateProjectionMatrix()
     dirty = true
@@ -209,6 +217,7 @@ function mount(
     setPlaying: (p) => {
       stage.playing = p
     },
+    setMarked: (m) => stage.setMarked?.(m),
     dispose: () => {
       cancelAnimationFrame(raf)
       io.disconnect()
@@ -261,11 +270,12 @@ export function heroScene(el: HTMLElement, screens: string[], playing: boolean) 
   })
 }
 
-export type LayerPart = { y: [number, number]; name: string; own: boolean; from?: string }
+/** `mark` sets a band apart: a part designed from scratch, or a problem found on an old screen. */
+export type LayerPart = { y: [number, number]; name: string; mark?: "new" | "problem"; from?: string }
 
 /**
- * Layers: one screen cut into horizontal bands that pull apart and go back together. The parts
- * designed from scratch come further forward; `tags` are positioned beside each band.
+ * Layers: one screen cut into horizontal bands that pull apart and go back together. Marked
+ * parts come further forward; `tags` are positioned beside each band.
  */
 export function layersScene(el: HTMLElement, screen: string, parts: LayerPart[], tags: HTMLElement[], playing: boolean) {
   const still = !playing
@@ -297,12 +307,14 @@ export function layersScene(el: HTMLElement, screen: string, parts: LayerPart[],
       const w = el.clientWidth
       const h = el.clientHeight
       bands.forEach((mesh, i) => {
-        mesh.position.z = 0.004 + e * (parts[i].own ? 1.25 : 0.45) + e * i * 0.02
+        mesh.position.z = 0.004 + e * (parts[i].mark ? 1.25 : 0.45) + e * i * 0.02
         const tag = tags[i]
         if (!tag) return
         v.set(-PW / 2 - 0.08, mesh.position.y, mesh.position.z)
         group.localToWorld(v).project(stage.camera)
-        tag.style.transform = `translate(${((v.x + 1) / 2) * w}px, ${((1 - v.y) / 2) * h}px) translate(-100%, -50%)`
+        // Right edge on the band, kept inside the panel on narrow screens.
+        const left = Math.min(w - tag.offsetWidth - 6, Math.max(6, ((v.x + 1) / 2) * w - tag.offsetWidth))
+        tag.style.transform = `translate(${left}px, ${((1 - v.y) / 2) * h}px) translate(0, -50%)`
         tag.style.opacity = String(clamp(e * 1.6 - 0.5))
       })
     }
@@ -368,102 +380,78 @@ export function loopScene(el: HTMLElement, steps: LoopStep[], accent: string, on
   })
 }
 
-export type RowItem = {
-  screen: string
-  label: string
-  /** Label on narrow panels. */
-  short?: string
-  /** Areas to outline, in screen pixels; `x` defaults to almost the full width. */
-  bands?: { y: [number, number]; x?: [number, number] }[]
-}
-
-export type RowScene = Scene & {
-  setMarked: (marked: boolean) => void
-  setColor: (color: string) => void
-}
+/** A band to highlight on a row phone, in 390 × 844 screen pixels; `x` defaults to the full width. */
+export type RowBand = { y: [number, number]; x?: [number, number]; problem?: boolean }
+/** `on` sets the label in the accent colour: the new design, as opposed to the old one or an example. */
+export type RowPhone = { screen: string; label: string; short?: string; on?: boolean; bands?: RowBand[] }
 
 /**
- * Row: phones side by side, all visible at once, each labelled by a tag above it. Outlines over
- * the key areas stay hidden until `setMarked(true)`, so the designs read clean first. Three or
- * more phones fall into two columns on tall panels.
+ * Row: phones side by side, all visible at once, for before and after or a set of examples.
+ * Four or more sit in one row on wide frames and two per row on tall ones. Highlight bands stay
+ * hidden until `setMarked(true)`, then fade in with a slow pulse travelling along the row.
  */
-export function rowScene(el: HTMLElement, items: RowItem[], tags: HTMLElement[], color: string, playing: boolean): RowScene {
+export function rowScene(el: HTMLElement, phones: RowPhone[], tags: HTMLElement[], colors: { mark: string; problem: string }, playing: boolean) {
   const GAP = 2.6
   const ROW = BH + 0.9
-  const VIEW = 2 * Math.tan((30 * Math.PI) / 360)
-  const columns = (aspect: number) => (items.length > 2 && aspect < 1 ? 2 : items.length)
-  const distance = (aspect: number) => {
-    const cols = columns(aspect)
-    const rows = Math.ceil(items.length / cols)
-    return Math.max(9, (cols * GAP + 0.5) / (VIEW * aspect), (rows * ROW + 0.5) / VIEW)
-  }
-  let marked = false
-  let shown = 0
-  const outlines: THREE.MeshBasicMaterial[] = []
-
-  const scene = mount(el, 9, distance, playing, (stage) => {
+  const columns = (aspect: number) => (phones.length > 2 && aspect < 1 ? 2 : phones.length)
+  return mount(el, 9, 0.75, playing, (stage) => {
+    stage.fit = (aspect) => {
+      const cols = columns(aspect)
+      return [cols * GAP + 0.5, Math.ceil(phones.length / cols) * ROW + 0.5]
+    }
     const group = new THREE.Group()
     stage.scene.add(group)
-    const phones = items.map((item) => {
-      const p = stage.phone(item.screen)
+    const items = phones.map((phone) => {
+      const p = stage.phone(phone.screen)
       group.add(p)
-      const bands = (item.bands ?? []).map((band) => {
-        const [x0, x1] = band.x ?? [10, SW - 10]
+      const bands = (phone.bands ?? []).map((band) => {
+        const [x0, x1] = band.x ?? [10, 380]
         const [y0, y1] = band.y
-        const material = stage.material("band")
-        material.color.set(color)
-        material.opacity = 0
-        outlines.push(material)
-        const m = new THREE.Mesh(new THREE.PlaneGeometry(((x1 - x0) / SW) * PW, ((y1 - y0) / SH) * PH), material)
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(((x1 - x0) / SW) * PW, ((y1 - y0) / SH) * PH), stage.material("band"))
+        m.material.color.set(band.problem ? colors.problem : colors.mark)
+        m.material.opacity = 0
         m.position.set(((x0 + x1) / 2 / SW - 0.5) * PW, (0.5 - (y0 + y1) / 2 / SH) * PH, 0.01)
         m.renderOrder = 3
         p.add(m)
-        return material
+        return m
       })
-      return { p, bands }
+      return { p, phone, bands }
     })
+    let marked = false
+    let shown = 0
+    stage.setMarked = (m) => {
+      marked = m
+      stage.redraw()
+    }
     const v = new THREE.Vector3()
     let clock = 0
-    let last = performance.now()
     stage.update = (dt) => {
       clock += dt
-      // The outlines fade on real time, so the switch works while the animation is paused.
-      const now = performance.now()
-      const real = Math.min(0.05, Math.max(0, (now - last) / 1000))
-      last = now
-      shown += (Number(marked) - shown) * Math.min(1, real * 8)
+      // Fade the highlights in and out instead of snapping; paused, they switch at once.
+      shown = dt ? shown + (Number(marked) - shown) * Math.min(1, dt * 8) : Number(marked)
       const cols = columns(stage.camera.aspect)
-      const rows = Math.ceil(items.length / cols)
+      const rows = Math.ceil(phones.length / cols)
       lean(stage, group, { x: 0, y: 0 }, clock, 0.18)
       group.updateMatrixWorld()
       const w = el.clientWidth
       const h = el.clientHeight
-      phones.forEach(({ p, bands }, i) => {
+      items.forEach((item, i) => {
         const c = i % cols
         const r = Math.floor(i / cols)
-        p.position.set((c - (cols - 1) / 2) * GAP, ((rows - 1) / 2 - r) * ROW - 0.2, 0)
-        p.rotation.y = rows === 1 ? -(c - (cols - 1) / 2) * 0.07 : 0
-        // A slow, soft pulse on the outlines, travelling along the row.
+        item.p.position.set((c - (cols - 1) / 2) * GAP, ((rows - 1) / 2 - r) * ROW - 0.2, 0)
+        item.p.rotation.y = rows === 1 ? -(c - (cols - 1) / 2) * 0.07 : 0
         const k = 0.5 + 0.5 * Math.sin(clock * 1.6 - i * 0.9)
-        bands.forEach((b) => (b.opacity = shown * (0.75 + 0.25 * k)))
+        item.bands.forEach((m) => (m.material.opacity = shown * (0.75 + 0.25 * k)))
         const tag = tags[i]
         if (!tag) return
-        const label = stage.camera.aspect < 1 && items[i].short ? items[i].short! : items[i].label
+        const label = stage.camera.aspect < 1 && item.phone.short ? item.phone.short : item.phone.label
         if (tag.textContent !== label) tag.textContent = label
-        p.updateMatrixWorld()
+        item.p.updateMatrixWorld()
         v.set(0, BH / 2 + 0.12, 0)
-        p.localToWorld(v).project(stage.camera)
-        // Keep the tag inside the panel on narrow screens.
+        item.p.localToWorld(v).project(stage.camera)
         const left = Math.min(w - tag.offsetWidth - 6, Math.max(6, ((v.x + 1) / 2) * w - tag.offsetWidth / 2))
         tag.style.transform = `translate(${left}px, ${((1 - v.y) / 2) * h - tag.offsetHeight}px)`
       })
     }
   })
-  return {
-    ...scene,
-    setMarked: (m) => {
-      marked = m
-    },
-    setColor: (c) => outlines.forEach((m) => m.color.set(c))
-  }
 }

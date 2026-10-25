@@ -4,13 +4,14 @@ import Link from "next/link"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
 import { ThemeSwitch } from "@/components/home/theme-switch"
-import type { CaseStudy, Chapter, ChapterText, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
+import type { CaseStudy, Chapter, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
 
 import { HeroStage, LayersStage, LoopStage, RowStage } from "./stages"
 
 /**
- * Story case study: one claim per chapter. The text on the left argues a design decision, the
- * panel on the right proves it, then results and a reflection close the page.
+ * Story case study: one claim per chapter. The text on the left argues a design decision and the
+ * panel on the right proves it; wide chapters stack the text over a full-width panel. Results and
+ * next steps close the page.
  */
 
 const wrap = "mx-auto w-full max-w-[1200px] px-5 sm:px-6"
@@ -39,9 +40,9 @@ function Rich({ text }: { text: string }) {
   )
 }
 
-function Text({ n, chapter, full, children }: { n: number; chapter: ChapterText; full?: boolean; children?: React.ReactNode }) {
+function Text({ n, chapter, wide }: { n: number; chapter: Chapter; wide?: boolean }) {
   return (
-    <div className={`min-w-0 ${full ? "max-w-[620px]" : "md:sticky md:top-8"}`}>
+    <div className={`min-w-0 ${wide ? "max-w-[620px]" : "md:sticky md:top-8"}`}>
       <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-faint)]">({n})</span>
       <h2 className="mt-2 text-[24px] font-medium leading-[1.15] tracking-[-0.02em] [text-wrap:balance] sm:text-[30px]">{chapter.title}</h2>
       {chapter.body.map((p) => (
@@ -49,42 +50,34 @@ function Text({ n, chapter, full, children }: { n: number; chapter: ChapterText;
           <Rich text={p} />
         </p>
       ))}
-      {children}
     </div>
   )
 }
 
-function Results({ results }: { results: NonNullable<Chapter["results"]> }) {
+const note = "mt-2.5 text-center font-[family-name:var(--font-mono)] text-[11px] leading-[1.5] text-[var(--home-faint)]"
+const diagram = "m-0 flex flex-col justify-center gap-[18px] rounded-[14px] bg-[var(--home-panel)] p-5 sm:p-10"
+const facts = "flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-muted)]"
+
+function Meter({ value, was }: { value: number; was?: boolean }) {
   return (
-    <div className="mt-6">
-      {results.map((r) => (
-        <div key={r.label} className="border-t border-[var(--home-line)] py-5">
-          <div className="text-[40px] font-normal leading-none tracking-[-0.03em] tabular-nums sm:text-[52px]">{r.value}</div>
-          <div className="home-label mt-2.5 !text-[var(--home-fg)]">{r.label}</div>
-          <div className="mt-1 font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-faint)]">{r.note}</div>
-        </div>
-      ))}
+    <div className="h-1.5 overflow-hidden rounded-[3px] bg-[var(--home-bg)]">
+      <i className={`block h-full rounded-[3px] ${was ? "bg-[var(--home-faint)] opacity-50" : "bg-[var(--story-mark)]"}`} style={{ width: `${value}%` }} />
     </div>
   )
 }
 
 function Metrics({ metrics }: { metrics: NonNullable<Chapter["metrics"]> }) {
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div
+      className="grid grid-cols-2 gap-3 md:grid-cols-[repeat(var(--n),minmax(0,1fr))]"
+      style={{ "--n": Math.min(4, metrics.length) } as React.CSSProperties}
+    >
       {metrics.map((m) => (
-        <div key={m.label} className="flex flex-col gap-2.5 rounded-[14px] bg-[var(--home-panel)] p-[18px] sm:p-6">
-          <strong className="text-[40px] font-normal leading-none tracking-[-0.03em] tabular-nums sm:text-[56px]">{m.value}</strong>
+        <div key={m.label} className="flex flex-col gap-2.5 rounded-[14px] bg-[var(--home-panel)] p-[18px] md:p-6">
+          <strong className="text-[40px] font-normal leading-none tracking-[-0.03em] tabular-nums lg:text-[56px]">{m.value}</strong>
           <span className="home-label !text-[var(--home-fg)]">{m.label}</span>
-          {m.meter?.was !== undefined && (
-            <div className="h-1.5 overflow-hidden rounded-[3px] bg-[var(--home-bg)]">
-              <i className="block h-full rounded-[3px] bg-[var(--home-faint)] opacity-50" style={{ width: `${m.meter.was}%` }} />
-            </div>
-          )}
-          {m.meter && (
-            <div className="h-1.5 overflow-hidden rounded-[3px] bg-[var(--home-bg)]">
-              <i className="block h-full rounded-[3px] bg-[var(--story-accent)]" style={{ width: `${m.meter.now}%` }} />
-            </div>
-          )}
+          {m.meter?.was !== undefined && <Meter value={m.meter.was} was />}
+          {m.meter && <Meter value={m.meter.now} />}
           <small className="mt-auto pt-1.5 font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-faint)]">{m.note}</small>
         </div>
       ))}
@@ -92,24 +85,23 @@ function Metrics({ metrics }: { metrics: NonNullable<Chapter["metrics"]> }) {
   )
 }
 
-function Next({ next }: { next: NonNullable<Chapter["next"]> }) {
+function Cards({ cards }: { cards: NonNullable<Chapter["cards"]> }) {
   return (
     <ol className="m-0 grid list-none gap-3 p-0 md:grid-cols-3">
-      {next.map((item, i) => (
-        <li key={item.title} className="flex flex-col gap-2.5 rounded-[14px] border border-[var(--home-line)] p-[18px] sm:p-6">
+      {cards.map((c, i) => (
+        <li key={c.title} className="flex flex-col gap-2.5 rounded-[14px] border border-[var(--home-line)] p-[18px] md:p-6">
           <span className="home-label">{String(i + 1).padStart(2, "0")}</span>
-          <b className="text-[18px] font-medium tracking-[-0.01em]">{item.title}</b>
-          <p className="home-muted m-0 text-[14px] leading-[1.6]">{item.body}</p>
+          <b className="text-[18px] font-medium tracking-[-0.01em]">{c.title}</b>
+          <p className="home-muted m-0 text-[14px] leading-[1.6]">{c.body}</p>
         </li>
       ))}
     </ol>
   )
 }
 
-const statusTones = { ok: "var(--story-ok)", calc: "var(--story-accent)", no: "var(--story-warn)" }
-const chip = "whitespace-nowrap rounded-full px-2.5 py-1.5"
+const statusTones = { ok: "var(--story-ok)", calc: "var(--story-mark)", no: "var(--story-warn)" }
 
-function VisualPanel({ visual }: { visual: Visual }) {
+function VisualPanel({ visual, wide }: { visual: Visual; wide?: boolean }) {
   switch (visual.kind) {
     case "economy":
       return (
@@ -144,16 +136,79 @@ function VisualPanel({ visual }: { visual: Visual }) {
     case "layers":
       return (
         <figure className="m-0">
-          <LayersStage screen={visual.screen} parts={visual.parts} label={visual.label} />
-          <figcaption className="mt-2.5 text-center font-[family-name:var(--font-mono)] text-[11px] leading-[1.5] text-[var(--home-faint)]">
-            {visual.note}
-          </figcaption>
+          <LayersStage screen={visual.screen} parts={visual.parts} label={visual.label} zoom={visual.zoom} />
+          <figcaption className={note}>{visual.note}</figcaption>
         </figure>
       )
     case "loop":
       return <LoopStage steps={visual.steps} label={visual.label} />
     case "row":
-      return <RowStage items={visual.items} label={visual.label} mark={visual.mark} note={visual.note} />
+      return (
+        <figure className="m-0">
+          <RowStage phones={visual.phones} label={visual.label} toggle={visual.toggle} wide={wide} />
+          <figcaption className={note}>{visual.note}</figcaption>
+        </figure>
+      )
+    case "share":
+      return (
+        <figure role="img" aria-label={visual.description} className={diagram}>
+          <span className="home-label">{visual.label}</span>
+          <div className="flex h-11 overflow-hidden rounded-[10px] font-[family-name:var(--font-mono)] text-[12px]">
+            <span className="flex items-center whitespace-nowrap bg-[var(--story-mark)] px-3 text-white" style={{ width: `${visual.main.value}%` }}>
+              {visual.main.label} — {visual.main.value}%
+            </span>
+            <span className="flex flex-1 items-center whitespace-nowrap bg-[var(--home-bg)] px-3 text-[var(--home-muted)]">{100 - visual.main.value}%</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {visual.chips.map((c) => (
+              <span
+                key={c.name}
+                className={`rounded-full px-2.5 py-1.5 text-[13px] ${c.top ? "bg-[var(--story-mark)] text-white" : "bg-[var(--home-bg)]"}`}
+              >
+                {c.name}
+              </span>
+            ))}
+          </div>
+          <div className={facts}>
+            {visual.facts.map((f) => (
+              <span key={f}>{f}</span>
+            ))}
+          </div>
+        </figure>
+      )
+    case "dots":
+      return (
+        <figure role="img" aria-label={visual.description} className={diagram}>
+          <span className="home-label">{visual.label}</span>
+          {visual.rows.map((row) => (
+            <div key={row.name} className="grid grid-cols-[56px_1fr_40px] items-center gap-3 text-[13px] sm:grid-cols-[70px_1fr_48px]">
+              <span>{row.name}</span>
+              <div className="flex gap-1.5">
+                {Array.from({ length: row.total }, (_, i) => (
+                  <i
+                    key={i}
+                    className={`h-5 w-5 rounded-full sm:h-[26px] sm:w-[26px] ${
+                      i >= row.done
+                        ? "bg-[var(--home-bg)] shadow-[inset_0_0_0_1px_var(--home-line)]"
+                        : row.muted
+                          ? "bg-[var(--home-faint)]"
+                          : "bg-[var(--story-mark)]"
+                    }`}
+                  />
+                ))}
+              </div>
+              <b className="text-right font-medium tabular-nums">
+                {row.done} / {row.total}
+              </b>
+            </div>
+          ))}
+          <div className={facts}>
+            {visual.facts.map((f) => (
+              <span key={f}>{f}</span>
+            ))}
+          </div>
+        </figure>
+      )
     case "attempts":
       return (
         <figure
@@ -173,8 +228,9 @@ function VisualPanel({ visual }: { visual: Visual }) {
                       <React.Fragment key={step.text}>
                         {i > 0 && <span className="text-[var(--home-faint)]">→</span>}
                         <span
-                          className={`${chip} ${step.tone ? "text-white" : "bg-[var(--home-bg)]"}`}
-                          style={step.tone ? { background: step.tone === "no" ? "var(--story-warn)" : "var(--story-accent)" } : undefined}
+                          className={`whitespace-nowrap rounded-full px-2.5 py-1.5 ${
+                            step.tone === "no" ? "bg-[var(--story-warn)] text-white" : step.tone === "yes" ? "bg-[var(--story-mark)] text-white" : "bg-[var(--home-bg)]"
+                          }`}
                         >
                           {step.text}
                         </span>
@@ -196,7 +252,7 @@ function VisualPanel({ visual }: { visual: Visual }) {
         >
           <span className="home-label">{visual.label}</span>
           <div className="grid items-center gap-3.5 sm:grid-cols-[auto_1fr] sm:gap-[22px]">
-            <div className="rounded-xl bg-[var(--story-accent)] px-4 py-3.5 text-[14px] leading-[1.35] text-white">
+            <div className="rounded-xl bg-[var(--story-mark)] px-4 py-3.5 text-[14px] leading-[1.35] text-white">
               {visual.source}
               <small className="mt-1 block font-[family-name:var(--font-mono)] text-[10.5px] opacity-80">{visual.sourceNote}</small>
             </div>
@@ -204,10 +260,7 @@ function VisualPanel({ visual }: { visual: Visual }) {
               {visual.answers.map((a) => (
                 <div key={a.name} className="flex items-center justify-between gap-3 rounded-[10px] bg-[var(--home-bg)] px-3 py-2.5 text-[13px]">
                   {a.name}
-                  <span
-                    className="inline-flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px]"
-                    style={{ color: statusTones[a.tone] }}
-                  >
+                  <span className="inline-flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px]" style={{ color: statusTones[a.tone] }}>
                     <i className="h-[7px] w-[7px] rounded-full bg-current" />
                     {a.status}
                   </span>
@@ -236,10 +289,9 @@ function VisualPanel({ visual }: { visual: Visual }) {
 
 export function StoryCase({ study, next }: { study: Study; next: CaseStudy }) {
   const { story } = study
-  let n = 0
 
   return (
-    <div className="home-root">
+    <div className={`home-root ${story.palette ? `story-${story.palette}` : ""}`}>
       <main id="main" className="pb-20">
         <div className={`${wrap} flex items-center justify-between pt-5 sm:pt-7`}>
           <Link
@@ -274,22 +326,17 @@ export function StoryCase({ study, next }: { study: Study; next: CaseStudy }) {
           </dl>
         </div>
 
-        {story.chapters.map((chapter) => {
-          const full = chapter.layout === "full"
+        {story.chapters.map((chapter, i) => {
+          const wide = chapter.wide || !chapter.visual
           return (
             <section
               key={chapter.title}
-              className={`${wrap} mt-24 grid items-start md:mt-36 ${
-                full ? "gap-8" : "gap-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-14"
-              }`}
+              className={`${wrap} mt-24 grid items-start gap-6 md:mt-36 ${wide ? "md:gap-8" : "md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-14"}`}
             >
-              <Text n={++n} chapter={chapter} full={full}>
-                {chapter.results && <Results results={chapter.results} />}
-              </Text>
-              {chapter.visual && <VisualPanel visual={chapter.visual} />}
+              <Text n={i + 1} chapter={chapter} wide={wide} />
+              {chapter.visual && <VisualPanel visual={chapter.visual} wide={wide} />}
               {chapter.metrics && <Metrics metrics={chapter.metrics} />}
-              {chapter.next && <Next next={chapter.next} />}
-              {chapter.alongside && <Text n={++n} chapter={chapter.alongside} />}
+              {chapter.cards && <Cards cards={chapter.cards} />}
             </section>
           )
         })}
