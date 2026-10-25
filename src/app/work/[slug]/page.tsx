@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import { VideoLoop } from "@/components/video-loop"
 import { FadeIn } from "@/components/motion"
+import { StoryCase } from "@/components/story/story-case"
 import { caseStudies, getCaseStudy, type CaseImage } from "@/content/case-studies"
 
 export const dynamicParams = false
@@ -59,6 +60,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
   const index = caseStudies.findIndex((c) => c.slug === study.slug)
   const next = caseStudies[(index + 1) % caseStudies.length]
+  if (study.kind === "story") return <StoryCase study={study} next={next} />
 
   return (
     <div className="home-root">

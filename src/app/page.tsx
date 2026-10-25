@@ -39,14 +39,14 @@ const featured = [
   },
   {
     n: "02",
-    slug: "technodom-credit",
-    company: "Technodom · Fintech",
-    year: "2022",
-    title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
-    line: "Partnered with the banks to pre-score every shopper across all of them in one step, instead of one bank at a time. Became the company’s #1 revenue source.",
-    stats: ["$4M+ monthly revenue", "+35% credit conversions", "#1 revenue stream"],
-    img: "/work/td-solution.webp",
-    alt: "Technodom credit flow showing offers from every partner bank at once"
+    slug: "ozen-telegram-music",
+    company: "Ōzen · Telegram Mini App",
+    year: "2025",
+    title: "Designed a crypto music economy that feels like Telegram",
+    line: "A listen-to-earn Mini App built on Telegram’s own components, so nobody needed a tutorial. As the only designer, I took it from research to an invite-only beta.",
+    stats: ["5,000 users in week one", "Sole designer", "Telegram Mini App"],
+    img: "/work/ozen-telegram-music/hero.webp",
+    alt: "Ōzen screens: the farming claim, a collection that earns, the full player, tasks and the friends tab"
   },
   {
     n: "03",
@@ -97,6 +97,7 @@ const side = [
 ]
 
 const more = [
+  { slug: "technodom-credit", title: "Multi-bank credit flow", where: "Technodom · 2022", metric: "$4M+ monthly revenue" },
   { slug: "bi-design-system", title: "Design system with dark mode and WCAG 2.2", where: "BI Group · 2025", metric: "−83% QA cycles" },
   { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
   { slug: "beeline-checkout-research", title: "Checkout research with real customers", where: "Beeline · 2023", metric: "2:43 → 1:37 per order" },

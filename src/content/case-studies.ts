@@ -8,18 +8,82 @@ export type CaseSection = {
   image?: CaseImage
 }
 
-export type CaseStudy = {
+type CaseBase = {
   slug: string
   company: string
   year: string
   title: string
   summary: string
+  /** Shown on the home page and as the share image. */
+  hero: CaseImage
+}
+
+/** Label, problem, decision, outcome: one section after another. */
+export type ClassicCase = CaseBase & {
+  kind?: "classic"
   meta: { label: string; value: string }[]
   outcomes: { value: string; label: string }[]
-  hero: CaseImage
   sections: CaseSection[]
   takeaway: string
 }
+
+/**
+ * One claim per chapter: the text argues a design decision and one visual proves it. Screens are
+ * 390 × 844 PNG/WebP exports; every y and tap position is in those screen pixels.
+ */
+export type StoryCase = CaseBase & {
+  kind: "story"
+  story: Story
+}
+
+export type CaseStudy = ClassicCase | StoryCase
+
+export type Story = {
+  subtitle: string
+  /** Three screens for the hero, left to right. */
+  heroScreens: string[]
+  heroLabel: string
+  role: { label: string; value: string }[]
+  chapters: Chapter[]
+}
+
+/** Body paragraphs may wrap a phrase in **double asterisks** to set it in the text colour. */
+export type ChapterText = { title: string; body: string[] }
+
+export type Chapter = ChapterText & {
+  visual?: Visual
+  results?: { value: string; label: string; note: string }[]
+  /** A second text column in place of a visual, numbered as its own chapter. */
+  alongside?: ChapterText
+}
+
+export type Tone = "accent" | "coin" | "farm" | "spend"
+
+export type Visual =
+  | {
+      kind: "economy"
+      label: string
+      /** Read aloud in place of the diagram. */
+      description: string
+      rows: { items: ({ node: string; tone: Tone } | { arrow: string })[]; divider?: boolean }[]
+    }
+  | {
+      kind: "layers"
+      label: string
+      screen: string
+      /** Horizontal bands of the screen; `own` marks the parts designed from scratch. */
+      parts: { y: [number, number]; name: string; own: boolean; from?: string }[]
+      note: string
+    }
+  | {
+      kind: "loop"
+      label: string
+      /** Screens shown in place, one after another, with a tap ring where the user taps. */
+      steps: { screen: string; name: string; tap?: [number, number] }[]
+    }
+  | ({ kind: "image" } & CaseImage)
+
+const ozen = (name: string) => `/work/ozen-telegram-music/screens/${name}.webp`
 
 export const caseStudies: CaseStudy[] = [
   {
@@ -132,6 +196,154 @@ export const caseStudies: CaseStudy[] = [
       }
     ],
     takeaway: "On mobile, clarity beats completeness. The biggest gain came from removing options, not adding them."
+  },
+  {
+    kind: "story",
+    slug: "ozen-telegram-music",
+    company: "Ōzen · Telegram Mini App",
+    year: "2025",
+    title: "Ōzen: a crypto economy that feels like Telegram",
+    summary:
+      "Designing a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
+    hero: {
+      src: "/work/ozen-telegram-music/hero.webp",
+      alt: "Five Ōzen screens: the farming claim, a collection that earns, the full player, tasks and the friends tab",
+      w: 1600,
+      h: 820
+    },
+    story: {
+      subtitle:
+        "Designing a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
+      heroScreens: [ozen("t2"), ozen("m3"), ozen("p3")],
+      heroLabel: "Three Ōzen screens: claiming a farming reward, a collection earning coins, and the referral tab",
+      role: [
+        { label: "Role", value: "Sole product designer · 2025" },
+        {
+          label: "Contribution",
+          value:
+            "Market research, coin economy, product architecture and every screen of the beta, built on Telegram’s Mini Apps kit and handed off to Ōzen’s developers."
+        },
+        { label: "Platform", value: "Telegram Mini App, iOS and Android" }
+      ],
+      chapters: [
+        {
+          title: "Earning had to be as easy as pressing play",
+          body: [
+            "Ōzen distributes music and video. Its founders watched tap-to-earn games like Hamster Kombat pull millions of people into crypto through Telegram, and wanted that pull for music: you earn coins for listening, then back the tracks you believe in.",
+            "Most of the people Ōzen wanted had never held a token. So the real brief wasn’t “build a crypto app”. It was **make a new money habit feel like something they already do every day.**"
+          ],
+          visual: {
+            kind: "economy",
+            label: "The economy, before any screen",
+            description:
+              "Coin economy: farming pays 120 coins per 8 hours, listening 0.01 coin a second, an invested track 0.05 coin a second, all into the wallet; the wallet pays for boost energy",
+            rows: [
+              { items: [{ node: "Farming", tone: "farm" }, { arrow: "8 h = 120 coins" }, { node: "Wallet", tone: "coin" }] },
+              { items: [{ node: "Listening", tone: "accent" }, { arrow: "0.01 coin / sec" }, { node: "Wallet", tone: "coin" }] },
+              {
+                items: [
+                  { node: "Listening", tone: "accent" },
+                  { arrow: "invest" },
+                  { node: "Invested track", tone: "accent" },
+                  { arrow: "0.05 coin / sec" },
+                  { node: "Wallet", tone: "coin" }
+                ]
+              },
+              { divider: true, items: [{ node: "Wallet", tone: "coin" }, { arrow: "spend" }, { node: "Boost energy", tone: "spend" }] }
+            ]
+          }
+        },
+        {
+          title: "Copy habits, not features",
+          body: [
+            "I went through the Mini Apps that had gone viral and the big music apps, Spotify, Apple Music and Yandex Music. The viral ones had nothing clever in their UI. They looked and behaved exactly like Telegram, so nobody had to learn anything before the fun part.",
+            "That became the rule for the beta: **if Telegram has a component for it, use Telegram’s.** Header, search, list cells, buttons and tabs all come straight from the Mini Apps kit. Only three things are new: the coin balance, the farming button and the mini player. That’s everything a first-time user has to learn."
+          ],
+          visual: {
+            kind: "layers",
+            label:
+              "The main screen pulled apart into layers: Telegram components at the back, Ōzen’s balance, farming button and mini player in front",
+            screen: ozen("m1"),
+            parts: [
+              { y: [0, 122], name: "Header", own: false },
+              { y: [122, 180], name: "Search", own: false },
+              { y: [180, 246], name: "Coin balance", own: true },
+              { y: [246, 620], name: "List cells", own: false },
+              { y: [620, 692], name: "Farming button", own: true },
+              // The main screen while a track plays, so the mini player isn’t empty.
+              { y: [692, 753], name: "Mini player", own: true, from: ozen("m2") },
+              { y: [753, 844], name: "Tab bar", own: false }
+            ],
+            note: "Grey: stock Telegram components. Blue: the only parts designed from scratch."
+          }
+        },
+        {
+          title: "The button is the status",
+          body: [
+            "A farming session runs for eight hours, so most visits are a five-second check: is it done yet? Instead of a separate timer, progress bar and claim screen, one Telegram button carries the whole loop.",
+            "It starts the session, fills up with a live coin count and the time left, then turns into **Claim 480**. The answer to “is it done yet?” is always in the same place, and the eight-hour cycle gives people a reason to come back up to three times a day."
+          ],
+          visual: {
+            kind: "loop",
+            label: "The farming button going from Start farming to a live progress fill to Claim",
+            steps: [
+              { screen: ozen("m1"), name: "Start", tap: [195, 655] },
+              { screen: ozen("m2"), name: "Farming" },
+              { screen: ozen("m3"), name: "Claim", tap: [195, 655] }
+            ]
+          }
+        },
+        {
+          title: "Show the price before the promise",
+          body: [
+            "Putting coins into a track is the newest idea in Ōzen, and the easiest to mistake for gambling. So the flow explains before it asks.",
+            "An empty collection tells you how it earns instead of showing nothing. The add sheet shows the price, **1,000 coins**, before anything is spent. Once a track is in, its row shows what it has paid back, so the promise is checked on every visit."
+          ],
+          visual: {
+            kind: "loop",
+            label: "Opening an empty collection, trying it out, seeing the 1,000 coin price and the collection earning coins",
+            steps: [
+              { screen: ozen("p2"), name: "Empty collection", tap: [96, 447] },
+              { screen: ozen("p4"), name: "Price", tap: [195, 732] },
+              { screen: ozen("p3"), name: "Earning" }
+            ]
+          }
+        },
+        {
+          title: "Invite-only, on purpose",
+          body: [
+            "The beta didn’t open to everyone. Each invite was scarce, which made it worth sending, and every friend you brought in paid you **2.75% of what they earned**, which made it worth sending twice.",
+            "The Friends tab keeps that reward visible: who you invited, what each one brought in, and when you can claim next. Sending an invite takes two taps, through Telegram or a copied link."
+          ],
+          visual: {
+            kind: "loop",
+            label: "Claiming the referral share, the claim cooldown, and the invite sheet",
+            steps: [
+              { screen: ozen("t2"), name: "Claim share", tap: [194, 249] },
+              { screen: ozen("t3"), name: "Cooldown", tap: [195, 655] },
+              { screen: ozen("t4"), name: "Invite" }
+            ]
+          }
+        },
+        {
+          title: "Results",
+          body: [
+            "The invite gate did its job. The beta spread organically through Telegram communities, and Telegram’s CEO, Pavel Durov, tried it himself."
+          ],
+          results: [
+            { value: "5,000", label: "Active users", note: "first week of the invite-only beta" },
+            { value: "0", label: "Tutorial screens", note: "every control was already familiar from Telegram" }
+          ],
+          alongside: {
+            title: "What the beta didn’t prove",
+            body: [
+              "Five thousand people in a week proves curiosity, not habit. Tap-to-earn apps tend to fade once the novelty goes, and the beta ended before we could see whether Ōzen would.",
+              "The next version needed to prove retention: measure how many people came back for a second and third farming claim, and test whether investing in tracks kept them longer than farming alone. On the product side, that meant on-chain transfers, an artist dashboard, and real ownership of tracks."
+            ]
+          }
+        }
+      ]
+    }
   },
   {
     slug: "technodom-credit",

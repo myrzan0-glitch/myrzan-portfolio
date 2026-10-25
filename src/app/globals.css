@@ -122,6 +122,12 @@
   --home-glow: rgba(245, 180, 60, 0.55);
   --home-spark-a: #f2a516;
   --home-spark-b: #f97316;
+  /* Story case studies: visual panels and diagram tones */
+  --home-panel: #ececee;
+  --story-accent: #2f8cf0;
+  --story-coin: #d9950c;
+  --story-farm: #8b6cf0;
+  --story-spend: #e5671c;
 }
 
 .dark {
@@ -138,6 +144,11 @@
   --home-glow: rgba(156, 195, 255, 0.45);
   --home-spark-a: #f5c451;
   --home-spark-b: #9cc3ff;
+  --home-panel: #161618;
+  --story-accent: #4aa3ff;
+  --story-coin: #f5c451;
+  --story-farm: #b49cff;
+  --story-spend: #ff8a45;
 }
 
 @layer components {
