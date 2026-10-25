@@ -104,9 +104,14 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
       } else if (src === "shadow") {
         t = new THREE.CanvasTexture(
           drawn(160, 300, (x) => {
-            x.filter = "blur(16px)"
-            x.fillStyle = "rgba(0,0,0,0.5)"
-            x.fillRect(32, 34, 96, 236)
+            // Safari ignores ctx.filter, which left a hard dark box, so blur with a canvas shadow instead:
+            // the box itself is drawn off the canvas and only its shadow lands. shadowBlur 32 ≈ blur(16px).
+            const off = 1000
+            x.shadowColor = "rgba(0,0,0,0.5)"
+            x.shadowBlur = 32
+            x.shadowOffsetX = off
+            x.fillStyle = "#000"
+            x.fillRect(32 - off, 34, 96, 236)
           })
         )
       } else {
