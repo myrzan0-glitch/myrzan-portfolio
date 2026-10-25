@@ -115,6 +115,9 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
       const body = new THREE.Mesh(new THREE.PlaneGeometry(BW, BH), material("bezel"))
       const screen = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), material(src))
       screen.position.z = 0.004
+      // Transparent planes sort by distance, which flips layers this close together; fix the order.
+      body.renderOrder = 1
+      screen.renderOrder = 2
       g.add(shadow, body, screen)
       g.userData.screen = screen
       return g
@@ -148,7 +151,8 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
   let visible = false
   let last = performance.now()
   const frame = (now: number) => {
-    const dt = Math.min(0.05, (now - last) / 1000)
+    // The first frame's timestamp can be earlier than `last`, so never step backwards.
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000))
     last = now
     stage.update?.(stage.playing ? dt : 0)
     renderer.render(scene, camera)
@@ -298,12 +302,14 @@ export function loopScene(el: HTMLElement, steps: LoopStep[], accent: string, on
     const next = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), stage.material(steps[0].screen))
     next.position.z = 0.006
     next.material.opacity = 0
+    next.renderOrder = 3
     group.add(next)
     const ring = new THREE.Mesh(
       new THREE.RingGeometry(0.16, 0.21, 48),
       new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0, depthWrite: false })
     )
     ring.position.z = 0.01
+    ring.renderOrder = 4
     group.add(ring)
     // Load every step up front so the cross-fade never shows an empty frame.
     steps.forEach((s) => stage.texture(s.screen))
