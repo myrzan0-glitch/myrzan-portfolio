@@ -420,7 +420,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "ozen-telegram-music",
     company: "Ōzen · Telegram Mini App",
     year: "2025",
-    title: "Ōzen: a crypto economy that feels like Telegram",
+    title: "Ōzen: a Web3 music player that feels like Telegram",
     summary:
       "Designing a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
     hero: {
