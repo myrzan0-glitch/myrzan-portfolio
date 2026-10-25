@@ -128,6 +128,9 @@
   --story-coin: #d9950c;
   --story-farm: #8b6cf0;
   --story-spend: #e5671c;
+  /* Problems marked on old screens, and the page's accent for highlights, tags and meters */
+  --story-warn: #e0472f;
+  --story-mark: var(--story-accent);
 }
 
 .dark {
@@ -149,6 +152,16 @@
   --story-coin: #f5c451;
   --story-farm: #b49cff;
   --story-spend: #ff8a45;
+  --story-warn: #ff7a62;
+}
+
+/* Per-story accents, set on the case study's root */
+.story-bi {
+  --story-mark: #2f5bea;
+}
+
+.dark .story-bi {
+  --story-mark: #6f8dff;
 }
 
 @layer components {

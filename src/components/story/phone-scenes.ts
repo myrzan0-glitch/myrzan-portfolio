@@ -34,6 +34,8 @@ const BH = (PH * BEZEL.h) / SH
 
 export type Scene = {
   setPlaying: (playing: boolean) => void
+  /** Shows or hides a row's highlight bands. */
+  setMarked?: (marked: boolean) => void
   dispose: () => void
 }
 
@@ -47,6 +49,11 @@ type Stage = {
   phone: (src: string) => THREE.Group
   /** Called every frame while visible; `dt` is 0 while paused. */
   update?: (dt: number) => void
+  /** World units the frame must show across and down at an aspect; overrides the fixed distance. */
+  fit?: (aspect: number) => [number, number]
+  setMarked?: (marked: boolean) => void
+  /** Asks for one more frame, e.g. after a change made while paused or off screen. */
+  redraw: () => void
 }
 
 /**
@@ -79,6 +86,19 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
             x.fillStyle = "#050505"
             roundRect(x, 6, 6, BEZEL.w - 12, BEZEL.h - 12, 61)
             x.fill()
+          })
+        )
+      } else if (src === "band") {
+        // A highlight: a rounded outline with a soft fill, tinted by the material colour.
+        t = new THREE.CanvasTexture(
+          drawn(256, 64, (x) => {
+            x.fillStyle = "rgba(255,255,255,0.22)"
+            roundRect(x, 4, 4, 248, 56, 14)
+            x.fill()
+            x.lineWidth = 7
+            x.strokeStyle = "#fff"
+            roundRect(x, 4, 4, 248, 56, 14)
+            x.stroke()
           })
         )
       } else if (src === "shadow") {
@@ -121,6 +141,10 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
       g.add(shadow, body, screen)
       g.userData.screen = screen
       return g
+    },
+    redraw: () => {
+      dirty = true
+      update()
     }
   }
   build(stage)
@@ -131,7 +155,11 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
     if (!w || !h) return
     renderer.setSize(w, h, false)
     camera.aspect = w / h
-    camera.position.set(0, 0, dist * Math.max(1, fit / camera.aspect))
+    if (stage.fit) {
+      const view = 2 * Math.tan((camera.fov * Math.PI) / 360)
+      const [across, down] = stage.fit(camera.aspect)
+      camera.position.set(0, 0, Math.max(dist, across / (view * camera.aspect), down / view))
+    } else camera.position.set(0, 0, dist * Math.max(1, fit / camera.aspect))
     camera.lookAt(0, 0, 0)
     camera.updateProjectionMatrix()
     dirty = true
@@ -189,6 +217,7 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
     setPlaying: (p) => {
       stage.playing = p
     },
+    setMarked: (m) => stage.setMarked?.(m),
     dispose: () => {
       cancelAnimationFrame(raf)
       io.disconnect()
@@ -241,11 +270,12 @@ export function heroScene(el: HTMLElement, screens: string[], playing: boolean) 
   })
 }
 
-export type LayerPart = { y: [number, number]; name: string; own: boolean; from?: string }
+/** `mark` sets a band apart: a part designed from scratch, or a problem found on an old screen. */
+export type LayerPart = { y: [number, number]; name: string; mark?: "new" | "problem"; from?: string }
 
 /**
- * Layers: one screen cut into horizontal bands that pull apart and go back together. The parts
- * designed from scratch come further forward; `tags` are positioned beside each band.
+ * Layers: one screen cut into horizontal bands that pull apart and go back together. Marked
+ * parts come further forward; `tags` are positioned beside each band.
  */
 export function layersScene(el: HTMLElement, screen: string, parts: LayerPart[], tags: HTMLElement[], playing: boolean) {
   const still = !playing
@@ -277,12 +307,14 @@ export function layersScene(el: HTMLElement, screen: string, parts: LayerPart[],
       const w = el.clientWidth
       const h = el.clientHeight
       bands.forEach((mesh, i) => {
-        mesh.position.z = 0.004 + e * (parts[i].own ? 1.25 : 0.45) + e * i * 0.02
+        mesh.position.z = 0.004 + e * (parts[i].mark ? 1.25 : 0.45) + e * i * 0.02
         const tag = tags[i]
         if (!tag) return
         v.set(-PW / 2 - 0.08, mesh.position.y, mesh.position.z)
         group.localToWorld(v).project(stage.camera)
-        tag.style.transform = `translate(${((v.x + 1) / 2) * w}px, ${((1 - v.y) / 2) * h}px) translate(-100%, -50%)`
+        // Right edge on the band, kept inside the panel on narrow screens.
+        const left = Math.min(w - tag.offsetWidth - 6, Math.max(6, ((v.x + 1) / 2) * w - tag.offsetWidth))
+        tag.style.transform = `translate(${left}px, ${((1 - v.y) / 2) * h}px) translate(0, -50%)`
         tag.style.opacity = String(clamp(e * 1.6 - 0.5))
       })
     }
@@ -344,6 +376,82 @@ export function loopScene(el: HTMLElement, steps: LoopStep[], accent: string, on
         next.material.opacity = 0
       }
       lean(stage, group, { x: 0, y: -0.18 }, clock, 0.35)
+    }
+  })
+}
+
+/** A band to highlight on a row phone, in 390 × 844 screen pixels; `x` defaults to the full width. */
+export type RowBand = { y: [number, number]; x?: [number, number]; problem?: boolean }
+/** `on` sets the label in the accent colour: the new design, as opposed to the old one or an example. */
+export type RowPhone = { screen: string; label: string; short?: string; on?: boolean; bands?: RowBand[] }
+
+/**
+ * Row: phones side by side, all visible at once, for before and after or a set of examples.
+ * Four or more sit in one row on wide frames and two per row on tall ones. Highlight bands stay
+ * hidden until `setMarked(true)`, then fade in with a slow pulse travelling along the row.
+ */
+export function rowScene(el: HTMLElement, phones: RowPhone[], tags: HTMLElement[], colors: { mark: string; problem: string }, playing: boolean) {
+  const GAP = 2.6
+  const ROW = BH + 0.9
+  const columns = (aspect: number) => (phones.length > 2 && aspect < 1 ? 2 : phones.length)
+  return mount(el, 9, 0.75, playing, (stage) => {
+    stage.fit = (aspect) => {
+      const cols = columns(aspect)
+      return [cols * GAP + 0.5, Math.ceil(phones.length / cols) * ROW + 0.5]
+    }
+    const group = new THREE.Group()
+    stage.scene.add(group)
+    const items = phones.map((phone) => {
+      const p = stage.phone(phone.screen)
+      group.add(p)
+      const bands = (phone.bands ?? []).map((band) => {
+        const [x0, x1] = band.x ?? [10, 380]
+        const [y0, y1] = band.y
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(((x1 - x0) / SW) * PW, ((y1 - y0) / SH) * PH), stage.material("band"))
+        m.material.color.set(band.problem ? colors.problem : colors.mark)
+        m.material.opacity = 0
+        m.position.set(((x0 + x1) / 2 / SW - 0.5) * PW, (0.5 - (y0 + y1) / 2 / SH) * PH, 0.01)
+        m.renderOrder = 3
+        p.add(m)
+        return m
+      })
+      return { p, phone, bands }
+    })
+    let marked = false
+    let shown = 0
+    stage.setMarked = (m) => {
+      marked = m
+      stage.redraw()
+    }
+    const v = new THREE.Vector3()
+    let clock = 0
+    stage.update = (dt) => {
+      clock += dt
+      // Fade the highlights in and out instead of snapping; paused, they switch at once.
+      shown = dt ? shown + (Number(marked) - shown) * Math.min(1, dt * 8) : Number(marked)
+      const cols = columns(stage.camera.aspect)
+      const rows = Math.ceil(phones.length / cols)
+      lean(stage, group, { x: 0, y: 0 }, clock, 0.18)
+      group.updateMatrixWorld()
+      const w = el.clientWidth
+      const h = el.clientHeight
+      items.forEach((item, i) => {
+        const c = i % cols
+        const r = Math.floor(i / cols)
+        item.p.position.set((c - (cols - 1) / 2) * GAP, ((rows - 1) / 2 - r) * ROW - 0.2, 0)
+        item.p.rotation.y = rows === 1 ? -(c - (cols - 1) / 2) * 0.07 : 0
+        const k = 0.5 + 0.5 * Math.sin(clock * 1.6 - i * 0.9)
+        item.bands.forEach((m) => (m.material.opacity = shown * (0.75 + 0.25 * k)))
+        const tag = tags[i]
+        if (!tag) return
+        const label = stage.camera.aspect < 1 && item.phone.short ? item.phone.short : item.phone.label
+        if (tag.textContent !== label) tag.textContent = label
+        item.p.updateMatrixWorld()
+        v.set(0, BH / 2 + 0.12, 0)
+        item.p.localToWorld(v).project(stage.camera)
+        const left = Math.min(w - tag.offsetWidth - 6, Math.max(6, ((v.x + 1) / 2) * w - tag.offsetWidth / 2))
+        tag.style.transform = `translate(${left}px, ${((1 - v.y) / 2) * h - tag.offsetHeight}px)`
+      })
     }
   })
 }

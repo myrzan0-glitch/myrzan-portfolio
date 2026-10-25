@@ -1,3 +1,5 @@
+import type { LayerPart, RowPhone } from "@/components/story/phone-scenes"
+
 export type CaseImage = { src: string; alt: string; w: number; h: number; caption?: string; video?: string }
 
 export type CaseSection = {
@@ -39,22 +41,27 @@ export type StoryCase = CaseBase & {
 export type CaseStudy = ClassicCase | StoryCase
 
 export type Story = {
+  /** Sets the page's accent colour (`--story-mark`) from globals.css; the default is `--story-accent`. */
+  palette?: "bi"
   subtitle: string
   /** Three screens for the hero, left to right. */
-  heroScreens: string[]
+  heroScreens: { screen: string; label: string }[]
   heroLabel: string
   role: { label: string; value: string }[]
   chapters: Chapter[]
 }
 
 /** Body paragraphs may wrap a phrase in **double asterisks** to set it in the text colour. */
-export type ChapterText = { title: string; body: string[] }
-
-export type Chapter = ChapterText & {
+export type Chapter = {
+  title: string
+  body: string[]
   visual?: Visual
-  results?: { value: string; label: string; note: string }[]
-  /** A second text column in place of a visual, numbered as its own chapter. */
-  alongside?: ChapterText
+  /** Full width: the text sits above the visual instead of beside it. */
+  wide?: boolean
+  /** Result tiles. A meter shows a share; with `was`, the old value against the new one. */
+  metrics?: { value: string; label: string; note: string; meter?: { was?: number; now: number } }[]
+  /** Numbered cards, for next steps. */
+  cards?: { title: string; body: string }[]
 }
 
 export type Tone = "accent" | "coin" | "farm" | "spend"
@@ -71,9 +78,11 @@ export type Visual =
       kind: "layers"
       label: string
       screen: string
-      /** Horizontal bands of the screen; `own` marks the parts designed from scratch. */
-      parts: { y: [number, number]; name: string; own: boolean; from?: string }[]
+      /** Horizontal bands of the screen; `mark` sets a part apart as new or as a problem. */
+      parts: LayerPart[]
       note: string
+      /** Caption for the full-size view. */
+      zoom?: string
     }
   | {
       kind: "loop"
@@ -81,121 +90,312 @@ export type Visual =
       /** Screens shown in place, one after another, with a tap ring where the user taps. */
       steps: { screen: string; name: string; tap?: [number, number] }[]
     }
+  | {
+      kind: "row"
+      label: string
+      /** Names the switch that shows the highlights, after what they show. */
+      toggle: string
+      note: string
+      /** Phones side by side; bands mark areas in screen pixels, red where `problem` is set. */
+      phones: RowPhone[]
+    }
+  | {
+      kind: "share"
+      label: string
+      description: string
+      /** One bar: the main share in the accent colour, the rest after it. */
+      main: { label: string; value: number }
+      chips: { name: string; top?: boolean }[]
+      facts: string[]
+    }
+  | {
+      kind: "dots"
+      label: string
+      description: string
+      /** One row of dots per group, filled for each person who succeeded. */
+      rows: { name: string; done: number; total: number; muted?: boolean }[]
+      facts: string[]
+    }
   | ({ kind: "image" } & CaseImage)
 
 const ozen = (name: string) => `/work/ozen-telegram-music/screens/${name}.webp`
+const bi = (name: string) => `/work/bi-mobile-search/screens/${name}.webp`
 
 export const caseStudies: CaseStudy[] = [
   {
+    kind: "story",
     slug: "bi-mobile-search",
     company: "BI Group · Mobile web",
     year: "2025",
-    title: "Rebuilt mobile search around the three filters buyers actually use",
+    title: "BI Group: mobile search built around three questions",
     summary:
       "75% of BI Group’s traffic is mobile, yet buyers were leaving search before they saw a single apartment. In six weeks I took the filter panel from field research to production, and bounce rate fell by a third.",
-    meta: [
-      { label: "My role", value: "Owned the design: audit, field research, interaction design, usability test, handoff" },
-      { label: "Team", value: "PM, engineers, QA" },
-      { label: "Timeline", value: "6 weeks" },
-      { label: "Platform", value: "Mobile web, 2M+ monthly users" }
-    ],
-    outcomes: [
-      { value: "54%", label: "conversion rate via quick filters" },
-      { value: "25% → 16.8%", label: "bounce rate" },
-      { value: "+156%", label: "page depth" },
-      { value: "679K", label: "filter interactions, first month" }
-    ],
     hero: {
       src: "/work/bi-final.webp",
       alt: "Final BI Group mobile search with quick-filter chips for city, price and rooms",
       w: 1600,
       h: 773
     },
-    sections: [
-      {
-        label: "Problem",
-        title: "Search hid the controls people needed most",
-        body: [
-          "BI Group is one of the largest residential developers in the region, and its site is where most purchases start. On mobile, the filter panel sat under heavy whitespace, the Filters and Map buttons were easy to miss, and every option had the same weight.",
-          "The business goal was simple: more mobile buyers reaching a listing they care about. I owned the design end to end, working with the PM on the goal and with engineers and QA through to release."
-        ],
-        image: {
-          src: "/work/bi-mobile-search/bi-audit.webp",
-          alt: "UX audit of the old mobile search marking wasted space and hidden filter and map buttons",
-          w: 1600,
-          h: 665,
-          caption: "Audit of the old flow: wasted space, a hidden Map button, and no clear first step."
+    story: {
+      palette: "bi",
+      subtitle:
+        "Three quarters of buyers searched on a phone, and they were leaving before they saw a single apartment. Six weeks of research, cutting and testing took bounce rate from 25% to 16.8%.",
+      heroScreens: [
+        { screen: bi("a-map"), label: "Map" },
+        { screen: bi("a-home"), label: "Home" },
+        { screen: bi("a-listing"), label: "Listing" }
+      ],
+      heroLabel: "Three redesigned BI Group screens: home with quick filters, the map with price pins, and the apartment listing",
+      role: [
+        { label: "Role", value: "Product designer · 2025" },
+        {
+          label: "Contribution",
+          value:
+            "Owned the design end to end: UX audit, field research, interaction design, split test and handoff. Worked with a PM on the goal and with engineers and QA through release."
+        },
+        { label: "Platform", value: "Mobile web, 2M+ monthly users" }
+      ],
+      chapters: [
+        {
+          title: "The first screen sold everything except homes",
+          body: [
+            "BI Group is one of the region’s largest developers, and three quarters of its traffic is mobile. On a phone, the first screen opened with a promo banner and a row of five shortcuts. Search, Map and Filters shared one row halfway down, easy to miss and all with the same weight, and sticky bars took another quarter of the screen.",
+            "Buyers arrived wanting an apartment and found a brochure. Many left before they saw a single listing."
+          ],
+          visual: {
+            kind: "layers",
+            label:
+              "The old home screen pulled apart into layers, with problems marked: shortcuts before search, filters and map that are easy to miss, and sticky bars",
+            screen: bi("b-home"),
+            parts: [
+              { y: [0, 112], name: "Header" },
+              { y: [112, 304], name: "Promo banner" },
+              { y: [304, 416], name: "Five shortcuts before search", mark: "problem" },
+              { y: [416, 556], name: "Filters and Map, easy to miss", mark: "problem" },
+              { y: [556, 644], name: "Category tabs" },
+              { y: [644, 844], name: "Sticky bars: 24% of the screen", mark: "problem" }
+            ],
+            note: "The old home screen. Red: what stood between a buyer and a listing.",
+            zoom: "Before · home"
+          }
+        },
+        {
+          title: "Shop like a marketplace",
+          wide: true,
+          body: [
+            "BI Group wants to sell homes the way marketplaces sell everything else. So next to the property portals, Krisha and Yandex Real Estate, I benchmarked the marketplaces buyers already shop on, Kaspi and Ozon.",
+            "Three of the four put **a row of filter chips right above the results**, and both property portals give the map **its own labelled button**. Buyers had learned the chips elsewhere. BI Group’s search hid every filter behind one button."
+          ],
+          visual: {
+            kind: "row",
+            label: "Search screens from Kaspi, Krisha, Yandex Real Estate and Ozon, with their filter chips and map buttons highlighted",
+            toggle: "Show pattern",
+            note: "Show pattern marks the filter chips and labelled map buttons.",
+            phones: [
+              { screen: bi("bench-kaspi"), label: "Kaspi", bands: [{ y: [109, 157] }] },
+              { screen: bi("bench-krisha"), label: "Krisha", bands: [{ y: [49, 97] }] },
+              {
+                screen: bi("bench-yandex"),
+                label: "Yandex Real Estate",
+                short: "Yandex",
+                bands: [{ y: [224, 269] }, { y: [785, 825], x: [12, 124] }]
+              },
+              { screen: bi("bench-ozon"), label: "Ozon", bands: [{ y: [220, 266] }] }
+            ]
+          }
+        },
+        {
+          title: "Eight buyers, one card sort",
+          body: [
+            "Chips only work if they’re the right chips. I went to a sales office and ran card sorts with buyers on their own phones, in the middle of real decisions.",
+            "The answer was lopsided: **city, price and number of rooms covered 87% of all filter use.** Everything else was occasional."
+          ],
+          visual: {
+            kind: "share",
+            label: "Card sort · 8 buyers · sales office",
+            description: "Card sort result: city, price and rooms cover 87% of filter use; every other filter shares the remaining 13%",
+            main: { label: "City · Price · Rooms", value: 87 },
+            chips: [
+              { name: "City", top: true },
+              { name: "Price", top: true },
+              { name: "Rooms", top: true },
+              { name: "Property type" },
+              { name: "Project" },
+              { name: "Area, m²" }
+            ],
+            facts: ["Moderated, on buyers’ own phones", "Thanked with a $20 bookstore voucher"]
+          }
+        },
+        {
+          title: "Fewer options, faster decisions",
+          body: [
+            "Every extra choice slows a decision down, so I cut the first screen to the three questions that matter. The shortcuts went, and City, Price and Rooms became chips at the top of the project list, with search and a blue, labelled Map button right below. Everything else moved one tap deeper, behind Filters.",
+            "The trade-off was deliberate: **power users lose one tap on rare filters, and everyone else reaches a listing faster.**"
+          ],
+          visual: {
+            kind: "row",
+            label: "The old home screen next to the new one",
+            toggle: "Show changes",
+            note: "Shortcuts and a lone Filter button became quick filters and a Map button you can’t miss.",
+            phones: [
+              { screen: bi("b-home"), label: "Before", bands: [{ y: [313, 406], problem: true }, { y: [502, 544], problem: true }] },
+              { screen: bi("a-home"), label: "After", on: true, bands: [{ y: [464, 492] }, { y: [509, 548], x: [259, 369] }] }
+            ]
+          }
+        },
+        {
+          title: "One question per tap",
+          body: [
+            "The old filter was a full-screen form: city, property type, project, rooms and area, all at once, before you could see anything. Now each chip opens a small sheet with a single question and an Apply button, and the results stay visible behind it."
+          ],
+          visual: {
+            kind: "row",
+            label: "The old full-screen filter form next to the new price sheet",
+            toggle: "Show changes",
+            note: "Five questions on one screen became one question in a small sheet.",
+            phones: [
+              { screen: bi("b-filter"), label: "Before", bands: [{ y: [104, 660], problem: true }] },
+              { screen: bi("a-price"), label: "After", on: true, bands: [{ y: [470, 700] }] }
+            ]
+          }
+        },
+        {
+          title: "A map that shows price before you tap",
+          wide: true,
+          body: [
+            "The old map showed photo pins: you had to open each one to learn anything. The new pins carry the starting price, the quick filters stay at the top, and “Back to list” is one tap away.",
+            "The project preview changed the same way. The old card had a photo, a name and an address. The new one adds **the starting price, the number of floors and the completion date**, and a Call button next to Details, so a buyer can judge a project without leaving the map."
+          ],
+          visual: {
+            kind: "row",
+            label: "The old and new map, then the old and new project preview card",
+            toggle: "Show changes",
+            note: "Price comes first on the map and on the preview card.",
+            phones: [
+              { screen: bi("b-map"), label: "Before · map", short: "Before" },
+              { screen: bi("a-map"), label: "After · map", short: "After", on: true, bands: [{ y: [170, 295], x: [90, 225] }] },
+              { screen: bi("b-mapcard"), label: "Before · preview", short: "Before" },
+              { screen: bi("a-mapcard"), label: "After · preview", short: "After", on: true, bands: [{ y: [555, 620] }, { y: [640, 680] }] }
+            ]
+          }
+        },
+        {
+          title: "A project page that asks for the next step",
+          body: [
+            "The old project page was a brochure: photos, a description and a floating phone icon. The new one puts the facts buyers ask first right under the name: completion date, address and the walk to the nearest landmark.",
+            "Then it gives two ways forward. **Leave a request** sits on the photo, for buyers ready to talk to sales. **Choose a property** opens this project’s listings, for buyers who want to keep looking."
+          ],
+          visual: {
+            kind: "row",
+            label: "The old project page next to the new one, with Leave a request and Choose a property highlighted",
+            toggle: "Show changes",
+            note: "Two calls to action on the first screen of every project.",
+            phones: [
+              { screen: bi("b-project"), label: "Before", bands: [{ y: [561, 619], x: [312, 369], problem: true }] },
+              {
+                screen: bi("a-project"),
+                label: "After",
+                on: true,
+                bands: [
+                  { y: [351, 385], x: [21, 185] },
+                  { y: [584, 626], x: [21, 369] }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          title: "A listing that tells you where you are",
+          body: [
+            "The old listing put every filter behind one button and switched views with unlabelled icons. The new one shows how many layouts match, **32,221**, uses the same chips as the home screen, and names its views: tiles, list, and a floor-by-floor grid.",
+            "Price, Project and Rooms come first, the listing filters people used most. The pattern is the same as on the home screen, so buyers learn it once."
+          ],
+          visual: {
+            kind: "row",
+            label: "The old listing next to the new one, with the match count, chips and labelled views highlighted",
+            toggle: "Show changes",
+            note: "Same chips as home, a match count, and views with names.",
+            phones: [
+              { screen: bi("b-listing"), label: "Before", bands: [{ y: [185, 227], problem: true }] },
+              {
+                screen: bi("a-listing"),
+                label: "After",
+                on: true,
+                bands: [{ y: [183, 204], x: [239, 369] }, { y: [275, 309] }, { y: [322, 356] }]
+              }
+            ]
+          }
+        },
+        {
+          title: "A next step on every screen",
+          wide: true,
+          body: [
+            "A buyer can arrive on any screen and leave from any screen. So we hunted for the buyer at every step: **whatever screen someone stops on, the next step is one tap away**, and every path leads closer to a conversation with sales."
+          ],
+          visual: {
+            kind: "row",
+            label:
+              "Four new screens with their next step highlighted: quick filters and Map on home, Call on the map preview, Leave a request and Choose a property on the project page, and the heart on the listing",
+            toggle: "Show next steps",
+            note: "Home → map preview → project → listing. Show next steps marks the way forward on each.",
+            phones: [
+              { screen: bi("a-home"), label: "Home", on: true, bands: [{ y: [464, 492] }, { y: [509, 548], x: [259, 369] }] },
+              { screen: bi("a-mapcard"), label: "Map preview", on: true, bands: [{ y: [640, 680] }] },
+              {
+                screen: bi("a-project"),
+                label: "Project",
+                on: true,
+                bands: [
+                  { y: [351, 385], x: [21, 185] },
+                  { y: [584, 626], x: [21, 369] }
+                ]
+              },
+              { screen: bi("a-listing"), label: "Listing", on: true, bands: [{ y: [415, 450], x: [320, 362] }] }
+            ]
+          }
+        },
+        {
+          title: "Split-tested before a line of code",
+          body: [
+            "I ran a split test with 12 people on real phones. The task: **find a two-bedroom apartment in Astana under 30 million tenge.**",
+            "The new design more than doubled unaided success, and 10 of 12 preferred it. One finding changed the design before handoff: people found the pin icon unclear, so it became a labelled Map button."
+          ],
+          visual: {
+            kind: "dots",
+            label: "Split test · 12 people · real phones",
+            description: "Split test: 2 of 6 completed the task on the old design, 5 of 6 on the new one; 10 of 12 preferred the new design",
+            rows: [
+              { name: "Old", done: 2, total: 6, muted: true },
+              { name: "New", done: 5, total: 6 }
+            ],
+            facts: ["Completed the task unaided", "10 of 12 preferred the new design"]
+          }
+        },
+        {
+          title: "Results",
+          wide: true,
+          body: ["In June 2025 the new search served 261,944 sessions from 118,216 users."],
+          metrics: [
+            { value: "54%", label: "Conversion via quick filters", note: "5.7 filter interactions per user", meter: { now: 54 } },
+            { value: "16.8%", label: "Bounce rate", note: "down from 25%", meter: { was: 100, now: 67.2 } },
+            { value: "4.1", label: "Pages per session", note: "up from 1.6, +156%", meter: { was: 39, now: 100 } },
+            { value: "679K", label: "Filter interactions", note: "in the first month after launch" }
+          ]
+        },
+        {
+          title: "What I’d measure next",
+          wide: true,
+          body: [
+            "The release changed chips, map pins, the Map button and the listing cards at once. The numbers moved together, so we can’t yet say which change did the most."
+          ],
+          cards: [
+            { title: "Ship in stages", body: "Release each change behind its own A/B test, so it earns its place on its own." },
+            { title: "Tag every chip and sheet", body: "Track each tap, so we see which filters lead to a listing and which lead nowhere." },
+            { title: "Watch advanced filters", body: "Check that the one extra tap isn’t costing the buyers who rely on them." }
+          ]
         }
-      },
-      {
-        label: "Research",
-        title: "Eight buyers, one card sort, one clear answer",
-        body: [
-          "I benchmarked e-commerce leaders as well as property portals, because BI Group’s strategy is to sell like a marketplace, not like a developer.",
-          "Then I ran card-sorting sessions with 8 real buyers on their own phones in a sales office. City, price and number of rooms covered 87% of all filter use. Everything else was occasional."
-        ],
-        points: [
-          "Method: moderated card sort, mobile devices, in a sales office",
-          "Participants: 8 buyers, thanked with a $20 bookstore voucher",
-          "Finding: 3 filters cover 87% of use cases"
-        ],
-        image: {
-          src: "/work/bi-mobile-search/bi-sales-office.webp",
-          alt: "Research sessions with buyers in a BI Group sales office",
-          w: 1600,
-          h: 1067,
-          caption: "Guerrilla research in a sales office, with real buyers mid-decision."
-        }
-      },
-      {
-        label: "Decision",
-        title: "Remove options to speed up the decision",
-        body: [
-          "Using the 80/20 split and Hick’s law, I surfaced City, Price and Rooms as quick-filter chips above the results, moved everything else one tap deeper, and gave Map its own labelled button.",
-          "The trade-off was deliberate. Power users lose one tap on rare filters; everyone else gets to a relevant listing faster. I also restructured listing cards for faster vertical scanning on small screens."
-        ],
-        points: [
-          "Quick-filter chips for City, Price and Rooms",
-          "Simplified header with a visible Map button",
-          "Progressive disclosure for advanced filters"
-        ],
-        image: {
-          src: "/work/bi-mobile-search/bi-moves.webp",
-          alt: "Design moves: most-used filters first, highlighted map, polished white space",
-          w: 1600,
-          h: 564
-        }
-      },
-      {
-        label: "Validation",
-        title: "Split-tested before a line of production code",
-        body: [
-          "I ran a split test with 12 participants on real phones. The task: find a 2-bedroom apartment in Astana under 30 million KZT.",
-          "Feedback led to one more change before handoff: the unclear pin icon became a labelled Map button."
-        ],
-        points: [
-          "Old design: 2 of 6 completed the task unaided",
-          "New design: 5 of 6 completed the task unaided",
-          "10 of 12 preferred the new version"
-        ],
-        image: {
-          src: "/work/bi-mobile-search/bi-before-after.webp",
-          alt: "Before and after of the main search page and the map view",
-          w: 1600,
-          h: 1212,
-          caption: "Before and after, on the main page and the map view."
-        }
-      },
-      {
-        label: "Outcome",
-        title: "Less bouncing, deeper browsing",
-        body: [
-          "In June 2025 the new search served 261,944 sessions from 118,216 users. The conversion rate through quick filters reached 54%, with 5.7 interactions per user. Bounce rate fell from 25% to 16.8% and page depth rose 156%.",
-          "The next iteration adds staged A/B releases and event tagging so we can isolate which micro-changes drive the biggest gains."
-        ]
-      }
-    ],
-    takeaway: "On mobile, clarity beats completeness. The biggest gain came from removing options, not adding them."
+      ]
+    }
   },
   {
     kind: "story",
@@ -214,7 +414,11 @@ export const caseStudies: CaseStudy[] = [
     story: {
       subtitle:
         "Designing a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
-      heroScreens: [ozen("t2"), ozen("m3"), ozen("p3")],
+      heroScreens: [
+        { screen: ozen("t2"), label: "Friends" },
+        { screen: ozen("m3"), label: "Claim" },
+        { screen: ozen("p3"), label: "Collection" }
+      ],
       heroLabel: "Three Ōzen screens: claiming a farming reward, a collection earning coins, and the referral tab",
       role: [
         { label: "Role", value: "Sole product designer · 2025" },
@@ -265,14 +469,14 @@ export const caseStudies: CaseStudy[] = [
               "The main screen pulled apart into layers: Telegram components at the back, Ōzen’s balance, farming button and mini player in front",
             screen: ozen("m1"),
             parts: [
-              { y: [0, 122], name: "Header", own: false },
-              { y: [122, 180], name: "Search", own: false },
-              { y: [180, 246], name: "Coin balance", own: true },
-              { y: [246, 620], name: "List cells", own: false },
-              { y: [620, 692], name: "Farming button", own: true },
+              { y: [0, 122], name: "Header" },
+              { y: [122, 180], name: "Search" },
+              { y: [180, 246], name: "Coin balance", mark: "new" },
+              { y: [246, 620], name: "List cells" },
+              { y: [620, 692], name: "Farming button", mark: "new" },
               // The main screen while a track plays, so the mini player isn’t empty.
-              { y: [692, 753], name: "Mini player", own: true, from: ozen("m2") },
-              { y: [753, 844], name: "Tab bar", own: false }
+              { y: [692, 753], name: "Mini player", mark: "new", from: ozen("m2") },
+              { y: [753, 844], name: "Tab bar" }
             ],
             note: "Grey: stock Telegram components. Blue: the only parts designed from scratch."
           }
@@ -327,20 +531,26 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           title: "Results",
+          wide: true,
           body: [
             "The invite gate did its job. The beta spread organically through Telegram communities, and Telegram’s CEO, Pavel Durov, tried it himself."
           ],
-          results: [
+          metrics: [
             { value: "5,000", label: "Active users", note: "first week of the invite-only beta" },
             { value: "0", label: "Tutorial screens", note: "every control was already familiar from Telegram" }
+          ]
+        },
+        {
+          title: "What the beta didn’t prove",
+          wide: true,
+          body: [
+            "Five thousand people in a week proves curiosity, not habit. Tap-to-earn apps tend to fade once the novelty goes, and the beta ended before we could see whether Ōzen would."
           ],
-          alongside: {
-            title: "What the beta didn’t prove",
-            body: [
-              "Five thousand people in a week proves curiosity, not habit. Tap-to-earn apps tend to fade once the novelty goes, and the beta ended before we could see whether Ōzen would.",
-              "The next version needed to prove retention: measure how many people came back for a second and third farming claim, and test whether investing in tracks kept them longer than farming alone. On the product side, that meant on-chain transfers, an artist dashboard, and real ownership of tracks."
-            ]
-          }
+          cards: [
+            { title: "Measure return visits", body: "Count how many people come back for a second and third farming claim." },
+            { title: "Test investing", body: "See whether backing tracks keeps people longer than farming alone." },
+            { title: "Make ownership real", body: "On-chain transfers, an artist dashboard and real ownership of tracks." }
+          ]
         }
       ]
     }
