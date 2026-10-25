@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowUpRight } from "lucide-react"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
 
 import { CvButton } from "@/components/cv-button"
 import { HeroBackground } from "@/components/hero-background"
@@ -8,6 +8,7 @@ import { CopyEmail, EMAIL } from "@/components/home/copy-email"
 import { LondonClock } from "@/components/home/london-clock"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import { SideScene } from "@/components/home/side-scene"
+import { WorkCover, type CoverKind } from "@/components/home/work-cover"
 import { FadeIn } from "@/components/motion"
 
 const fan = [
@@ -25,50 +26,42 @@ const photos = [
   { src: "/personal/family-walk.webp", alt: "Family on a city walk, black and white", r: "-5deg", y: "12px", z: 2 }
 ]
 
-const featured = [
+const featured: { slug: string; client: string; year: string; title: string; summary: string; cover: CoverKind; light: boolean }[] = [
   {
-    n: "01",
     slug: "bi-mobile-search",
-    company: "BI Group · Mobile web",
+    client: "BI Group",
     year: "2025",
     title: "Redesigned mobile search to a 54% conversion rate in six weeks",
-    line: "Ran field research with buyers in a sales office, cut the filter panel down to the three that cover 87% of use, and validated with a split test before handoff.",
-    stats: ["54% conversion rate", "Bounce 25% → 16.8%", "2M+ monthly users"],
-    img: "/work/bi-final.webp",
-    alt: "Redesigned BI Group mobile search with quick-filter chips and a map view"
+    summary: "Three filters for 2M+ monthly buyers, split-tested before code",
+    cover: "bi",
+    light: true
   },
   {
-    n: "02",
     slug: "ozen-telegram-music",
-    company: "Ōzen · Telegram Mini App",
+    client: "Ōzen",
     year: "2025",
-    title: "Designed a crypto music economy that feels like Telegram",
-    line: "A listen-to-earn Mini App built on Telegram’s own components, so nobody needed a tutorial. As the only designer, I took it from research to an invite-only beta.",
-    stats: ["5,000 users in week one", "Sole designer", "Telegram Mini App"],
-    img: "/work/ozen-telegram-music/hero.webp",
-    alt: "Ōzen screens: the farming claim, a collection that earns, the full player, tasks and the friends tab"
+    title: "Designed a Web3 music player that feels like Telegram",
+    summary: "A Telegram Mini App with 5,000 users in its first week",
+    cover: "ozen",
+    light: false
   },
   {
-    n: "03",
-    slug: "bi-video-consultation",
-    company: "BI Group · Growth experiment",
-    year: "2026",
-    title: "Turned a $500 experiment into a $100K sale and a funded product team",
-    line: "The product team said video calls would take too long to build. I shipped them in one week with Calendly, Teams and one sales manager. The first month closed a $100K apartment sale.",
-    stats: ["$100K first sale", "1 week to launch", "0 engineers"],
-    img: "/work/video-consult.webp",
-    alt: "Video consultation flow from the BI Group site to a booked call"
-  },
-  {
-    n: "04",
     slug: "technodom-credit",
-    company: "Technodom · Fintech",
+    client: "Technodom",
     year: "2022",
     title: "Turned a credit rejection loop into a $4M-a-month revenue stream",
-    line: "Partnered with the banks to pre-score every shopper across all of them in one step, instead of one bank at a time. Became the company’s #1 revenue source.",
-    stats: ["$4M+ monthly revenue", "+35% credit conversions", "#1 revenue stream"],
-    img: "/work/technodom-credit/hero.webp",
-    alt: "Technodom screens: offers from every partner bank with their status, the credit checkout and a refusal that suggests other banks"
+    summary: "Every partner bank pre-scores the shopper at once",
+    cover: "technodom",
+    light: true
+  },
+  {
+    slug: "bi-video-consultation",
+    client: "BI Group",
+    year: "2026",
+    title: "Turned a $500 experiment into a $100K sale and a funded product team",
+    summary: "Video consultations shipped in one week, with no engineers",
+    cover: "video",
+    light: false
   }
 ]
 
@@ -243,47 +236,37 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="work" className={`${column} pt-20 sm:pt-24`}>
+        <section id="work" className="mx-auto w-full max-w-[1180px] px-5 pt-20 sm:px-6 sm:pt-24">
           <div className="home-rule">
             <span className="home-label">Selected work</span>
             <span className="home-label">4 case studies</span>
           </div>
-          {featured.map((w) => (
-            <FadeIn key={w.n}>
-              <Link
-                href={`/work/${w.slug}`}
-                className="group flex flex-col gap-3.5 border-b border-[var(--home-line)] py-8"
-              >
-                <div className="flex justify-between gap-3">
-                  <span className="home-label">
-                    {w.n} · {w.company}
-                  </span>
-                  <span className="home-label">{w.year}</span>
-                </div>
-                <div className="flex items-start justify-between gap-4">
-                  <h2 className="m-0 text-[19px] font-medium leading-[1.3] sm:text-[22px]">{w.title}</h2>
-                  <ArrowUpRight className="mt-1 h-[18px] w-[18px] shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-                </div>
-                <p className="home-muted m-0 text-[15px] leading-[1.55]">{w.line}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {w.stats.map((s) => (
-                    <span key={s} className="home-chip">
-                      {s}
+          <div className="mt-6 grid gap-x-4 gap-y-12 sm:grid-cols-2">
+            {featured.map((w) => (
+              <FadeIn key={w.slug}>
+                <Link href={`/work/${w.slug}`} className="group flex flex-col gap-2.5">
+                  <div className="relative">
+                    <WorkCover kind={w.cover} />
+                    <span
+                      aria-hidden="true"
+                      className={`absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full transition-transform duration-300 group-hover:scale-110 ${
+                        w.light ? "bg-white text-[#111]" : "bg-white/15 text-white"
+                      }`}
+                    >
+                      <ArrowRight className="h-4 w-4" />
                     </span>
-                  ))}
-                </div>
-                <div className="relative mt-1.5 aspect-[16/9] overflow-hidden rounded-xl border border-[var(--home-line)] bg-[var(--home-soft)]">
-                  <Image
-                    src={w.img}
-                    alt={w.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 640px"
-                    className={`${"contain" in w && w.contain ? "bg-[#1b1b1b] object-contain" : "object-cover"} transition-transform duration-700 ease-out group-hover:scale-[1.02]`}
-                  />
-                </div>
-              </Link>
-            </FadeIn>
-          ))}
+                  </div>
+                  <span className="home-label mt-2">
+                    Case study · {w.year} · {w.client}
+                  </span>
+                  <h2 className="m-0 text-[20px] font-medium leading-[1.25] tracking-[-0.01em] underline-offset-4 group-hover:underline sm:text-[22px]">
+                    {w.title}
+                  </h2>
+                  <p className="home-muted m-0 font-[family-name:var(--font-mono)] text-[13px] leading-[1.5]">{w.summary}</p>
+                </Link>
+              </FadeIn>
+            ))}
+          </div>
         </section>
 
         <section className={`${column} pt-16 sm:pt-[72px]`}>

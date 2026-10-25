@@ -293,3 +293,254 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Selected work covers (components/home/work-cover.tsx). Each is a 1280 × 1024 artboard sized in
+ * cqw, so 1cqw is 12.8 artboard pixels. A device on a flat ground plays the case's real screens:
+ * a slow camera zoom, screens that cross-fade, and a ring where the user taps. 8 s per loop.
+ */
+.cover {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border-radius: 14px;
+  container-type: inline-size;
+}
+.cover-cam {
+  position: absolute;
+  animation-duration: 8s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+.cover-phone-cam {
+  left: 33.83cqw;
+  top: 6.09cqw;
+  width: 32.34cqw;
+  height: 67.81cqw;
+}
+.cover-phone {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 0.234cqw;
+  border-radius: 4.84cqw;
+  background: linear-gradient(145deg, #9a9aa0, #2b2b2e 38%, #66666c 62%, #1d1d20);
+  box-shadow: 0 5.47cqw 9.38cqw -3.13cqw rgba(0, 0, 0, 0.6), 0 2.03cqw 3.44cqw -2.03cqw rgba(0, 0, 0, 0.5);
+}
+.cover-light .cover-phone {
+  box-shadow: 0 5.47cqw 9.38cqw -3.13cqw rgba(0, 0, 0, 0.3), 0 2.03cqw 3.44cqw -2.03cqw rgba(0, 0, 0, 0.3);
+}
+.cover-bezel {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0.703cqw;
+  border-radius: 4.61cqw;
+  background: #050505;
+}
+.cover-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 3.91cqw;
+  background: #000;
+}
+.cover-tap {
+  position: absolute;
+  width: 3.44cqw;
+  height: 3.44cqw;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 0.23cqw solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.28);
+  opacity: 0;
+  animation: 8s ease-out infinite;
+}
+
+/* BI Group and Technodom: a slow zoom into the quick filters, and into the bank offers. */
+.cover-bi-cam {
+  transform-origin: 50% 59%;
+  animation-name: cover-bi-cam;
+}
+.cover-td-cam {
+  transform-origin: 50% 57.8%;
+  animation-name: cover-td-cam;
+}
+@keyframes cover-bi-cam {
+  0%, 12% { transform: scale(1); }
+  42%, 70% { transform: scale(1.75); }
+  94%, 100% { transform: scale(1); }
+}
+@keyframes cover-td-cam {
+  0%, 12% { transform: scale(1); }
+  42%, 70% { transform: scale(1.6); }
+  94%, 100% { transform: scale(1); }
+}
+
+/* Ōzen: Start farming, the farming fill, then a zoom into Claim 480. */
+.cover-oz-cam {
+  transform-origin: 50% 76.8%;
+  animation-name: cover-oz-cam;
+}
+.cover-oz-farming,
+.cover-oz-claim {
+  opacity: 0;
+  animation: 8s ease-in-out infinite;
+}
+.cover-oz-farming { animation-name: cover-oz-farming; }
+.cover-oz-claim { animation-name: cover-oz-claim; }
+.cover-oz-tap1,
+.cover-oz-tap2 {
+  left: 44.36%;
+  top: 75%;
+}
+.cover-oz-tap1 { animation-name: cover-oz-tap1; }
+.cover-oz-tap2 { animation-name: cover-oz-tap2; }
+@keyframes cover-oz-cam {
+  0%, 60% { transform: scale(1); }
+  70%, 86% { transform: scale(1.8); }
+  95%, 100% { transform: scale(1); }
+}
+@keyframes cover-oz-farming {
+  0%, 25% { opacity: 0; }
+  29%, 58% { opacity: 1; }
+  62%, 100% { opacity: 0; }
+}
+@keyframes cover-oz-claim {
+  0%, 56% { opacity: 0; }
+  60%, 92% { opacity: 1; }
+  97%, 100% { opacity: 0; }
+}
+@keyframes cover-oz-tap1 {
+  0%, 20% { opacity: 0; transform: scale(0.6); }
+  22% { opacity: 1; transform: scale(1); }
+  27%, 100% { opacity: 0; transform: scale(1.6); }
+}
+@keyframes cover-oz-tap2 {
+  0%, 79% { opacity: 0; transform: scale(0.6); }
+  81% { opacity: 1; transform: scale(1); }
+  86%, 100% { opacity: 0; transform: scale(1.6); }
+}
+
+/* Video consultation: zoom to the header button, tap, Calendly, then the Teams meeting. */
+.cover-window {
+  left: 18.13cqw;
+  top: 8.83cqw;
+  width: 63.75cqw;
+  height: 62.27cqw;
+  overflow: hidden;
+  border-radius: 1.25cqw;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 5.47cqw 9.38cqw -3.13cqw rgba(0, 0, 0, 0.7);
+}
+.cover-vc-cam {
+  transform-origin: 72.8% 8.4%;
+  animation-name: cover-vc-cam;
+}
+.cover-window-bar {
+  height: 3.13cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.63cqw;
+  padding: 0 1.25cqw;
+  background: #f3f2ef;
+  border-bottom: 1px solid #e4e2dd;
+}
+.cover-window-bar i {
+  width: 0.94cqw;
+  height: 0.94cqw;
+  border-radius: 50%;
+}
+.cover-window-bar span {
+  margin-left: 1.41cqw;
+  padding: 0.31cqw 1.09cqw;
+  border-radius: 0.55cqw;
+  background: #fff;
+  font-size: 1.02cqw;
+  line-height: 1.2;
+  color: #6f6f6f;
+}
+.cover-window-page {
+  position: relative;
+  height: 59.14cqw;
+}
+.cover-vc-dim {
+  position: absolute;
+  inset: 3.13cqw 0 0;
+  background: rgba(10, 10, 12, 0.45);
+  opacity: 0;
+  animation: cover-vc-dim 8s ease-in-out infinite;
+}
+.cover-vc-cal,
+.cover-vc-teams {
+  position: absolute;
+  overflow: hidden;
+  opacity: 0;
+  animation: 8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+.cover-vc-cal {
+  left: 17.11cqw;
+  top: 24.38cqw;
+  width: 29.53cqw;
+  height: 16.64cqw;
+  border-radius: 2.34cqw;
+  box-shadow: 0 2.34cqw 4.69cqw -1.56cqw rgba(0, 0, 0, 0.5);
+  animation-name: cover-vc-cal;
+}
+.cover-vc-teams {
+  left: 9.22cqw;
+  top: 14.61cqw;
+  width: 45.31cqw;
+  height: 36.09cqw;
+  border-radius: 1.09cqw;
+  box-shadow: 0 3.13cqw 6.25cqw -1.88cqw rgba(0, 0, 0, 0.55);
+  animation-name: cover-vc-teams;
+}
+.cover-vc-tap {
+  left: 44.69cqw;
+  top: 3.52cqw;
+  background: rgba(47, 91, 234, 0.3);
+  animation-name: cover-vc-tap;
+}
+@keyframes cover-vc-cam {
+  0%, 6% { transform: scale(1); }
+  16%, 30% { transform: scale(2); }
+  38%, 100% { transform: scale(1); }
+}
+@keyframes cover-vc-tap {
+  0%, 24% { opacity: 0; transform: scale(0.6); }
+  26% { opacity: 1; transform: scale(1); }
+  31%, 100% { opacity: 0; transform: scale(1.6); }
+}
+@keyframes cover-vc-dim {
+  0%, 34% { opacity: 0; }
+  38%, 92% { opacity: 1; }
+  97%, 100% { opacity: 0; }
+}
+@keyframes cover-vc-cal {
+  0%, 35% { opacity: 0; transform: scale(0.92); }
+  40%, 59% { opacity: 1; transform: scale(1); }
+  63%, 100% { opacity: 0; transform: scale(0.96); }
+}
+@keyframes cover-vc-teams {
+  0%, 62% { opacity: 0; transform: translateY(1.88cqw) scale(0.94); }
+  67%, 92% { opacity: 1; transform: translateY(0) scale(1); }
+  97%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+}
+
+/* Without motion, each cover rests on its key screen. */
+@media (prefers-reduced-motion: reduce) {
+  .cover-cam,
+  .cover-tap,
+  .cover-oz-farming,
+  .cover-vc-dim,
+  .cover-vc-cal,
+  .cover-vc-teams {
+    animation: none;
+  }
+  .cover-oz-claim {
+    animation: none;
+    opacity: 1;
+  }
+}
