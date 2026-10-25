@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react"
 
 import { CvButton } from "@/components/cv-button"
 import { HeroBackground } from "@/components/hero-background"
-import { CopyEmail, EMAIL } from "@/components/home/copy-email"
+import { CopyEmail } from "@/components/home/copy-email"
 import { SiteFooter, SiteNav } from "@/components/home/site-nav"
 import { WorkCover, type CoverKind } from "@/components/home/work-cover"
 import { FadeIn } from "@/components/motion"
@@ -53,13 +53,6 @@ const more = [
   { slug: "bi-scratch-card", title: "AI-personalised scratch card campaign", where: "BI Group · 2026", metric: "Same-day approval" },
   { slug: "beeline-checkout-research", title: "Checkout research with real customers", where: "Beeline · 2023", metric: "2:43 → 1:37 per order" },
   { slug: "beeline-design-system", title: "From one chaotic file to a design system", where: "Beeline · 2022", metric: "5 flows rebuilt" }
-]
-
-const contacts = [
-  { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
-  { label: "LinkedIn", value: "/in/myrzanio", href: "https://linkedin.com/in/myrzanio" },
-  { label: "Telegram", value: "@myrzanio", href: "https://t.me/myrzanio" },
-  { label: "CV", value: "PDF", href: "/cv-myrzan-izimbetov.pdf" }
 ]
 
 const column = "mx-auto w-full max-w-[640px] px-5 sm:px-6"
@@ -165,29 +158,9 @@ export default function HomePage() {
           ))}
         </section>
 
-        <section id="contact" className={`${column} pt-20 sm:pt-[88px]`}>
-          <div className="home-rule">
-            <span className="home-label">Contact</span>
-          </div>
-          {contacts.map((k) => (
-            <a
-              key={k.label}
-              href={k.href}
-              target={k.href.startsWith("http") ? "_blank" : undefined}
-              rel={k.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              className="group flex min-h-12 items-center justify-between py-2"
-            >
-              <span className="text-[15px]">{k.label}</span>
-              <span className="home-muted inline-flex items-center gap-1.5 text-[13px] sm:text-sm">
-                {k.value}
-                <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-              </span>
-            </a>
-          ))}
-        </section>
       </main>
 
-      <SiteFooter className={column} />
+      <SiteFooter />
     </div>
   )
 }

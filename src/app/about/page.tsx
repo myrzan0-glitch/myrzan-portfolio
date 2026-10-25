@@ -19,9 +19,9 @@ export default function AboutPage() {
       <main id="main">
         <SiteNav className={wrap} />
 
-        {/* Who I am on the left; photos, the book and what I'm doing now on the right. */}
+        {/* Who I am on the left, in view while the photos, the book and what I'm doing now scroll by. */}
         <section className={`${wrap} grid gap-10 pt-14 sm:pt-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12`}>
-          <div className="max-w-[560px]">
+          <div className="max-w-[560px] lg:sticky lg:top-8 lg:self-start">
             <h1 className="m-0 text-[34px] font-medium leading-[1.1] tracking-[-0.025em] sm:text-[40px]">Hey, I&rsquo;m Myrzan!</h1>
             <div className="home-muted mt-6 flex flex-col gap-4 text-[15px] leading-[1.65] sm:text-base">
               <p className="m-0">
@@ -173,7 +173,7 @@ export default function AboutPage() {
         </section>
       </main>
 
-      <SiteFooter className={wrap} />
+      <SiteFooter />
     </div>
   )
 }
