@@ -212,28 +212,26 @@ export default function HomePage() {
           </div>
           <div className="mt-6 grid gap-x-4 gap-y-12 sm:grid-cols-2">
             {featured.map((w) => (
-              <FadeIn key={w.slug}>
-                <Link href={`/work/${w.slug}`} className="group flex flex-col gap-2.5">
-                  <div className="relative">
-                    <WorkCover kind={w.cover} />
-                    <span
-                      aria-hidden="true"
-                      className={`absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full transition-transform duration-300 group-hover:scale-110 ${
-                        w.light ? "bg-white text-[#111]" : "bg-white/15 text-white"
-                      }`}
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </div>
-                  <span className="home-label mt-2">
-                    Case study · {w.year} · {w.client}
+              <Link key={w.slug} href={`/work/${w.slug}`} className="group flex flex-col gap-2.5">
+                <div className="relative">
+                  <WorkCover kind={w.cover} />
+                  <span
+                    aria-hidden="true"
+                    className={`absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full transition-transform duration-300 group-hover:scale-110 ${
+                      w.light ? "bg-white text-[#111]" : "bg-white/15 text-white"
+                    }`}
+                  >
+                    <ArrowRight className="h-4 w-4" />
                   </span>
-                  <h2 className="m-0 text-[20px] font-medium leading-[1.25] tracking-[-0.01em] underline-offset-4 group-hover:underline sm:text-[22px]">
-                    {w.title}
-                  </h2>
-                  <p className="home-muted m-0 font-[family-name:var(--font-mono)] text-[13px] leading-[1.5]">{w.summary}</p>
-                </Link>
-              </FadeIn>
+                </div>
+                <span className="home-label mt-2">
+                  Case study · {w.year} · {w.client}
+                </span>
+                <h2 className="m-0 text-[20px] font-medium leading-[1.25] tracking-[-0.01em] underline-offset-4 group-hover:underline sm:text-[22px]">
+                  {w.title}
+                </h2>
+                <p className="home-muted m-0 font-[family-name:var(--font-mono)] text-[13px] leading-[1.5]">{w.summary}</p>
+              </Link>
             ))}
           </div>
         </section>
