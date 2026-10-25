@@ -4,7 +4,7 @@ import * as React from "react"
 import { createPortal } from "react-dom"
 import { Pause, Play, ZoomIn } from "lucide-react"
 
-import { heroScene, layersScene, loopScene, rowScene, type LayerPart, type LoopStep, type RowPhone, type Scene } from "./phone-scenes"
+import { heroScene, layersScene, rowScene, type LayerPart, type RowPhone, type Scene } from "./phone-scenes"
 
 /** A screen to open full size, with its caption. */
 export type Shot = { screen: string; label?: string }
@@ -196,27 +196,6 @@ export function LayersStage({ screen, parts, label, zoom }: { screen: string; pa
   )
 }
 
-export function LoopStage({ steps, label }: { steps: LoopStep[]; label: string }) {
-  const [step, setStep] = React.useState(0)
-  const { ref, playing, toggle } = useScene((el, p) => loopScene(el, steps, cssColor(el, "--story-mark"), setStep, p))
-  return (
-    <figure className="m-0">
-      <div ref={ref} role="img" aria-label={label} className={`${panel} aspect-[4/5] sm:aspect-[4/3]`}>
-        <Zoom shots={steps.map((s) => ({ screen: s.screen, label: s.name }))} />
-        <PlayButton playing={playing} onClick={toggle} />
-      </div>
-      <figcaption className="mt-3 flex flex-wrap justify-center gap-x-2.5 gap-y-1.5 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.04em] text-[var(--home-faint)]">
-        {steps.map((s, i) => (
-          <React.Fragment key={s.name}>
-            {i > 0 && <span aria-hidden="true" className="text-[var(--home-line)]">→</span>}
-            <span className={`transition-colors ${i === step ? "text-[var(--home-fg)]" : ""}`}>{s.name}</span>
-          </React.Fragment>
-        ))}
-      </figcaption>
-    </figure>
-  )
-}
-
 /**
  * Phones side by side with their labels. Highlights start hidden so the designs read clean; the
  * switch below the panel, named for what it shows, turns them on.
@@ -239,7 +218,7 @@ export function RowStage({ phones, label, toggle: toggleLabel, wide }: { phones:
   }
   return (
     <>
-      <div ref={ref} role="img" aria-label={label} className={`${panel} ${wide ? "aspect-[4/5] sm:aspect-[2/1]" : "aspect-square sm:aspect-[4/3]"}`}>
+      <div ref={ref} role="img" aria-label={label} className={`${panel} ${!wide ? "aspect-square sm:aspect-[4/3]" : phones.length > 3 ? "aspect-[4/5] sm:aspect-[2/1]" : "aspect-[4/3] sm:aspect-[2/1]"}`}>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           {phones.map((phone, i) => (
             <span

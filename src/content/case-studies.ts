@@ -85,12 +85,6 @@ export type Visual =
       zoom?: string
     }
   | {
-      kind: "loop"
-      label: string
-      /** Screens shown in place, one after another, with a tap ring where the user taps. */
-      steps: { screen: string; name: string; tap?: [number, number] }[]
-    }
-  | {
       kind: "row"
       label: string
       /** Names the switch that shows the highlights, after what they show. */
@@ -487,13 +481,16 @@ export const caseStudies: CaseStudy[] = [
             "A farming session runs for eight hours, so most visits are a five-second check: is it done yet? Instead of a separate timer, progress bar and claim screen, one Telegram button carries the whole loop.",
             "It starts the session, fills up with a live coin count and the time left, then turns into **Claim 480**. The answer to “is it done yet?” is always in the same place, and the eight-hour cycle gives people a reason to come back up to three times a day."
           ],
+          wide: true,
           visual: {
-            kind: "loop",
-            label: "The farming button going from Start farming to a live progress fill to Claim",
-            steps: [
-              { screen: ozen("m1"), name: "Start", tap: [195, 655] },
-              { screen: ozen("m2"), name: "Farming" },
-              { screen: ozen("m3"), name: "Claim", tap: [195, 655] }
+            kind: "row",
+            label: "The farming button in its three states: Start farming, a live progress fill, and Claim 480",
+            toggle: "Show the button",
+            note: "One button, three states: start, a live count, then the claim.",
+            phones: [
+              { screen: ozen("m1"), label: "1 · Start", on: true, bands: [{ y: [628, 682] }] },
+              { screen: ozen("m2"), label: "2 · Farming", on: true, bands: [{ y: [628, 682] }] },
+              { screen: ozen("m3"), label: "3 · Claim", on: true, bands: [{ y: [628, 682] }] }
             ]
           }
         },
@@ -503,13 +500,24 @@ export const caseStudies: CaseStudy[] = [
             "Putting coins into a track is the newest idea in Ōzen, and the easiest to mistake for gambling. So the flow explains before it asks.",
             "An empty collection tells you how it earns instead of showing nothing. The add sheet shows the price, **1,000 coins**, before anything is spent. Once a track is in, its row shows what it has paid back, so the promise is checked on every visit."
           ],
+          wide: true,
           visual: {
-            kind: "loop",
-            label: "Opening an empty collection, trying it out, seeing the 1,000 coin price and the collection earning coins",
-            steps: [
-              { screen: ozen("p2"), name: "Empty collection", tap: [96, 447] },
-              { screen: ozen("p4"), name: "Price", tap: [195, 732] },
-              { screen: ozen("p3"), name: "Earning" }
+            kind: "row",
+            label: "An empty collection that explains how it earns, the add sheet with its 1,000 coin price, and the collection earning coins",
+            toggle: "Show price and payback",
+            note: "Explain first, show the price before the tap, then show what came back.",
+            phones: [
+              { screen: ozen("p2"), label: "1 · Empty collection", short: "1 · Empty", on: true, bands: [{ y: [430, 465], x: [56, 140] }] },
+              {
+                screen: ozen("p4"),
+                label: "2 · Price",
+                on: true,
+                bands: [
+                  { y: [568, 612], x: [130, 260] },
+                  { y: [710, 754] }
+                ]
+              },
+              { screen: ozen("p3"), label: "3 · Earning", on: true, bands: [{ y: [478, 700], x: [322, 380] }] }
             ]
           }
         },
@@ -519,13 +527,25 @@ export const caseStudies: CaseStudy[] = [
             "The beta didn’t open to everyone. Each invite was scarce, which made it worth sending, and every friend you brought in paid you **2.75% of what they earned**, which made it worth sending twice.",
             "The Friends tab keeps that reward visible: who you invited, what each one brought in, and when you can claim next. Sending an invite takes two taps, through Telegram or a copied link."
           ],
+          wide: true,
           visual: {
-            kind: "loop",
-            label: "Claiming the referral share, the claim cooldown, and the invite sheet",
-            steps: [
-              { screen: ozen("t2"), name: "Claim share", tap: [194, 249] },
-              { screen: ozen("t3"), name: "Cooldown", tap: [195, 655] },
-              { screen: ozen("t4"), name: "Invite" }
+            kind: "row",
+            label: "The Friends tab with the referral share to claim, the claim cooldown, and the invite sheet",
+            toggle: "Show claim and invite",
+            note: "Claim your share, see when the next one comes, invite in two taps.",
+            phones: [
+              {
+                screen: ozen("t2"),
+                label: "1 · Claim share",
+                short: "1 · Claim",
+                on: true,
+                bands: [
+                  { y: [232, 266], x: [158, 232] },
+                  { y: [628, 682] }
+                ]
+              },
+              { screen: ozen("t3"), label: "2 · Cooldown", on: true, bands: [{ y: [232, 266], x: [115, 275] }] },
+              { screen: ozen("t4"), label: "3 · Invite", on: true, bands: [{ y: [652, 756] }] }
             ]
           }
         },
