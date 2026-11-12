@@ -2,21 +2,16 @@
 
 import * as React from "react"
 import { createPortal } from "react-dom"
-import { Pause, Play, ZoomIn } from "lucide-react"
+import { ZoomIn } from "lucide-react"
 
 import Image from "next/image"
-import { heroScene, layersScene, rowScene, type LayerPart, type RowPhone, type Scene } from "./phone-scenes"
+import { heroScene, type LayerPart, type RowPhone, type Scene } from "./phone-scenes"
 
 /** A screen to open full size, with its caption. */
 export type Shot = { screen: string; label?: string }
 
 function reducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-}
-
-/** The story's accent colour, read from the page so scenes match the text around them. */
-function cssColor(el: HTMLElement, name: string) {
-  return getComputedStyle(el).getPropertyValue(name).trim()
 }
 
 /** Builds the scene once the panel comes near the screen, and keeps play/pause in sync with it. */
@@ -55,19 +50,6 @@ function useScene(build: (el: HTMLDivElement, playing: boolean) => Scene) {
     scene.current?.setPlaying(next)
   }
   return { ref, scene, playing, toggle }
-}
-
-function PlayButton({ playing, onClick }: { playing: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={playing ? "Pause animation" : "Play animation"}
-      className="absolute bottom-3.5 right-3.5 z-10 grid h-[30px] w-[30px] place-items-center rounded-full bg-[var(--home-fg)] text-[var(--home-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-    >
-      {playing ? <Pause className="h-3 w-3" fill="currentColor" /> : <Play className="h-3 w-3" fill="currentColor" />}
-    </button>
-  )
 }
 
 /** The screens of a panel, full size and side by side. Closes with Close, Escape or a click outside. */
@@ -178,72 +160,117 @@ export function MockupHeroStage({ mockup, screens, label }: { mockup: { src: str
   )
 }
 
-export function LayersStage({ screen, parts, label, zoom }: { screen: string; parts: LayerPart[]; label: string; zoom?: string }) {
-  const tags = React.useRef<(HTMLSpanElement | null)[]>([])
-  const { ref, playing, toggle } = useScene((el, p) => layersScene(el, screen, parts, tags.current.filter((t): t is HTMLSpanElement => !!t), p))
+/** Screen exports are 390 × 844 in the units that bands and layer parts are given in. */
+const SW = 390
+const SH = 844
+
+/**
+ * A still iPhone mockup (the mockup-device-3d skill's device: titanium frame, rounded screen,
+ * Dynamic Island) with the real screen as a plain image, so the browser scales it crisply.
+ * Bands are highlight boxes in screen units, shown while `marked`.
+ */
+function StillPhone({ screen, bands, marked }: { screen: string; bands?: RowPhone["bands"]; marked?: boolean }) {
   return (
-    <div ref={ref} role="img" aria-label={label} className={`${panel} aspect-[4/5] sm:aspect-[4/3]`}>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {parts.map((part, i) => (
-          <span
-            key={part.name}
-            ref={(node) => {
-              tags.current[i] = node
-            }}
-            className={`${tag} opacity-0 ${
-              part.mark === "problem"
-                ? "bg-[var(--story-warn)] text-white"
-                : part.mark === "new"
-                  ? "bg-[var(--story-mark)] text-white"
-                  : "bg-[var(--home-bg)] text-[var(--home-muted)] shadow-[0_0_0_1px_var(--home-line)]"
-            }`}
-          >
-            {part.name}
-          </span>
-        ))}
+    <div className="still-phone">
+      <div className="still-screen">
+        {/* The original PNG export: next/image would re-encode it and blur small UI text. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={screen} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+        <span aria-hidden="true" className="still-notch" />
+        {bands?.map((b, i) => {
+          const [x0, x1] = b.x ?? [0, SW]
+          return (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={`still-band ${b.problem ? "still-band-problem" : ""}`}
+              style={{
+                left: `${(x0 / SW) * 100}%`,
+                width: `${((x1 - x0) / SW) * 100}%`,
+                top: `${(b.y[0] / SH) * 100}%`,
+                height: `${((b.y[1] - b.y[0]) / SH) * 100}%`,
+                opacity: marked ? 1 : 0
+              }}
+            />
+          )
+        })}
       </div>
-      <Zoom shots={[{ screen, label: zoom }]} />
-      <PlayButton playing={playing} onClick={toggle} />
     </div>
   )
 }
 
 /**
- * Phones side by side with their labels. Highlights start hidden so the designs read clean; the
- * switch below the panel, named for what it shows, turns them on.
+ * One screen cut into its parts and pulled apart into a still stack, each part named beside it.
+ * Marked parts step forward: red for a problem on an old screen, accent for something new.
+ */
+export function LayersStage({ screen, parts, label, zoom }: { screen: string; parts: LayerPart[]; label: string; zoom?: string }) {
+  return (
+    <div role="img" aria-label={label} className={`${panel} still-panel aspect-[4/5] sm:aspect-[4/3]`}>
+      <div className="still-layers" style={{ "--parts": parts.length } as React.CSSProperties}>
+        <div className="still-stack">
+          {parts.map((part) => {
+            const [a, b] = part.y
+            const span = b - a
+            const y = span >= SH ? 0 : (a / (SH - span)) * 100
+            return (
+              <div
+                key={part.name}
+                className={`still-slice ${part.mark ? `still-slice-${part.mark}` : ""} ${a <= 0 ? "still-slice-top" : ""} ${b >= SH ? "still-slice-bottom" : ""}`}
+                style={{ aspectRatio: `${SW} / ${span}`, backgroundImage: `url(${part.from ?? screen})`, backgroundPosition: `0 ${y}%` }}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`${tag} still-tag ${
+                    part.mark === "problem"
+                      ? "bg-[var(--story-warn)] text-white"
+                      : part.mark === "new"
+                        ? "bg-[var(--story-mark)] text-white"
+                        : "bg-[var(--home-bg)] text-[var(--home-muted)] shadow-[0_0_0_1px_var(--home-line)]"
+                  }`}
+                >
+                  {part.name}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+      <Zoom shots={[{ screen, label: zoom }]} />
+    </div>
+  )
+}
+
+/**
+ * Still phones side by side with their labels. Highlights start hidden so the designs read clean;
+ * the switch below the panel, named for what it shows, turns them on.
  */
 export function RowStage({ phones, label, toggle: toggleLabel, wide }: { phones: RowPhone[]; label: string; toggle: string; wide?: boolean }) {
-  const tags = React.useRef<(HTMLSpanElement | null)[]>([])
   const [marked, setMarked] = React.useState(false)
-  const { ref, scene } = useScene((el, p) =>
-    rowScene(
-      el,
-      phones,
-      tags.current.filter((t): t is HTMLSpanElement => !!t),
-      { mark: cssColor(el, "--story-mark"), problem: cssColor(el, "--story-warn") },
-      p
-    )
-  )
-  const flip = () => {
-    setMarked(!marked)
-    scene.current?.setMarked?.(!marked)
-  }
   return (
     <>
-      <div ref={ref} role="img" aria-label={label} className={`${panel} ${!wide ? "aspect-square sm:aspect-[4/3]" : phones.length > 3 ? "aspect-[4/5] sm:aspect-[2/1]" : "aspect-[4/3] sm:aspect-[2/1]"}`}>
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          {phones.map((phone, i) => (
-            <span
-              key={phone.label}
-              ref={(node) => {
-                tags.current[i] = node
-              }}
-              className={`${tag} ${
-                phone.on ? "bg-[var(--story-mark)] text-white" : "bg-[var(--home-bg)] text-[var(--home-muted)] shadow-[0_0_0_1px_var(--home-line)]"
-              }`}
-            >
-              {phone.label}
-            </span>
+      <div
+        role="img"
+        aria-label={label}
+        className={`${panel} still-panel ${!wide ? "aspect-square sm:aspect-[4/3]" : phones.length > 3 ? "aspect-[2/3] sm:aspect-[2/1]" : "aspect-[4/3] sm:aspect-[2/1]"}`}
+      >
+        <div className="still-row" data-n={phones.length} style={{ "--n": phones.length } as React.CSSProperties}>
+          {phones.map((phone) => (
+            <div key={phone.label} className="still-item">
+              <span
+                aria-hidden="true"
+                className={`${tag} !static ${phone.on ? "bg-[var(--story-mark)] text-white" : "bg-[var(--home-bg)] text-[var(--home-muted)] shadow-[0_0_0_1px_var(--home-line)]"}`}
+              >
+                {phone.short ? (
+                  <>
+                    <span className="sm:hidden">{phone.short}</span>
+                    <span className="max-sm:hidden">{phone.label}</span>
+                  </>
+                ) : (
+                  phone.label
+                )}
+              </span>
+              <StillPhone screen={phone.screen} bands={phone.bands} marked={marked} />
+            </div>
           ))}
         </div>
         <Zoom shots={phones.map((p) => ({ screen: p.screen, label: p.label }))} />
@@ -251,7 +278,7 @@ export function RowStage({ phones, label, toggle: toggleLabel, wide }: { phones:
       <button
         type="button"
         aria-pressed={marked}
-        onClick={flip}
+        onClick={() => setMarked(!marked)}
         className="mx-auto mt-3 flex items-center gap-2 rounded-full bg-[var(--home-bg)] py-1.5 pl-1.5 pr-3 text-[12px] font-medium shadow-[0_0_0_1px_var(--home-line)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       >
         <span aria-hidden="true" className={`relative h-4 w-[26px] rounded-full transition-colors ${marked ? "bg-[var(--story-mark)]" : "bg-[var(--home-line)]"}`}>

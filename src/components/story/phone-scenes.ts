@@ -11,8 +11,6 @@ const PH = 4.22
 const SW = 390
 const SH = 844
 
-const ease = (v: number) => (v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2)
-const clamp = (v: number) => Math.min(1, Math.max(0, v))
 
 function drawn(w: number, h: number, draw: (x: CanvasRenderingContext2D) => void) {
   const c = document.createElement("canvas")
@@ -305,129 +303,7 @@ export function heroScene(el: HTMLElement, screens: string[], playing: boolean) 
 /** `mark` sets a band apart: a part designed from scratch, or a problem found on an old screen. */
 export type LayerPart = { y: [number, number]; name: string; mark?: "new" | "problem"; from?: string }
 
-/**
- * Layers: one screen cut into horizontal bands that pull apart and go back together. Marked
- * parts come further forward; `tags` are positioned beside each band.
- */
-export function layersScene(el: HTMLElement, screen: string, parts: LayerPart[], tags: HTMLElement[], playing: boolean) {
-  const still = !playing
-  return mount(el, 11, 0.75, playing, (stage) => {
-    const group = new THREE.Group()
-    stage.scene.add(group)
-    group.add(new THREE.Mesh(new THREE.PlaneGeometry(BW, BH), stage.material("bezel")))
-    const bands = parts.map((part) => {
-      const [a, b] = part.y
-      // Crop the screen texture to this band; the top and bottom bands keep the screen's rounded corners.
-      const top = a <= 0 ? SR : 0
-      const bottom = b >= SH ? SR : 0
-      const geo = roundedPlane(PW, ((b - a) / SH) * PH, [top, top, bottom, bottom], 1 - b / SH, 1 - a / SH)
-      const mesh = new THREE.Mesh(geo, stage.material(part.from ?? screen))
-      mesh.position.y = (0.5 - (a + b) / 2 / SH) * PH
-      group.add(mesh)
-      return mesh
-    })
-    const v = new THREE.Vector3()
-    let clock = 0
-    stage.update = (dt) => {
-      clock += dt
-      // 8 s cycle: together, apart, hold, back. Paused from the start, it rests apart.
-      const c = clock % 8
-      const e = still && clock === 0 ? 1 : ease(clamp((c - 1) / 1.4)) * (1 - ease(clamp((c - 6) / 1.4)))
-      group.position.x = stage.camera.aspect < 1 ? 1.3 : 0.9
-      lean(stage, group, { x: -0.12, y: -0.62 }, clock, 0.3)
-      group.updateMatrixWorld()
-      const w = el.clientWidth
-      const h = el.clientHeight
-      bands.forEach((mesh, i) => {
-        mesh.position.z = 0.004 + e * (parts[i].mark ? 1.25 : 0.45) + e * i * 0.02
-        const tag = tags[i]
-        if (!tag) return
-        v.set(-PW / 2 - 0.08, mesh.position.y, mesh.position.z)
-        group.localToWorld(v).project(stage.camera)
-        // Right edge on the band, kept inside the panel on narrow screens.
-        const left = Math.min(w - tag.offsetWidth - 6, Math.max(6, ((v.x + 1) / 2) * w - tag.offsetWidth))
-        tag.style.transform = `translate(${left}px, ${((1 - v.y) / 2) * h}px) translate(0, -50%)`
-        tag.style.opacity = String(clamp(e * 1.6 - 0.5))
-      })
-    }
-  })
-}
-
 /** A band to highlight on a row phone, in 390 × 844 screen pixels; `x` defaults to the full width. */
 export type RowBand = { y: [number, number]; x?: [number, number]; problem?: boolean }
 /** `on` sets the label in the accent colour: the new design, as opposed to the old one or an example. */
 export type RowPhone = { screen: string; label: string; short?: string; on?: boolean; bands?: RowBand[] }
-
-/**
- * Row: phones side by side, all visible at once, for before and after or a set of examples.
- * Up to three always share a row; four or more sit in one row on wide frames and two per row on
- * tall ones, with a lone last phone centred. Highlight bands stay
- * hidden until `setMarked(true)`, then fade in with a slow pulse travelling along the row.
- */
-export function rowScene(el: HTMLElement, phones: RowPhone[], tags: HTMLElement[], colors: { mark: string; problem: string }, playing: boolean) {
-  const GAP = 2.6
-  const ROW = BH + 0.9
-  const columns = (aspect: number) => (phones.length > 3 && aspect < 1 ? 2 : phones.length)
-  return mount(el, 9, 0.75, playing, (stage) => {
-    stage.fit = (aspect) => {
-      const cols = columns(aspect)
-      return [cols * GAP + 0.5, Math.ceil(phones.length / cols) * ROW + 0.5]
-    }
-    const group = new THREE.Group()
-    stage.scene.add(group)
-    const items = phones.map((phone) => {
-      const p = stage.phone(phone.screen)
-      group.add(p)
-      const bands = (phone.bands ?? []).map((band) => {
-        const [x0, x1] = band.x ?? [10, 380]
-        const [y0, y1] = band.y
-        const m = new THREE.Mesh(new THREE.PlaneGeometry(((x1 - x0) / SW) * PW, ((y1 - y0) / SH) * PH), stage.material("band"))
-        m.material.color.set(band.problem ? colors.problem : colors.mark)
-        m.material.opacity = 0
-        m.position.set(((x0 + x1) / 2 / SW - 0.5) * PW, (0.5 - (y0 + y1) / 2 / SH) * PH, 0.01)
-        m.renderOrder = 3
-        p.add(m)
-        return m
-      })
-      return { p, phone, bands }
-    })
-    let marked = false
-    let shown = 0
-    stage.setMarked = (m) => {
-      marked = m
-      stage.redraw()
-    }
-    const v = new THREE.Vector3()
-    let clock = 0
-    stage.update = (dt) => {
-      clock += dt
-      // Fade the highlights in and out instead of snapping; paused, they switch at once.
-      shown = dt ? shown + (Number(marked) - shown) * Math.min(1, dt * 8) : Number(marked)
-      const cols = columns(stage.camera.aspect)
-      const rows = Math.ceil(phones.length / cols)
-      lean(stage, group, { x: 0, y: 0 }, clock, 0.18)
-      group.updateMatrixWorld()
-      const w = el.clientWidth
-      const h = el.clientHeight
-      items.forEach((item, i) => {
-        const c = i % cols
-        const r = Math.floor(i / cols)
-        const inRow = Math.min(cols, phones.length - r * cols)
-        item.p.position.set((c - (inRow - 1) / 2) * GAP, ((rows - 1) / 2 - r) * ROW - 0.2, 0)
-        item.p.rotation.y = rows === 1 ? -(c - (cols - 1) / 2) * 0.07 : 0
-        const k = 0.5 + 0.5 * Math.sin(clock * 1.6 - i * 0.9)
-        item.bands.forEach((m) => (m.material.opacity = shown * (0.75 + 0.25 * k)))
-        const tag = tags[i]
-        if (!tag) return
-        // Short tags on tall or narrow panels, where full ones would run into each other.
-        const label = (stage.camera.aspect < 1 || w < 640) && item.phone.short ? item.phone.short : item.phone.label
-        if (tag.textContent !== label) tag.textContent = label
-        item.p.updateMatrixWorld()
-        v.set(0, BH / 2 + 0.12, 0)
-        item.p.localToWorld(v).project(stage.camera)
-        const left = Math.min(w - tag.offsetWidth - 6, Math.max(6, ((v.x + 1) / 2) * w - tag.offsetWidth / 2))
-        tag.style.transform = `translate(${left}px, ${((1 - v.y) / 2) * h - tag.offsetHeight}px)`
-      })
-    }
-  })
-}
