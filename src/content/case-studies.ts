@@ -196,23 +196,23 @@ export const caseStudies: CaseStudy[] = [
           wide: true,
           body: [
             "BI Group wants to sell homes the way marketplaces sell everything else. So next to the property portals, Krisha and Yandex Real Estate, I benchmarked the marketplaces buyers already shop on, Kaspi and Ozon.",
-            "Three of the four put **a row of filter chips right above the results**, and both property portals give the map **its own labelled button**. Buyers had learned the chips elsewhere. BI Group’s search hid every filter behind one button."
+            "Three of the four put **a row of filter chips right above the results**, and both property portals give the map **its own button**. Buyers had learned the chips elsewhere. BI Group’s search hid every filter behind one button."
           ],
           visual: {
             kind: "row",
             label: "Search screens from Kaspi, Krisha, Yandex Real Estate and Ozon, with their filter chips and map buttons highlighted",
             toggle: "Show pattern",
-            note: "Show pattern marks the filter chips and labelled map buttons. Competitor screens are in their original Russian.",
+            note: "Show pattern marks the filter chips and the map buttons. Kaspi, Krisha and Yandex are shown in their original Russian.",
             phones: [
               { screen: bi("bench-kaspi"), label: "Kaspi", bands: [{ y: [109, 157] }] },
-              { screen: bi("bench-krisha"), label: "Krisha", bands: [{ y: [49, 97] }] },
+              { screen: bi("bench-krisha"), label: "Krisha", bands: [{ y: [700, 749], x: [244, 377] }] },
               {
                 screen: bi("bench-yandex"),
                 label: "Yandex Real Estate",
                 short: "Yandex",
-                bands: [{ y: [224, 269] }, { y: [785, 825], x: [12, 124] }]
+                bands: [{ y: [226, 268] }, { y: [672, 734], x: [5, 66] }]
               },
-              { screen: bi("bench-ozon"), label: "Ozon", bands: [{ y: [220, 266] }] }
+              { screen: bi("bench-ozon"), label: "Ozon", bands: [{ y: [194, 232] }] }
             ]
           }
         },
@@ -319,7 +319,7 @@ export const caseStudies: CaseStudy[] = [
         {
           title: "A listing that tells you where you are",
           body: [
-            "The old listing put every filter behind one button and switched views with unlabelled icons. The new one shows how many layouts match, **32,221**, uses the same chips as the home screen, and names its views: tiles, list, and a floor-by-floor grid.",
+            "The old listing put every filter behind one button and switched views with unlabelled icons. The new one shows how many layouts match, **32,221**, uses the same chips as the home screen, and names its views: cards, list, and a floor-by-floor grid.",
             "Price, Project and Rooms come first, the listing filters people used most. The pattern is the same as on the home screen, so buyers learn it once."
           ],
           visual: {
