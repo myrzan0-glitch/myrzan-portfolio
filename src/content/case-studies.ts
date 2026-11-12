@@ -267,7 +267,7 @@ export const caseStudies: CaseStudy[] = [
             note: "Five questions on one screen became one question in a small sheet.",
             phones: [
               { screen: bi("b-filter"), label: "Before", bands: [{ y: [104, 660], problem: true }] },
-              { screen: bi("a-price"), label: "After", on: true, bands: [{ y: [470, 700] }] }
+              { screen: bi("a-price"), label: "After", on: true, bands: [{ y: [522, 752] }] }
             ]
           }
         },
@@ -285,9 +285,9 @@ export const caseStudies: CaseStudy[] = [
             note: "Price comes first on the map and on the preview card.",
             phones: [
               { screen: bi("b-map"), label: "Before · map", short: "Before" },
-              { screen: bi("a-map"), label: "After · map", short: "After", on: true, bands: [{ y: [170, 295], x: [90, 225] }] },
+              { screen: bi("a-map"), label: "After · map", short: "After", on: true, bands: [{ y: [230, 362], x: [4, 222] }] },
               { screen: bi("b-mapcard"), label: "Before · preview", short: "Before" },
-              { screen: bi("a-mapcard"), label: "After · preview", short: "After", on: true, bands: [{ y: [548, 626] }, { y: [640, 680] }] }
+              { screen: bi("a-mapcard"), label: "After · preview", short: "After", on: true, bands: [{ y: [596, 681] }, { y: [692, 733] }] }
             ]
           }
         },
@@ -352,7 +352,7 @@ export const caseStudies: CaseStudy[] = [
             note: "Home → map preview → project → listing. Show next steps marks the way forward on each.",
             phones: [
               { screen: bi("a-home"), label: "Home", on: true, bands: [{ y: [464, 492] }, { y: [509, 548], x: [259, 369] }] },
-              { screen: bi("a-mapcard"), label: "Map preview", on: true, bands: [{ y: [640, 680] }] },
+              { screen: bi("a-mapcard"), label: "Map preview", on: true, bands: [{ y: [692, 733] }] },
               {
                 screen: bi("a-project"),
                 label: "Project",
