@@ -4,7 +4,7 @@ import * as React from "react"
 import { createPortal } from "react-dom"
 import { Pause, Play, ZoomIn } from "lucide-react"
 
-import { DeviceShowcase } from "../device-showcase"
+import Image from "next/image"
 import { heroScene, layersScene, rowScene, type LayerPart, type RowPhone, type Scene } from "./phone-scenes"
 
 /** A screen to open full size, with its caption. */
@@ -167,16 +167,11 @@ export function HeroStage({ screens, label }: { screens: Shot[]; label: string }
   )
 }
 
-/** The hero as titanium iPhones drawn in CSS (mockup-device-3d), turning slowly on a dark floor. */
-export function DeviceHeroStage({ screens, label }: { screens: Shot[]; label: string }) {
+/** The hero as a still device mockup (mockup-device-3d iPhones, front-facing); the magnifier opens the screens. */
+export function MockupHeroStage({ mockup, screens, label }: { mockup: { src: string; w: number; h: number }; screens: Shot[]; label: string }) {
   return (
-    <div role="img" aria-label={label} className={`${panel} aspect-[4/3] sm:aspect-[2/1]`}>
-      <DeviceShowcase
-        phones={screens.map((s) => ({ src: s.screen, alt: "" }))}
-        palette="midnight"
-        sizes="(max-width: 640px) 34vw, 220px"
-        priority
-      />
+    <div className={`${panel} aspect-[2/1]`}>
+      <Image src={mockup.src} alt={label} fill priority sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" />
       <Zoom shots={screens} />
     </div>
   )

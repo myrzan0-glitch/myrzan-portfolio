@@ -7,7 +7,7 @@ import { grid } from "@/components/home/grid"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import type { CaseStudy, Chapter, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
 
-import { DeviceHeroStage, HeroStage, LayersStage, RowStage } from "./stages"
+import { HeroStage, LayersStage, MockupHeroStage, RowStage } from "./stages"
 
 /**
  * Story case study: one claim per chapter. The text on the left argues a design decision and the
@@ -314,8 +314,8 @@ export function StoryCase({ study, next }: { study: Study; next: CaseStudy }) {
         </header>
 
         <div className={`${wrap} mt-10`}>
-          {story.heroStyle === "device3d" ? (
-            <DeviceHeroStage screens={story.heroScreens} label={story.heroLabel} />
+          {story.heroMockup ? (
+            <MockupHeroStage mockup={story.heroMockup} screens={story.heroScreens} label={story.heroLabel} />
           ) : (
             <HeroStage screens={story.heroScreens} label={story.heroLabel} />
           )}

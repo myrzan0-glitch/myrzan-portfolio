@@ -47,8 +47,8 @@ export type Story = {
   /** Three screens for the hero, left to right. */
   heroScreens: { screen: string; label: string }[]
   heroLabel: string
-  /** "device3d" shows the hero screens on CSS-drawn titanium iPhones instead of the three.js scene. */
-  heroStyle?: "device3d"
+  /** A still device mockup of the hero screens, shown instead of the three.js scene. */
+  heroMockup?: { src: string; w: number; h: number }
   role: { label: string; value: string }[]
   chapters: Chapter[]
 }
@@ -160,7 +160,7 @@ export const caseStudies: CaseStudy[] = [
         { screen: bi("a-listing"), label: "Listing" }
       ],
       heroLabel: "Three redesigned BI Group screens: home with quick filters, the map with price pins, and the apartment listing",
-      heroStyle: "device3d",
+      heroMockup: { src: "/work/bi-mobile-search/hero-mockup.webp", w: 2880, h: 1440 },
       role: [
         { label: "Role", value: "Product designer · 2025" },
         {
