@@ -358,16 +358,6 @@
   animation: 8s ease-out infinite;
 }
 
-/* Technodom: a slow zoom into the bank offers. */
-.cover-td-cam {
-  transform-origin: 50% 57.8%;
-  animation-name: cover-td-cam;
-}
-@keyframes cover-td-cam {
-  0%, 12% { transform: scale(1); }
-  42%, 70% { transform: scale(1.6); }
-  94%, 100% { transform: scale(1); }
-}
 
 /* Ōzen: Start farming, the farming fill, then a zoom into Claim 480. */
 .cover-oz-cam {
@@ -434,6 +424,13 @@
  */
 .still-panel {
   container-type: size;
+  /* Phone body height per width, and screen height per width. */
+  --bhw: calc(892 / 433);
+  --shw: calc(844 / 390);
+}
+.still-android-panel {
+  --bhw: calc(824 / 384);
+  --shw: calc(800 / 360);
 }
 .still-phone {
   position: relative;
@@ -484,6 +481,37 @@
 .still-btn-up { left: -0.6%; top: 28.5%; height: 7.2%; }
 .still-btn-down { left: -0.6%; top: 37.5%; height: 7.2%; }
 .still-btn-side { right: -0.6%; top: 30%; height: 11.5%; background: linear-gradient(to left, #1c1c1f, #5c5c61); }
+/*
+ * Android (Technodom): a current 20:9 phone for 360 × 800 screens. 384 × 824 body: a 3 px
+ * aluminium frame, an even 9 px black bezel, softly rounded corners, a centred punch-hole camera,
+ * and power and volume on the right edge.
+ */
+.still-phone.still-android {
+  aspect-ratio: 384 / 824;
+  padding: 0.78%;
+  border-radius: 11.5% / 5.4%;
+  background: linear-gradient(90deg, #6e6f74 0%, #2f3034 4%, #3d3e42 50%, #2f3034 96%, #6e6f74 100%);
+}
+.still-android .still-glass {
+  padding: 2.38%;
+  border-radius: 10.9% / 5.05%;
+}
+.still-android .still-screen {
+  border-radius: 8.5% / 3.85%;
+}
+.still-punch {
+  position: absolute;
+  top: 2.15%;
+  left: 50%;
+  width: 3.7%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, #2a2d36 0%, #0b0b0e 55%, #000 100%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.still-btn-power { right: -0.6%; top: 25%; height: 6.5%; background: linear-gradient(to left, #1c1c1f, #5c5c61); }
+.still-btn-volume { right: -0.6%; top: 34%; height: 13%; background: linear-gradient(to left, #1c1c1f, #5c5c61); }
 .still-band {
   position: absolute;
   box-sizing: border-box;
@@ -512,7 +540,7 @@
   gap: 2.5cqh var(--gap);
   --ph: min(
     calc((86cqh - var(--rows) * var(--label, 30px) - (var(--rows) - 1) * 2.5cqh) / var(--rows)),
-    calc((90cqw - (var(--per) - 1) * var(--gap)) / var(--per) * 892 / 433)
+    calc((90cqw - (var(--per) - 1) * var(--gap)) / var(--per) * var(--bhw))
   );
 }
 @container (max-aspect-ratio: 1 / 1) {
@@ -539,15 +567,15 @@
   display: flex;
   align-items: center;
   --gap: 1.4cqh;
-  --stack-h: min(84cqh, 40cqw * 844 / 390);
+  --stack-h: min(84cqh, 40cqw * var(--shw));
 }
 .still-stack {
   margin-left: 54%;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
-  width: calc((var(--stack-h) - (var(--parts) - 1) * var(--gap)) * 390 / 844);
-  --r: calc((var(--stack-h) - (var(--parts) - 1) * var(--gap)) * 390 / 844 * 0.15);
+  width: calc((var(--stack-h) - (var(--parts) - 1) * var(--gap)) / var(--shw));
+  --r: calc((var(--stack-h) - (var(--parts) - 1) * var(--gap)) / var(--shw) * 0.15);
 }
 .still-slice {
   position: relative;

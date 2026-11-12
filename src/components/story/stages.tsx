@@ -93,8 +93,9 @@ const tag = "absolute left-0 top-0 whitespace-nowrap rounded-full px-2 py-[3px] 
 
 /** The hero: three still iPhones side by side, front-facing; the magnifier opens the screens. */
 export function HeroStage({ screens, label }: { screens: Shot[]; label: string }) {
+  const dc = useDeviceClass()
   return (
-    <div role="img" aria-label={label} className={`${panel} still-panel aspect-[4/3] sm:aspect-[2/1]`}>
+    <div role="img" aria-label={label} className={`${panel} still-panel ${dc} aspect-[4/3] sm:aspect-[2/1]`}>
       <div className="still-row still-hero" style={{ "--n": screens.length } as React.CSSProperties}>
         {screens.map((s) => (
           <div key={s.screen} className="still-item">
@@ -107,22 +108,44 @@ export function HeroStage({ screens, label }: { screens: Shot[]; label: string }
   )
 }
 
-/** Screen exports are 390 × 844 in the units that bands and layer parts are given in. */
-const SW = 390
-const SH = 844
+/** The phone a case is shown on, set per case study; screens and band units differ per device. */
+export type Device = "iphone" | "android"
+const DEVICES = {
+  // iPhone screens are 390 × 844; Android (Technodom) screens are 360 × 800.
+  iphone: { sw: 390, sh: 844 },
+  android: { sw: 360, sh: 800 }
+} as const
+const DeviceContext = React.createContext<Device>("iphone")
+export function DeviceProvider({ device, children }: { device?: Device; children: React.ReactNode }) {
+  return <DeviceContext.Provider value={device ?? "iphone"}>{children}</DeviceContext.Provider>
+}
+const useDevice = () => DEVICES[React.useContext(DeviceContext)]
+const useDeviceClass = () => (React.useContext(DeviceContext) === "android" ? "still-android-panel" : "")
 
 /**
- * A still iPhone 15 Pro mockup in CSS (black titanium frame, glass bezel, Dynamic Island, side
- * buttons) with the real screen as a plain image, so the browser scales it crisply. Bands are
+ * A still phone mockup in CSS with the real screen as a plain image, so the browser scales it
+ * crisply. iPhone 15 Pro: titanium frame, Dynamic Island, buttons on both sides. Android: thin
+ * aluminium frame, even black bezel, punch-hole camera, power and volume on the right. Bands are
  * highlight boxes in screen units, shown while `marked`. Nothing moves.
  */
 function StillPhone({ screen, bands, marked, eager }: { screen: string; bands?: RowPhone["bands"]; marked?: boolean; eager?: boolean }) {
+  const android = React.useContext(DeviceContext) === "android"
+  const { sw: SW, sh: SH } = useDevice()
   return (
-    <div className="still-phone">
-      <span aria-hidden="true" className="still-btn still-btn-action" />
-      <span aria-hidden="true" className="still-btn still-btn-up" />
-      <span aria-hidden="true" className="still-btn still-btn-down" />
-      <span aria-hidden="true" className="still-btn still-btn-side" />
+    <div className={`still-phone ${android ? "still-android" : ""}`}>
+      {android ? (
+        <>
+          <span aria-hidden="true" className="still-btn still-btn-power" />
+          <span aria-hidden="true" className="still-btn still-btn-volume" />
+        </>
+      ) : (
+        <>
+          <span aria-hidden="true" className="still-btn still-btn-action" />
+          <span aria-hidden="true" className="still-btn still-btn-up" />
+          <span aria-hidden="true" className="still-btn still-btn-down" />
+          <span aria-hidden="true" className="still-btn still-btn-side" />
+        </>
+      )}
       <div className="still-glass">
         <div className="still-screen">
           {/* The Figma export as is: next/image would re-encode it and soften small UI text. */}
@@ -146,7 +169,7 @@ function StillPhone({ screen, bands, marked, eager }: { screen: string; bands?: 
             )
           })}
         </div>
-        <span aria-hidden="true" className="still-island" />
+        <span aria-hidden="true" className={android ? "still-punch" : "still-island"} />
       </div>
     </div>
   )
@@ -157,8 +180,10 @@ function StillPhone({ screen, bands, marked, eager }: { screen: string; bands?: 
  * Marked parts step forward: red for a problem on an old screen, accent for something new.
  */
 export function LayersStage({ screen, parts, label, zoom }: { screen: string; parts: LayerPart[]; label: string; zoom?: string }) {
+  const { sw: SW, sh: SH } = useDevice()
+  const dc = useDeviceClass()
   return (
-    <div role="img" aria-label={label} className={`${panel} still-panel aspect-[4/5] sm:aspect-[4/3]`}>
+    <div role="img" aria-label={label} className={`${panel} still-panel ${dc} aspect-[4/5] sm:aspect-[4/3]`}>
       <div className="still-layers" style={{ "--parts": parts.length } as React.CSSProperties}>
         <div className="still-stack">
           {parts.map((part) => {
@@ -199,12 +224,13 @@ export function LayersStage({ screen, parts, label, zoom }: { screen: string; pa
  */
 export function RowStage({ phones, label, toggle: toggleLabel, wide }: { phones: RowPhone[]; label: string; toggle: string; wide?: boolean }) {
   const [marked, setMarked] = React.useState(false)
+  const dc = useDeviceClass()
   return (
     <>
       <div
         role="img"
         aria-label={label}
-        className={`${panel} still-panel ${!wide ? "aspect-square sm:aspect-[4/3]" : phones.length > 3 ? "aspect-[2/3] sm:aspect-[2/1]" : "aspect-[4/3] sm:aspect-[2/1]"}`}
+        className={`${panel} still-panel ${dc} ${!wide ? "aspect-square sm:aspect-[4/3]" : phones.length > 3 ? "aspect-[2/3] sm:aspect-[2/1]" : "aspect-[4/3] sm:aspect-[2/1]"}`}
       >
         <div className="still-row" data-n={phones.length} style={{ "--n": phones.length } as React.CSSProperties}>
           {phones.map((phone) => (

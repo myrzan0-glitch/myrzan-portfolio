@@ -59,13 +59,14 @@ export function WorkCover({ kind }: { kind: CoverKind }) {
       )
     case "technodom":
       return (
-        <div className="cover cover-light" style={{ background: "#ece7e4" }}>
-          <Phone cam="cover-td-cam">
-            <Screen
-              src="/work/technodom-credit/screens/offers-all.webp"
-              alt="Technodom offers from every partner bank with approved, calculating and refused statuses"
-            />
-          </Phone>
+        <div className="cover" style={{ background: "#ece7e4" }}>
+          <Image
+            src="/work/technodom-credit/cover-mockup.webp"
+            alt="Technodom offers from every partner bank with approved, calculating and refused statuses, on an Android phone"
+            fill
+            unoptimized
+            className="object-cover"
+          />
         </div>
       )
     case "video":

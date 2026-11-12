@@ -43,6 +43,8 @@ export type CaseStudy = ClassicCase | StoryCase
 export type Story = {
   /** Sets the page's accent colour (`--story-mark`) from globals.css; the default is `--story-accent`. */
   palette?: "bi"
+  /** The phone the screens are shown on; Android screens are 360 × 800, iPhone ones 390 × 844. */
+  device?: "iphone" | "android"
   subtitle: string
   /** Three screens for the hero, left to right. */
   heroScreens: { screen: string; label: string }[]
@@ -602,13 +604,14 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Shoppers buying on credit were rejected bank by bank, retyping their details every time. Asking every partner bank at once turned online credit into Technodom’s top revenue stream, at more than $4M a month.",
     hero: {
-      src: "/work/technodom-credit/hero.webp",
-      alt: "Five Technodom screens: offers from every bank with their status, the credit checkout, a chosen offer, a credit limit with other banks below it, and offers sorted by term",
-      w: 1600,
-      h: 820
+      src: "/work/technodom-credit/showcase.webp",
+      alt: "Three Technodom screens on Android phones: the credit checkout, offers from every bank with their status, and a credit limit with other banks below it",
+      w: 1200,
+      h: 630
     },
     story: {
       palette: "bi",
+      device: "android",
       subtitle:
         "Shoppers buying on credit were rejected bank by bank, retyping their details every time. Asking every partner bank at once turned online credit into Technodom’s top revenue stream, at more than $4M a month.",
       heroScreens: [
@@ -686,12 +689,12 @@ export const caseStudies: CaseStudy[] = [
             label: "The checkout pulled apart into layers, with the new parts marked: term, every partner bank, and the ID number",
             screen: td("checkout"),
             parts: [
-              { y: [0, 87], name: "Header" },
-              { y: [87, 202], name: "Credit or instalments" },
-              { y: [202, 310], name: "Term first", mark: "new" },
-              { y: [310, 529], name: "Every bank", mark: "new" },
-              { y: [529, 739], name: "ID number, once", mark: "new" },
-              { y: [739, 844], name: "Continue" }
+              { y: [0, 80], name: "Header" },
+              { y: [80, 190], name: "Credit or instalments" },
+              { y: [190, 286], name: "Term first", mark: "new" },
+              { y: [286, 470], name: "Every bank", mark: "new" },
+              { y: [470, 662], name: "ID number, once", mark: "new" },
+              { y: [662, 800], name: "Continue" }
             ],
             note: "Blue: what changed. The shopper never picks a bank up front."
           }
@@ -707,10 +710,10 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Four screens: the SMS code, setting a password, the consent code, and the consent text listing every partner bank",
             phones: [
-              { screen: td("sms-done"), on: true, label: "Phone", bands: [{ y: [266, 334], x: [61, 329] }] },
-              { screen: td("password"), on: true, label: "Password", bands: [{ y: [455, 663] }] },
-              { screen: td("consent-code"), on: true, label: "Consent", bands: [{ y: [338, 429] }] },
-              { screen: td("consent"), on: true, label: "Every bank", bands: [{ y: [547, 834] }] }
+              { screen: td("sms-done"), on: true, label: "Phone", bands: [{ y: [246, 306], x: [56, 304] }] },
+              { screen: td("password"), on: true, label: "Password", bands: [{ y: [395, 575] }] },
+              { screen: td("consent-code"), on: true, label: "Consent", bands: [{ y: [362, 452] }] },
+              { screen: td("consent"), on: true, label: "Every bank", bands: [{ y: [508, 800] }] }
             ],
             toggle: "Show changes",
             note: "Phone → password → consent → every bank on one consent."
@@ -727,9 +730,9 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: the offers list with approved, calculating and refused statuses, Halyk Bank chosen, and the hand-off to the bank",
             phones: [
-              { screen: td("offers-all"), on: true, label: "Statuses", bands: [{ y: [249, 734], x: [276, 381] }] },
-              { screen: td("offer-picked"), on: true, label: "Choice", bands: [{ y: [245, 323] }, { y: [500, 557] }] },
-              { screen: td("handoff"), on: true, label: "Hand-off to bank", short: "Hand-off", bands: [{ y: [157, 471], x: [152, 377] }] }
+              { screen: td("offers-all"), on: true, label: "Statuses", bands: [{ y: [230, 678], x: [245, 352] }] },
+              { screen: td("offer-picked"), on: true, label: "Choice", bands: [{ y: [226, 298] }, { y: [462, 514] }] },
+              { screen: td("handoff"), on: true, label: "Hand-off to bank", short: "Hand-off", bands: [{ y: [142, 436], x: [132, 346] }] }
             ],
             toggle: "Show changes",
             note: "Statuses → choice → hand-off to the bank."
@@ -746,9 +749,9 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: the term sheet at 3 months showing 6 offers, at 24 months showing 2, and the list with two offers at 5,123 tenge a month",
             phones: [
-              { screen: td("term-3"), on: true, label: "3 months", bands: [{ y: [704, 760] }] },
-              { screen: td("term-24"), on: true, label: "24 months", bands: [{ y: [635, 682] }, { y: [704, 760] }] },
-              { screen: td("sorted"), on: true, label: "2 offers", bands: [{ y: [247, 405] }] }
+              { screen: td("term-3"), on: true, label: "3 months", bands: [{ y: [728, 782] }] },
+              { screen: td("term-24"), on: true, label: "24 months", bands: [{ y: [664, 708] }, { y: [728, 782] }] },
+              { screen: td("sorted"), on: true, label: "2 offers", bands: [{ y: [224, 380] }] }
             ],
             toggle: "Show changes",
             note: "The count updates before you commit; the payment updates on the card."
@@ -765,17 +768,17 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: a credit limit lower than the price, a refusal with other banks’ offers below, and refusal reasons on each offer",
             phones: [
-              { screen: td("limit"), on: true, label: "Limit below the price", short: "Limit", bands: [{ y: [105, 320] }, { y: [338, 676] }] },
-              { screen: td("refused"), on: true, label: "Refused by the bank", short: "Refused", bands: [{ y: [252, 672] }, { y: [756, 795] }] },
+              { screen: td("limit"), on: true, label: "Limit below the price", short: "Limit", bands: [{ y: [96, 272] }, { y: [282, 602] }] },
+              { screen: td("refused"), on: true, label: "Refused by the bank", short: "Refused", bands: [{ y: [232, 612] }, { y: [700, 730] }] },
               {
                 screen: td("reasons"),
                 on: true,
                 label: "Reason for refusal",
                 short: "Reasons",
                 bands: [
-                  { y: [310, 401], x: [78, 368] },
-                  { y: [478, 535], x: [78, 368] },
-                  { y: [613, 654], x: [78, 368] }
+                  { y: [286, 336], x: [72, 340] },
+                  { y: [408, 444], x: [72, 340] },
+                  { y: [512, 540], x: [72, 340] }
                 ]
               }
             ],
@@ -793,8 +796,8 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Two error states: a wrong SMS code with a link to resend, and a failed check with a retry button",
             phones: [
-              { screen: td("wrongcode"), on: true, label: "Wrong code", bands: [{ y: [379, 418] }] },
-              { screen: td("failed"), on: true, label: "Check failed", bands: [{ y: [379, 418] }] }
+              { screen: td("wrongcode"), on: true, label: "Wrong code", bands: [{ y: [348, 386] }] },
+              { screen: td("failed"), on: true, label: "Check failed", bands: [{ y: [348, 400] }] }
             ],
             toggle: "Show next steps",
             note: "Wrong code and failed check, each with one way forward."

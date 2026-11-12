@@ -7,7 +7,7 @@ import { grid } from "@/components/home/grid"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import type { CaseStudy, Chapter, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
 
-import { HeroStage, LayersStage, RowStage } from "./stages"
+import { DeviceProvider, HeroStage, LayersStage, RowStage } from "./stages"
 
 /**
  * Story case study: one claim per chapter. The text on the left argues a design decision and the
@@ -291,6 +291,7 @@ export function StoryCase({ study, next }: { study: Study; next: CaseStudy }) {
 
   return (
     <div className={`home-root ${story.palette ? `story-${story.palette}` : ""}`}>
+      <DeviceProvider device={story.device}>
       <main id="main" className="pb-20">
         <div className={`${wrap} flex items-center justify-between pt-5 sm:pt-7`}>
           <Link
@@ -353,6 +354,7 @@ export function StoryCase({ study, next }: { study: Study; next: CaseStudy }) {
           </Link>
         </nav>
       </main>
+      </DeviceProvider>
     </div>
   )
 }
