@@ -1,5 +1,7 @@
 import Image from "next/image"
 
+import { DeviceShowcase } from "../device-showcase"
+
 /**
  * Home page covers for the selected case studies: one device on a flat ground, playing a short
  * loop of the case's real screens; the video consultation keeps its original banner. Laid out on
@@ -35,10 +37,12 @@ export function WorkCover({ kind }: { kind: CoverKind }) {
   switch (kind) {
     case "bi":
       return (
-        <div className="cover cover-light" style={{ background: "#e8e8ea" }}>
-          <Phone cam="cover-bi-cam">
-            <Screen src="/work/bi-mobile-search/screens/a-home.webp" alt="BI Group home with quick filters for city, price and rooms" />
-          </Phone>
+        <div className="cover">
+          <DeviceShowcase
+            phones={[{ src: "/work/bi-mobile-search/screens/a-home.webp", alt: "BI Group home with quick filters for city, price and rooms" }]}
+            palette="pearl"
+            sizes="(max-width: 640px) 22vw, 120px"
+          />
         </div>
       )
     case "ozen":

@@ -47,6 +47,8 @@ export type Story = {
   /** Three screens for the hero, left to right. */
   heroScreens: { screen: string; label: string }[]
   heroLabel: string
+  /** "device3d" shows the hero screens on CSS-drawn titanium iPhones instead of the three.js scene. */
+  heroStyle?: "device3d"
   role: { label: string; value: string }[]
   chapters: Chapter[]
 }
@@ -143,10 +145,10 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "75% of BI Group’s traffic is mobile, yet buyers were leaving search before they saw a single apartment. In six weeks I took the filter panel from field research to production, and bounce rate fell by a third.",
     hero: {
-      src: "/work/bi-final.webp",
-      alt: "Final BI Group mobile search with quick-filter chips for city, price and rooms",
-      w: 1600,
-      h: 773
+      src: "/work/bi-mobile-search/showcase.webp",
+      alt: "Three redesigned BI Group screens on iPhones: the map with price pins, home with quick filters, and the listing",
+      w: 1200,
+      h: 630
     },
     story: {
       palette: "bi",
@@ -158,6 +160,7 @@ export const caseStudies: CaseStudy[] = [
         { screen: bi("a-listing"), label: "Listing" }
       ],
       heroLabel: "Three redesigned BI Group screens: home with quick filters, the map with price pins, and the apartment listing",
+      heroStyle: "device3d",
       role: [
         { label: "Role", value: "Product designer · 2025" },
         {
@@ -202,7 +205,7 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Search screens from Kaspi, Krisha, Yandex Real Estate and Ozon, with their filter chips and map buttons highlighted",
             toggle: "Show pattern",
-            note: "Show pattern marks the filter chips and labelled map buttons.",
+            note: "Show pattern marks the filter chips and labelled map buttons. Competitor screens are in their original Russian.",
             phones: [
               { screen: bi("bench-kaspi"), label: "Kaspi", bands: [{ y: [109, 157] }] },
               { screen: bi("bench-krisha"), label: "Krisha", bands: [{ y: [49, 97] }] },
@@ -287,7 +290,7 @@ export const caseStudies: CaseStudy[] = [
               { screen: bi("b-map"), label: "Before · map", short: "Before" },
               { screen: bi("a-map"), label: "After · map", short: "After", on: true, bands: [{ y: [170, 295], x: [90, 225] }] },
               { screen: bi("b-mapcard"), label: "Before · preview", short: "Before" },
-              { screen: bi("a-mapcard"), label: "After · preview", short: "After", on: true, bands: [{ y: [555, 620] }, { y: [640, 680] }] }
+              { screen: bi("a-mapcard"), label: "After · preview", short: "After", on: true, bands: [{ y: [548, 626] }, { y: [640, 680] }] }
             ]
           }
         },

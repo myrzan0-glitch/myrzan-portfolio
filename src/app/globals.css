@@ -358,19 +358,10 @@
   animation: 8s ease-out infinite;
 }
 
-/* BI Group and Technodom: a slow zoom into the quick filters, and into the bank offers. */
-.cover-bi-cam {
-  transform-origin: 50% 59%;
-  animation-name: cover-bi-cam;
-}
+/* Technodom: a slow zoom into the bank offers. */
 .cover-td-cam {
   transform-origin: 50% 57.8%;
   animation-name: cover-td-cam;
-}
-@keyframes cover-bi-cam {
-  0%, 12% { transform: scale(1); }
-  42%, 70% { transform: scale(1.75); }
-  94%, 100% { transform: scale(1); }
 }
 @keyframes cover-td-cam {
   0%, 12% { transform: scale(1); }
@@ -434,4 +425,170 @@
     animation: none;
     opacity: 1;
   }
+}
+
+/*
+ * Device 3D showcase (mockup-device-3d skill): titanium iPhones drawn in CSS, tilted 4° and
+ * turning ±12° over 8 s, with glass lens highlights and a floor reflection. Sized from --pw,
+ * the phone width, in cqw of the showcase box.
+ */
+.d3 {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: inline-size;
+  isolation: isolate;
+  --turn: 12deg;
+}
+.d3-midnight {
+  background:
+    linear-gradient(to bottom, transparent 64%, rgba(120, 140, 255, 0.07) 64.2%, rgba(10, 12, 24, 0) 100%),
+    radial-gradient(120% 95% at 50% 26%, #1d2446 0%, #0e1226 52%, #07080f 100%);
+}
+.d3-pearl {
+  background:
+    linear-gradient(to bottom, transparent 66%, rgba(0, 0, 0, 0.035) 66.2%, rgba(0, 0, 0, 0) 100%),
+    radial-gradient(120% 95% at 50% 26%, #fbfbfc 0%, #ececef 55%, #dcdce1 100%);
+}
+.d3-solo { --pw: 30cqw; }
+.d3-trio { --pw: 17.5cqw; --turn: 7deg; --spread: 0.12; }
+
+/* Morphing glass lens: soft ellipses of light across the top. */
+.d3-lens {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+  filter: blur(1.5cqw);
+  mix-blend-mode: screen;
+}
+.d3-pearl .d3-lens { opacity: 0.55; mix-blend-mode: soft-light; }
+.d3-lens-1 { left: 6%; top: -14%; width: 46%; height: 34%; transform: rotate(-8deg); opacity: 0.55; }
+.d3-lens-2 { left: 44%; top: -20%; width: 38%; height: 30%; opacity: 0.35; }
+.d3-lens-3 { right: -6%; top: -10%; width: 30%; height: 26%; transform: rotate(10deg); opacity: 0.4; }
+
+.d3-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 150cqw;
+  padding-bottom: calc(var(--pw) * 0.3);
+}
+/* Narrow boxes: bigger phones, the outer two tucked further behind the middle one. */
+@container (max-width: 640px) {
+  .d3-trio .d3-stage { --pw: 27cqw; --spread: 0.3; padding-bottom: calc(var(--pw) * 0.18); }
+}
+.d3-row {
+  display: flex;
+  align-items: center;
+  transform-style: preserve-3d;
+  transform: rotateX(4deg) rotateY(calc(var(--turn) * -1));
+  animation: d3-turn 8s ease-in-out infinite alternate;
+}
+@keyframes d3-turn {
+  from { transform: rotateX(4deg) rotateY(calc(var(--turn) * -1)); }
+  to { transform: rotateX(4deg) rotateY(var(--turn)); }
+}
+
+.d3-dev {
+  position: relative;
+  width: var(--pw);
+  flex: none;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--pw) * 0.1));
+}
+.d3-trio .d3-dev-1 { transform: translateX(calc(var(--pw) * var(--spread))) translateZ(calc(var(--pw) * -0.35)) rotateY(20deg); }
+.d3-trio .d3-dev-2 { transform: translateZ(calc(var(--pw) * 0.1)); z-index: 1; }
+.d3-trio .d3-dev-3 { transform: translateX(calc(var(--pw) * var(--spread) * -1)) translateZ(calc(var(--pw) * -0.35)) rotateY(-20deg); }
+
+/* Titanium frame, black bezel, screen. */
+.d3-body {
+  position: relative;
+  box-sizing: border-box;
+  padding: calc(var(--pw) * 0.0105);
+  border-radius: calc(var(--pw) * 0.165);
+  background: linear-gradient(135deg, #dcdce0 0%, #a8a8ad 24%, #6c6c71 48%, #a8a8ad 70%, #d0d0d4 86%, #8e8e93 100%);
+}
+.d3-dev > .d3-body {
+  box-shadow:
+    0 calc(var(--pw) * 0.16) calc(var(--pw) * 0.22) calc(var(--pw) * -0.08) rgba(0, 0, 0, 0.6),
+    0 calc(var(--pw) * 0.04) calc(var(--pw) * 0.08) calc(var(--pw) * -0.04) rgba(0, 0, 0, 0.45);
+}
+.d3-pearl .d3-dev > .d3-body {
+  box-shadow:
+    0 calc(var(--pw) * 0.16) calc(var(--pw) * 0.22) calc(var(--pw) * -0.08) rgba(20, 20, 40, 0.28),
+    0 calc(var(--pw) * 0.04) calc(var(--pw) * 0.08) calc(var(--pw) * -0.04) rgba(20, 20, 40, 0.22);
+}
+.d3-bezel {
+  position: relative;
+  padding: calc(var(--pw) * 0.03);
+  border-radius: calc(var(--pw) * 0.155);
+  background: #050506;
+}
+.d3-screen {
+  position: relative;
+  aspect-ratio: 390 / 844;
+  overflow: hidden;
+  border-radius: calc(var(--pw) * 0.128);
+  background: #000;
+}
+.d3-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 26%, transparent 44%);
+}
+.d3-island {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--pw) * 0.058);
+  width: calc(var(--pw) * 0.3);
+  height: calc(var(--pw) * 0.085);
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #000;
+}
+.d3-btn {
+  position: absolute;
+  width: calc(var(--pw) * 0.014);
+  border-radius: calc(var(--pw) * 0.01);
+  background: linear-gradient(to right, #6c6c71, #b4b4b9);
+}
+.d3-btn-action { left: calc(var(--pw) * -0.01); top: 17%; height: 4.5%; }
+.d3-btn-up { left: calc(var(--pw) * -0.01); top: 25%; height: 8%; }
+.d3-btn-down { left: calc(var(--pw) * -0.01); top: 35%; height: 8%; }
+.d3-btn-power { right: calc(var(--pw) * -0.01); top: 28%; height: 12%; background: linear-gradient(to left, #6c6c71, #b4b4b9); }
+
+/* Floor: a mirrored copy fading out, and a soft contact shadow. */
+.d3-reflect {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  margin-top: calc(var(--pw) * 0.03);
+  transform: scaleY(-1);
+  pointer-events: none;
+  opacity: 0.32;
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent 24%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent 24%);
+}
+.d3-pearl .d3-reflect { opacity: 0.25; }
+.d3-contact {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 100%;
+  height: calc(var(--pw) * 0.08);
+  margin-top: calc(var(--pw) * -0.02);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.55), transparent 70%);
+  filter: blur(calc(var(--pw) * 0.02));
+}
+.d3-pearl .d3-contact { background: radial-gradient(ellipse, rgba(20, 20, 40, 0.22), transparent 70%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .d3-row { animation: none; }
 }

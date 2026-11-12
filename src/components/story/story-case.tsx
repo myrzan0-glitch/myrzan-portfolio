@@ -7,7 +7,7 @@ import { grid } from "@/components/home/grid"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 import type { CaseStudy, Chapter, StoryCase as Study, Tone, Visual } from "@/content/case-studies"
 
-import { HeroStage, LayersStage, RowStage } from "./stages"
+import { DeviceHeroStage, HeroStage, LayersStage, RowStage } from "./stages"
 
 /**
  * Story case study: one claim per chapter. The text on the left argues a design decision and the
@@ -314,7 +314,11 @@ export function StoryCase({ study, next }: { study: Study; next: CaseStudy }) {
         </header>
 
         <div className={`${wrap} mt-10`}>
-          <HeroStage screens={story.heroScreens} label={story.heroLabel} />
+          {story.heroStyle === "device3d" ? (
+            <DeviceHeroStage screens={story.heroScreens} label={story.heroLabel} />
+          ) : (
+            <HeroStage screens={story.heroScreens} label={story.heroLabel} />
+          )}
           <dl className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-[1fr_2fr_1fr]">
             {story.role.map((r, i) => (
               <div key={r.label} className={`min-w-0 ${i === 1 ? "max-sm:order-last max-sm:col-span-2" : ""}`}>
