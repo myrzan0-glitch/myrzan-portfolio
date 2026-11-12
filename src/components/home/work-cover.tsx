@@ -37,10 +37,10 @@ export function WorkCover({ kind }: { kind: CoverKind }) {
       return (
         <div className="cover" style={{ background: "#e9e9ec" }}>
           <Image
-            src="/work/bi-mobile-search/cover-mockup.webp"
+            src="/work/bi-mobile-search/cover-mockup.png"
             alt="BI Group home with quick filters for city, price and rooms, on an iPhone"
             fill
-            sizes="(max-width: 640px) 100vw, 580px"
+            unoptimized
             className="object-cover"
           />
         </div>

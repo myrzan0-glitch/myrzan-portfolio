@@ -31,6 +31,33 @@ function roundRect(x: CanvasRenderingContext2D, left: number, top: number, w: nu
 const BEZEL = { w: 434, h: 888 }
 const BW = (PW * BEZEL.w) / SW
 const BH = (PH * BEZEL.h) / SH
+/** Screen corner radius, concentric with the bezel's inner corner (61 px at 6 px in, the screen sits 22 px in). */
+const SR = (PW * 45) / SW
+
+/**
+ * A w × h plane with rounded corners (radii [top-left, top-right, bottom-right, bottom-left]),
+ * its UVs spanning u 0–1 and v `v0`–`v1` from bottom to top, like a cropped PlaneGeometry.
+ */
+function roundedPlane(w: number, h: number, r: [number, number, number, number], v0 = 0, v1 = 1) {
+  const [tl, tr, br, bl] = r
+  const x = -w / 2
+  const y = -h / 2
+  const s = new THREE.Shape()
+  s.moveTo(x + bl, y)
+  s.lineTo(x + w - br, y)
+  if (br) s.absarc(x + w - br, y + br, br, -Math.PI / 2, 0, false)
+  s.lineTo(x + w, y + h - tr)
+  if (tr) s.absarc(x + w - tr, y + h - tr, tr, 0, Math.PI / 2, false)
+  s.lineTo(x + tl, y + h)
+  if (tl) s.absarc(x + tl, y + h - tl, tl, Math.PI / 2, Math.PI, false)
+  s.lineTo(x, y + bl)
+  if (bl) s.absarc(x + bl, y + bl, bl, Math.PI, Math.PI * 1.5, false)
+  const geo = new THREE.ShapeGeometry(s, 12)
+  const pos = geo.attributes.position
+  const uv = geo.attributes.uv
+  for (let i = 0; i < pos.count; i++) uv.setXY(i, (pos.getX(i) - x) / w, v0 + ((pos.getY(i) - y) / h) * (v1 - v0))
+  return geo
+}
 
 export type Scene = {
   setPlaying: (playing: boolean) => void
@@ -138,7 +165,7 @@ function mount(el: HTMLElement, dist: number, fit: number, playing: boolean, bui
       const shadow = new THREE.Mesh(new THREE.PlaneGeometry(BW * 1.7, BH * 1.3), material("shadow"))
       shadow.position.set(0.15, -0.25, -0.05)
       const body = new THREE.Mesh(new THREE.PlaneGeometry(BW, BH), material("bezel"))
-      const screen = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), material(src))
+      const screen = new THREE.Mesh(roundedPlane(PW, PH, [SR, SR, SR, SR]), material(src))
       screen.position.z = 0.004
       // Transparent planes sort by distance, which flips layers this close together; fix the order.
       body.renderOrder = 1
@@ -290,10 +317,10 @@ export function layersScene(el: HTMLElement, screen: string, parts: LayerPart[],
     group.add(new THREE.Mesh(new THREE.PlaneGeometry(BW, BH), stage.material("bezel")))
     const bands = parts.map((part) => {
       const [a, b] = part.y
-      const geo = new THREE.PlaneGeometry(PW, ((b - a) / SH) * PH)
-      // Crop the screen texture to this band.
-      const uv = geo.attributes.uv
-      for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) > 0.5 ? 1 - a / SH : 1 - b / SH)
+      // Crop the screen texture to this band; the top and bottom bands keep the screen's rounded corners.
+      const top = a <= 0 ? SR : 0
+      const bottom = b >= SH ? SR : 0
+      const geo = roundedPlane(PW, ((b - a) / SH) * PH, [top, top, bottom, bottom], 1 - b / SH, 1 - a / SH)
       const mesh = new THREE.Mesh(geo, stage.material(part.from ?? screen))
       mesh.position.y = (0.5 - (a + b) / 2 / SH) * PH
       group.add(mesh)

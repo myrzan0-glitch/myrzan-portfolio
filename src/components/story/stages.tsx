@@ -171,7 +171,8 @@ export function HeroStage({ screens, label }: { screens: Shot[]; label: string }
 export function MockupHeroStage({ mockup, screens, label }: { mockup: { src: string; w: number; h: number }; screens: Shot[]; label: string }) {
   return (
     <div className={`${panel} aspect-[2/1]`}>
-      <Image src={mockup.src} alt={label} fill priority sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" />
+      {/* Served as the original PNG: the optimiser's lossy re-encode blurs small UI text. */}
+      <Image src={mockup.src} alt={label} fill priority unoptimized className="object-cover" />
       <Zoom shots={screens} />
     </div>
   )
