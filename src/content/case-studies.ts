@@ -47,8 +47,6 @@ export type Story = {
   /** Three screens for the hero, left to right. */
   heroScreens: { screen: string; label: string }[]
   heroLabel: string
-  /** A still device mockup of the hero screens, shown instead of the three.js scene. */
-  heroMockup?: { src: string; w: number; h: number }
   role: { label: string; value: string }[]
   chapters: Chapter[]
 }
@@ -132,7 +130,7 @@ export type Visual =
   | ({ kind: "image" } & CaseImage)
 
 const ozen = (name: string) => `/work/ozen-telegram-music/screens/${name}.webp`
-const bi = (name: string) => `/work/bi-mobile-search/screens/${name}.png`
+const bi = (name: string) => `/work/bi-mobile-search/screens/${name}.webp`
 const td = (name: string) => `/work/technodom-credit/screens/${name}.webp`
 
 export const caseStudies: CaseStudy[] = [
@@ -145,7 +143,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "75% of BI Group’s traffic is mobile, yet buyers were leaving search before they saw a single apartment. In six weeks I took the filter panel from field research to production, and bounce rate fell by a third.",
     hero: {
-      src: "/work/bi-mobile-search/showcase.png",
+      src: "/work/bi-mobile-search/showcase.webp",
       alt: "Three redesigned BI Group screens on iPhones: the map with price pins, home with quick filters, and the listing",
       w: 1200,
       h: 630
@@ -160,7 +158,6 @@ export const caseStudies: CaseStudy[] = [
         { screen: bi("a-listing"), label: "Listing" }
       ],
       heroLabel: "Three redesigned BI Group screens: home with quick filters, the map with price pins, and the apartment listing",
-      heroMockup: { src: "/work/bi-mobile-search/hero-mockup.png", w: 2880, h: 1440 },
       role: [
         { label: "Role", value: "Product designer · 2025" },
         {

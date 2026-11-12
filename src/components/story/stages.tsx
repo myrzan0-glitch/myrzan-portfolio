@@ -4,53 +4,10 @@ import * as React from "react"
 import { createPortal } from "react-dom"
 import { ZoomIn } from "lucide-react"
 
-import Image from "next/image"
-import { heroScene, type LayerPart, type RowPhone, type Scene } from "./phone-scenes"
+import type { LayerPart, RowPhone } from "./phone-scenes"
 
 /** A screen to open full size, with its caption. */
 export type Shot = { screen: string; label?: string }
-
-function reducedMotion() {
-  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-}
-
-/** Builds the scene once the panel comes near the screen, and keeps play/pause in sync with it. */
-function useScene(build: (el: HTMLDivElement, playing: boolean) => Scene) {
-  const ref = React.useRef<HTMLDivElement>(null)
-  const scene = React.useRef<Scene | null>(null)
-  const [playing, setPlaying] = React.useState(true)
-  const buildRef = React.useRef(build)
-  buildRef.current = build
-
-  React.useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const start = !reducedMotion()
-    setPlaying(start)
-    const near = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !scene.current) {
-          near.disconnect()
-          scene.current = buildRef.current(el, start)
-        }
-      },
-      { rootMargin: "300px" }
-    )
-    near.observe(el)
-    return () => {
-      near.disconnect()
-      scene.current?.dispose()
-      scene.current = null
-    }
-  }, [])
-
-  const toggle = () => {
-    const next = !playing
-    setPlaying(next)
-    scene.current?.setPlaying(next)
-  }
-  return { ref, scene, playing, toggle }
-}
 
 /** The screens of a panel, full size and side by side. Closes with Close, Escape or a click outside. */
 function Lightbox({ shots, onClose }: { shots: Shot[]; onClose: () => void }) {
@@ -134,27 +91,17 @@ function Zoom({ shots }: { shots: Shot[] }) {
 const panel = "group relative overflow-hidden rounded-[14px] bg-[var(--home-panel)]"
 const tag = "absolute left-0 top-0 whitespace-nowrap rounded-full px-2 py-[3px] font-[family-name:var(--font-mono)] text-[9.5px] tracking-[0.03em] sm:text-[10.5px]"
 
+/** The hero: three still iPhones side by side, front-facing; the magnifier opens the screens. */
 export function HeroStage({ screens, label }: { screens: Shot[]; label: string }) {
-  const { ref } = useScene((el, playing) =>
-    heroScene(
-      el,
-      screens.map((s) => s.screen),
-      playing
-    )
-  )
   return (
-    <div ref={ref} role="img" aria-label={label} className={`${panel} aspect-[4/3] !bg-[#1c1c1e] sm:aspect-[2/1]`}>
-      <Zoom shots={screens} />
-    </div>
-  )
-}
-
-/** The hero as a still device mockup (mockup-device-3d iPhones, front-facing); the magnifier opens the screens. */
-export function MockupHeroStage({ mockup, screens, label }: { mockup: { src: string; w: number; h: number }; screens: Shot[]; label: string }) {
-  return (
-    <div className={`${panel} aspect-[2/1]`}>
-      {/* Served as the original PNG: the optimiser's lossy re-encode blurs small UI text. */}
-      <Image src={mockup.src} alt={label} fill priority unoptimized className="object-cover" />
+    <div role="img" aria-label={label} className={`${panel} still-panel aspect-[4/3] sm:aspect-[2/1]`}>
+      <div className="still-row still-hero" style={{ "--n": screens.length } as React.CSSProperties}>
+        {screens.map((s) => (
+          <div key={s.screen} className="still-item">
+            <StillPhone screen={s.screen} eager />
+          </div>
+        ))}
+      </div>
       <Zoom shots={screens} />
     </div>
   )
@@ -165,35 +112,41 @@ const SW = 390
 const SH = 844
 
 /**
- * A still iPhone mockup (the mockup-device-3d skill's device: titanium frame, rounded screen,
- * Dynamic Island) with the real screen as a plain image, so the browser scales it crisply.
- * Bands are highlight boxes in screen units, shown while `marked`.
+ * A still iPhone 15 Pro mockup in CSS (black titanium frame, glass bezel, Dynamic Island, side
+ * buttons) with the real screen as a plain image, so the browser scales it crisply. Bands are
+ * highlight boxes in screen units, shown while `marked`. Nothing moves.
  */
-function StillPhone({ screen, bands, marked }: { screen: string; bands?: RowPhone["bands"]; marked?: boolean }) {
+function StillPhone({ screen, bands, marked, eager }: { screen: string; bands?: RowPhone["bands"]; marked?: boolean; eager?: boolean }) {
   return (
     <div className="still-phone">
-      <div className="still-screen">
-        {/* The original PNG export: next/image would re-encode it and blur small UI text. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={screen} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
-        <span aria-hidden="true" className="still-notch" />
-        {bands?.map((b, i) => {
-          const [x0, x1] = b.x ?? [0, SW]
-          return (
-            <span
-              key={i}
-              aria-hidden="true"
-              className={`still-band ${b.problem ? "still-band-problem" : ""}`}
-              style={{
-                left: `${(x0 / SW) * 100}%`,
-                width: `${((x1 - x0) / SW) * 100}%`,
-                top: `${(b.y[0] / SH) * 100}%`,
-                height: `${((b.y[1] - b.y[0]) / SH) * 100}%`,
-                opacity: marked ? 1 : 0
-              }}
-            />
-          )
-        })}
+      <span aria-hidden="true" className="still-btn still-btn-action" />
+      <span aria-hidden="true" className="still-btn still-btn-up" />
+      <span aria-hidden="true" className="still-btn still-btn-down" />
+      <span aria-hidden="true" className="still-btn still-btn-side" />
+      <div className="still-glass">
+        <div className="still-screen">
+          {/* The Figma export as is: next/image would re-encode it and soften small UI text. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={screen} alt="" loading={eager ? "eager" : "lazy"} decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+          {bands?.map((b, i) => {
+            const [x0, x1] = b.x ?? [0, SW]
+            return (
+              <span
+                key={i}
+                aria-hidden="true"
+                className={`still-band ${b.problem ? "still-band-problem" : ""}`}
+                style={{
+                  left: `${(x0 / SW) * 100}%`,
+                  width: `${((x1 - x0) / SW) * 100}%`,
+                  top: `${(b.y[0] / SH) * 100}%`,
+                  height: `${((b.y[1] - b.y[0]) / SH) * 100}%`,
+                  opacity: marked ? 1 : 0
+                }}
+              />
+            )
+          })}
+        </div>
+        <span aria-hidden="true" className="still-island" />
       </div>
     </div>
   )

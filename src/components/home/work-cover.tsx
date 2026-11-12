@@ -37,7 +37,7 @@ export function WorkCover({ kind }: { kind: CoverKind }) {
       return (
         <div className="cover" style={{ background: "#e9e9ec" }}>
           <Image
-            src="/work/bi-mobile-search/cover-mockup.png"
+            src="/work/bi-mobile-search/cover-mockup.webp"
             alt="BI Group home with quick filters for city, price and rooms, on an iPhone"
             fill
             unoptimized

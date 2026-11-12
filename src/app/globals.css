@@ -428,9 +428,9 @@
 }
 
 /*
- * Still phones for the story chapters: the mockup-device-3d skill's iPhone (280 × 590 body,
- * 7 px titanium frame, 46 / 40 px corners, 108 × 28 island) as percentages, with the screen as
- * a plain image so the browser scales it crisply. No motion.
+ * Still phones for the story cases: a real iPhone 15 Pro in proportion (433 × 892 body, black
+ * titanium frame, glass bezel, 55 pt screen corners, 126 × 37 Dynamic Island, side buttons) in
+ * percentages, with the screen as a plain image so the browser scales it crisply. No motion.
  */
 .still-panel {
   container-type: size;
@@ -438,30 +438,52 @@
 .still-phone {
   position: relative;
   box-sizing: border-box;
-  aspect-ratio: 280 / 590;
-  padding: 2.5%;
-  border-radius: 16.4% / 7.8%;
-  background: linear-gradient(140deg, #3a3a40 0%, #a8a8ad 35%, #1f1f24 60%, #5a5a60 100%);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 40px -18px rgba(0, 0, 0, 0.6);
+  aspect-ratio: 433 / 892;
+  padding: 1.39%;
+  border-radius: 17.3% / 8.4%;
+  background: linear-gradient(90deg, #77777c 0%, #2e2e31 3.5%, #3c3c40 50%, #2e2e31 96.5%, #77777c 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.55),
+    0 28px 48px -22px rgba(0, 0, 0, 0.6);
+}
+.still-glass {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 3.33%;
+  border-radius: 16.4% / 7.84%;
+  background: #000;
 }
 .still-screen {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 15% / 6.9%;
+  border-radius: 14% / 6.46%;
   background: #fff;
 }
-.still-notch {
+.still-island {
   position: absolute;
-  top: 1%;
+  top: 2.84%;
   left: 50%;
-  width: 40.6%;
-  height: 4.9%;
+  width: 29.9%;
+  height: 4.2%;
   transform: translateX(-50%);
   border-radius: 999px;
   background: #000;
 }
+.still-btn {
+  position: absolute;
+  width: 0.95%;
+  border-radius: 2px;
+  background: linear-gradient(to right, #1c1c1f, #5c5c61);
+}
+.still-btn-action { left: -0.6%; top: 20.5%; height: 3.6%; }
+.still-btn-up { left: -0.6%; top: 28.5%; height: 7.2%; }
+.still-btn-down { left: -0.6%; top: 37.5%; height: 7.2%; }
+.still-btn-side { right: -0.6%; top: 30%; height: 11.5%; background: linear-gradient(to left, #1c1c1f, #5c5c61); }
 .still-band {
   position: absolute;
   box-sizing: border-box;
@@ -489,8 +511,8 @@
   --rows: 1;
   gap: 2.5cqh var(--gap);
   --ph: min(
-    calc((86cqh - var(--rows) * 30px - (var(--rows) - 1) * 2.5cqh) / var(--rows)),
-    calc((90cqw - (var(--per) - 1) * var(--gap)) / var(--per) * 590 / 280)
+    calc((86cqh - var(--rows) * var(--label, 30px) - (var(--rows) - 1) * 2.5cqh) / var(--rows)),
+    calc((90cqw - (var(--per) - 1) * var(--gap)) / var(--per) * 892 / 433)
   );
 }
 @container (max-aspect-ratio: 1 / 1) {
@@ -555,4 +577,8 @@
   top: 50% !important;
   right: calc(100% + 12px);
   transform: translateY(-50%);
+}
+/* The hero row has no labels above its phones. */
+.still-hero {
+  --label: 0px;
 }
