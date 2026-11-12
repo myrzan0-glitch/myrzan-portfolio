@@ -295,143 +295,208 @@
 }
 
 /*
- * Selected work covers (components/home/work-cover.tsx). Each is a 1280 × 1024 artboard sized in
- * cqw, so 1cqw is 12.8 artboard pixels. A device on a flat ground plays the case's real screens:
- * a slow camera zoom, screens that cross-fade, and a ring where the user taps. 8 s per loop.
+ * Selected work covers (components/home/work-cover.tsx): a still image of the case's screens on
+ * a phone, or the video consultation banner, in a 5:4 card.
  */
 .cover {
   position: relative;
   aspect-ratio: 5 / 4;
   overflow: hidden;
   border-radius: 14px;
-  container-type: inline-size;
 }
-.cover-cam {
-  position: absolute;
-  animation-duration: 8s;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+
+/*
+ * Still phones for the story cases: a real iPhone 15 Pro in proportion (433 × 892 body, black
+ * titanium frame, glass bezel, 55 pt screen corners, 126 × 37 Dynamic Island, side buttons) in
+ * percentages, with the screen as a plain image so the browser scales it crisply. No motion.
+ */
+.still-panel {
+  container-type: size;
+  /* Phone body height per width, and screen height per width. */
+  --bhw: calc(892 / 433);
+  --shw: calc(844 / 390);
 }
-.cover-phone-cam {
-  left: 33.83cqw;
-  top: 6.09cqw;
-  width: 32.34cqw;
-  height: 67.81cqw;
+.still-android-panel {
+  --bhw: calc(824 / 384);
+  --shw: calc(800 / 360);
 }
-.cover-phone {
-  position: absolute;
-  inset: 0;
+.still-phone {
+  position: relative;
   box-sizing: border-box;
-  padding: 0.234cqw;
-  border-radius: 4.84cqw;
-  background: linear-gradient(145deg, #9a9aa0, #2b2b2e 38%, #66666c 62%, #1d1d20);
-  box-shadow: 0 5.47cqw 9.38cqw -3.13cqw rgba(0, 0, 0, 0.6), 0 2.03cqw 3.44cqw -2.03cqw rgba(0, 0, 0, 0.5);
+  aspect-ratio: 433 / 892;
+  padding: 1.39%;
+  border-radius: 17.3% / 8.4%;
+  background: linear-gradient(90deg, #77777c 0%, #2e2e31 3.5%, #3c3c40 50%, #2e2e31 96.5%, #77777c 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.55),
+    0 28px 48px -22px rgba(0, 0, 0, 0.6);
 }
-.cover-light .cover-phone {
-  box-shadow: 0 5.47cqw 9.38cqw -3.13cqw rgba(0, 0, 0, 0.3), 0 2.03cqw 3.44cqw -2.03cqw rgba(0, 0, 0, 0.3);
-}
-.cover-bezel {
+.still-glass {
+  position: relative;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
-  padding: 0.703cqw;
-  border-radius: 4.61cqw;
-  background: #050505;
+  padding: 3.33%;
+  border-radius: 16.4% / 7.84%;
+  background: #000;
 }
-.cover-screen {
+.still-screen {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 3.91cqw;
+  border-radius: 14% / 6.46%;
+  /* Black, like the bezel: at the clipped rounded corner the image's anti-aliased edge blends
+     with this backing, and white showed as a light arc on dark screens. */
   background: #000;
 }
-.cover-tap {
+.still-island {
   position: absolute;
-  width: 3.44cqw;
-  height: 3.44cqw;
-  box-sizing: border-box;
+  top: 2.84%;
+  left: 50%;
+  width: 29.9%;
+  height: 4.2%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #000;
+}
+.still-btn {
+  position: absolute;
+  width: 0.95%;
+  border-radius: 2px;
+  background: linear-gradient(to right, #1c1c1f, #5c5c61);
+}
+.still-btn-action { left: -0.6%; top: 20.5%; height: 3.6%; }
+.still-btn-up { left: -0.6%; top: 28.5%; height: 7.2%; }
+.still-btn-down { left: -0.6%; top: 37.5%; height: 7.2%; }
+.still-btn-side { right: -0.6%; top: 30%; height: 11.5%; background: linear-gradient(to left, #1c1c1f, #5c5c61); }
+/*
+ * Android (Technodom): a current 20:9 phone for 360 × 800 screens. 384 × 824 body: a 3 px
+ * aluminium frame, an even 9 px black bezel, softly rounded corners, a centred punch-hole camera,
+ * and power and volume on the right edge.
+ */
+.still-phone.still-android {
+  aspect-ratio: 384 / 824;
+  padding: 0.78%;
+  border-radius: 11.5% / 5.4%;
+  background: linear-gradient(90deg, #6e6f74 0%, #2f3034 4%, #3d3e42 50%, #2f3034 96%, #6e6f74 100%);
+}
+.still-android .still-glass {
+  padding: 2.38%;
+  border-radius: 10.9% / 5.05%;
+}
+.still-android .still-screen {
+  border-radius: 8.5% / 3.85%;
+}
+.still-punch {
+  position: absolute;
+  top: 2.15%;
+  left: 50%;
+  width: 3.7%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
   border-radius: 50%;
-  border: 0.23cqw solid rgba(255, 255, 255, 0.95);
-  background: rgba(255, 255, 255, 0.28);
-  opacity: 0;
-  animation: 8s ease-out infinite;
+  background: radial-gradient(circle at 40% 38%, #2a2d36 0%, #0b0b0e 55%, #000 100%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.still-btn-power { right: -0.6%; top: 25%; height: 6.5%; background: linear-gradient(to left, #1c1c1f, #5c5c61); }
+.still-btn-volume { right: -0.6%; top: 34%; height: 13%; background: linear-gradient(to left, #1c1c1f, #5c5c61); }
+.still-band {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 2px solid var(--story-mark);
+  background: color-mix(in srgb, var(--story-mark) 18%, transparent);
+  transition: opacity 200ms ease;
+}
+.still-band-problem {
+  border-color: var(--story-warn);
+  background: color-mix(in srgb, var(--story-warn) 18%, transparent);
 }
 
-/* BI Group and Technodom: a slow zoom into the quick filters, and into the bank offers. */
-.cover-bi-cam {
-  transform-origin: 50% 59%;
-  animation-name: cover-bi-cam;
+/* A row of phones, each with its label above; four tall phones wrap two by two in a narrow panel. */
+.still-row {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: flex-end;
+  justify-content: center;
+  --gap: 4cqw;
+  --per: var(--n);
+  --rows: 1;
+  gap: 2.5cqh var(--gap);
+  --ph: min(
+    calc((86cqh - var(--rows) * var(--label, 30px) - (var(--rows) - 1) * 2.5cqh) / var(--rows)),
+    calc((90cqw - (var(--per) - 1) * var(--gap)) / var(--per) * var(--bhw))
+  );
 }
-.cover-td-cam {
-  transform-origin: 50% 57.8%;
-  animation-name: cover-td-cam;
-}
-@keyframes cover-bi-cam {
-  0%, 12% { transform: scale(1); }
-  42%, 70% { transform: scale(1.75); }
-  94%, 100% { transform: scale(1); }
-}
-@keyframes cover-td-cam {
-  0%, 12% { transform: scale(1); }
-  42%, 70% { transform: scale(1.6); }
-  94%, 100% { transform: scale(1); }
-}
-
-/* Ōzen: Start farming, the farming fill, then a zoom into Claim 480. */
-.cover-oz-cam {
-  transform-origin: 50% 76.8%;
-  animation-name: cover-oz-cam;
-}
-.cover-oz-farming,
-.cover-oz-claim {
-  opacity: 0;
-  animation: 8s ease-in-out infinite;
-}
-.cover-oz-farming { animation-name: cover-oz-farming; }
-.cover-oz-claim { animation-name: cover-oz-claim; }
-.cover-oz-tap1,
-.cover-oz-tap2 {
-  left: 44.36%;
-  top: 75%;
-}
-.cover-oz-tap1 { animation-name: cover-oz-tap1; }
-.cover-oz-tap2 { animation-name: cover-oz-tap2; }
-@keyframes cover-oz-cam {
-  0%, 60% { transform: scale(1); }
-  70%, 86% { transform: scale(1.8); }
-  95%, 100% { transform: scale(1); }
-}
-@keyframes cover-oz-farming {
-  0%, 25% { opacity: 0; }
-  29%, 58% { opacity: 1; }
-  62%, 100% { opacity: 0; }
-}
-@keyframes cover-oz-claim {
-  0%, 56% { opacity: 0; }
-  60%, 92% { opacity: 1; }
-  97%, 100% { opacity: 0; }
-}
-@keyframes cover-oz-tap1 {
-  0%, 20% { opacity: 0; transform: scale(0.6); }
-  22% { opacity: 1; transform: scale(1); }
-  27%, 100% { opacity: 0; transform: scale(1.6); }
-}
-@keyframes cover-oz-tap2 {
-  0%, 79% { opacity: 0; transform: scale(0.6); }
-  81% { opacity: 1; transform: scale(1); }
-  86%, 100% { opacity: 0; transform: scale(1.6); }
-}
-
-/* Without motion, each cover rests on its key screen. */
-@media (prefers-reduced-motion: reduce) {
-  .cover-cam,
-  .cover-tap,
-  .cover-oz-farming {
-    animation: none;
+@container (max-aspect-ratio: 1 / 1) {
+  .still-row[data-n="4"] {
+    --per: 2;
+    --rows: 2;
   }
-  .cover-oz-claim {
-    animation: none;
-    opacity: 1;
-  }
+}
+.still-item {
+  display: flex;
+  flex: 0 0 calc((90cqw - (var(--per) - 1) * var(--gap)) / var(--per));
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.still-item .still-phone {
+  height: var(--ph);
+}
+
+/* Layers: the screen's parts as a still stack, pulled apart, names to the left. */
+.still-layers {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  --gap: 1.4cqh;
+  --stack-h: min(84cqh, 40cqw * var(--shw));
+}
+.still-stack {
+  margin-left: 54%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  width: calc((var(--stack-h) - (var(--parts) - 1) * var(--gap)) / var(--shw));
+  --r: calc((var(--stack-h) - (var(--parts) - 1) * var(--gap)) / var(--shw) * 0.15);
+}
+.still-slice {
+  position: relative;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 14px 24px -14px rgba(0, 0, 0, 0.6);
+}
+.still-slice-top {
+  border-top-left-radius: var(--r);
+  border-top-right-radius: var(--r);
+}
+.still-slice-bottom {
+  border-bottom-left-radius: var(--r);
+  border-bottom-right-radius: var(--r);
+}
+.still-slice-problem {
+  transform: translateX(-7%);
+  box-shadow: 0 0 0 2px var(--story-warn), 0 14px 24px -14px rgba(0, 0, 0, 0.6);
+}
+.still-slice-new {
+  transform: translateX(-7%);
+  box-shadow: 0 0 0 2px var(--story-mark), 0 14px 24px -14px rgba(0, 0, 0, 0.6);
+}
+.still-tag {
+  left: auto !important;
+  top: 50% !important;
+  right: calc(100% + 12px);
+  transform: translateY(-50%);
+}
+/* The hero row has no labels above its phones. */
+.still-hero {
+  --label: 0px;
 }

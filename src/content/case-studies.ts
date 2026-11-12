@@ -43,6 +43,8 @@ export type CaseStudy = ClassicCase | StoryCase
 export type Story = {
   /** Sets the page's accent colour (`--story-mark`) from globals.css; the default is `--story-accent`. */
   palette?: "bi"
+  /** The phone the screens are shown on; Android screens are 360 × 800, iPhone ones 390 × 844. */
+  device?: "iphone" | "android"
   subtitle: string
   /** Three screens for the hero, left to right. */
   heroScreens: { screen: string; label: string }[]
@@ -88,7 +90,8 @@ export type Visual =
       kind: "row"
       label: string
       /** Names the switch that shows the highlights, after what they show. */
-      toggle: string
+      /** The switch that shows highlight bands; leave it out for screens with nothing to mark. */
+      toggle?: string
       note: string
       /** Phones side by side; bands mark areas in screen pixels, red where `problem` is set. */
       phones: RowPhone[]
@@ -143,10 +146,10 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "75% of BI Group’s traffic is mobile, yet buyers were leaving search before they saw a single apartment. In six weeks I took the filter panel from field research to production, and bounce rate fell by a third.",
     hero: {
-      src: "/work/bi-final.webp",
-      alt: "Final BI Group mobile search with quick-filter chips for city, price and rooms",
-      w: 1600,
-      h: 773
+      src: "/work/bi-mobile-search/showcase.webp",
+      alt: "Three redesigned BI Group screens on iPhones: the map with price pins, home with quick filters, and the listing",
+      w: 1200,
+      h: 630
     },
     story: {
       palette: "bi",
@@ -196,23 +199,23 @@ export const caseStudies: CaseStudy[] = [
           wide: true,
           body: [
             "BI Group wants to sell homes the way marketplaces sell everything else. So next to the property portals, Krisha and Yandex Real Estate, I benchmarked the marketplaces buyers already shop on, Kaspi and Ozon.",
-            "Three of the four put **a row of filter chips right above the results**, and both property portals give the map **its own labelled button**. Buyers had learned the chips elsewhere. BI Group’s search hid every filter behind one button."
+            "Three of the four put **a row of filter chips right above the results**, and both property portals give the map **its own button**. Buyers had learned the chips elsewhere. BI Group’s search hid every filter behind one button."
           ],
           visual: {
             kind: "row",
             label: "Search screens from Kaspi, Krisha, Yandex Real Estate and Ozon, with their filter chips and map buttons highlighted",
             toggle: "Show pattern",
-            note: "Show pattern marks the filter chips and labelled map buttons.",
+            note: "Show pattern marks the filter chips and the map buttons. Kaspi, Krisha and Yandex are shown in their original Russian.",
             phones: [
               { screen: bi("bench-kaspi"), label: "Kaspi", bands: [{ y: [109, 157] }] },
-              { screen: bi("bench-krisha"), label: "Krisha", bands: [{ y: [49, 97] }] },
+              { screen: bi("bench-krisha"), label: "Krisha", bands: [{ y: [700, 749], x: [244, 377] }] },
               {
                 screen: bi("bench-yandex"),
                 label: "Yandex Real Estate",
                 short: "Yandex",
-                bands: [{ y: [224, 269] }, { y: [785, 825], x: [12, 124] }]
+                bands: [{ y: [226, 268] }, { y: [672, 734], x: [5, 66] }]
               },
-              { screen: bi("bench-ozon"), label: "Ozon", bands: [{ y: [220, 266] }] }
+              { screen: bi("bench-ozon"), label: "Ozon", bands: [{ y: [194, 232] }] }
             ]
           }
         },
@@ -267,7 +270,7 @@ export const caseStudies: CaseStudy[] = [
             note: "Five questions on one screen became one question in a small sheet.",
             phones: [
               { screen: bi("b-filter"), label: "Before", bands: [{ y: [104, 660], problem: true }] },
-              { screen: bi("a-price"), label: "After", on: true, bands: [{ y: [470, 700] }] }
+              { screen: bi("a-price"), label: "After", on: true, bands: [{ y: [522, 752] }] }
             ]
           }
         },
@@ -285,9 +288,9 @@ export const caseStudies: CaseStudy[] = [
             note: "Price comes first on the map and on the preview card.",
             phones: [
               { screen: bi("b-map"), label: "Before · map", short: "Before" },
-              { screen: bi("a-map"), label: "After · map", short: "After", on: true, bands: [{ y: [170, 295], x: [90, 225] }] },
+              { screen: bi("a-map"), label: "After · map", short: "After", on: true, bands: [{ y: [230, 362], x: [4, 222] }] },
               { screen: bi("b-mapcard"), label: "Before · preview", short: "Before" },
-              { screen: bi("a-mapcard"), label: "After · preview", short: "After", on: true, bands: [{ y: [555, 620] }, { y: [640, 680] }] }
+              { screen: bi("a-mapcard"), label: "After · preview", short: "After", on: true, bands: [{ y: [596, 681] }, { y: [692, 733] }] }
             ]
           }
         },
@@ -319,7 +322,7 @@ export const caseStudies: CaseStudy[] = [
         {
           title: "A listing that tells you where you are",
           body: [
-            "The old listing put every filter behind one button and switched views with unlabelled icons. The new one shows how many layouts match, **32,221**, uses the same chips as the home screen, and names its views: tiles, list, and a floor-by-floor grid.",
+            "The old listing put every filter behind one button and switched views with unlabelled icons. The new one shows how many layouts match, **32,221**, uses the same chips as the home screen, and names its views: cards, list, and a floor-by-floor grid.",
             "Price, Project and Rooms come first, the listing filters people used most. The pattern is the same as on the home screen, so buyers learn it once."
           ],
           visual: {
@@ -347,22 +350,13 @@ export const caseStudies: CaseStudy[] = [
           visual: {
             kind: "row",
             label:
-              "Four new screens with their next step highlighted: quick filters and Map on home, Call on the map preview, Leave a request and Choose a property on the project page, and the heart on the listing",
-            toggle: "Show next steps",
-            note: "Home → map preview → project → listing. Show next steps marks the way forward on each.",
+              "Four new screens, each with a next step: quick filters and Map on home, Call on the map preview, Leave a request and Choose a property on the project page, and the heart on the listing",
+            note: "Home → map preview → project → listing, each with a way forward.",
             phones: [
-              { screen: bi("a-home"), label: "Home", on: true, bands: [{ y: [464, 492] }, { y: [509, 548], x: [259, 369] }] },
-              { screen: bi("a-mapcard"), label: "Map preview", on: true, bands: [{ y: [640, 680] }] },
-              {
-                screen: bi("a-project"),
-                label: "Project",
-                on: true,
-                bands: [
-                  { y: [351, 385], x: [21, 185] },
-                  { y: [584, 626], x: [21, 369] }
-                ]
-              },
-              { screen: bi("a-listing"), label: "Listing", on: true, bands: [{ y: [415, 450], x: [320, 362] }] }
+              { screen: bi("a-home"), label: "Home", on: true },
+              { screen: bi("a-mapcard"), label: "Map preview", on: true },
+              { screen: bi("a-project"), label: "Project", on: true },
+              { screen: bi("a-listing"), label: "Listing", on: true }
             ]
           }
         },
@@ -418,10 +412,10 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Designing a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
     hero: {
-      src: "/work/ozen-telegram-music/hero.webp",
-      alt: "Five Ōzen screens: the farming claim, a collection that earns, the full player, tasks and the friends tab",
-      w: 1600,
-      h: 820
+      src: "/work/ozen-telegram-music/showcase.webp",
+      alt: "Three Ōzen screens on iPhones: referred friends, the top chart with Claim 480, and a collection that earns",
+      w: 1200,
+      h: 630
     },
     story: {
       subtitle:
@@ -503,12 +497,11 @@ export const caseStudies: CaseStudy[] = [
           visual: {
             kind: "row",
             label: "The farming button in its three states: Start farming, a live progress fill, and Claim 480",
-            toggle: "Show the button",
             note: "One button, three states: start, a live count, then the claim.",
             phones: [
-              { screen: ozen("m1"), label: "1 · Start", on: true, bands: [{ y: [628, 682] }] },
-              { screen: ozen("m2"), label: "2 · Farming", on: true, bands: [{ y: [628, 682] }] },
-              { screen: ozen("m3"), label: "3 · Claim", on: true, bands: [{ y: [628, 682] }] }
+              { screen: ozen("m1"), label: "1 · Start", on: true },
+              { screen: ozen("m2"), label: "2 · Farming", on: true },
+              { screen: ozen("m3"), label: "3 · Claim", on: true }
             ]
           }
         },
@@ -522,20 +515,15 @@ export const caseStudies: CaseStudy[] = [
           visual: {
             kind: "row",
             label: "An empty collection that explains how it earns, the add sheet with its 1,000 coin price, and the collection earning coins",
-            toggle: "Show price and payback",
             note: "Explain first, show the price before the tap, then show what came back.",
             phones: [
-              { screen: ozen("p2"), label: "1 · Empty collection", short: "1 · Empty", on: true, bands: [{ y: [430, 465], x: [56, 140] }] },
+              { screen: ozen("p2"), label: "1 · Empty collection", short: "1 · Empty", on: true },
               {
                 screen: ozen("p4"),
                 label: "2 · Price",
-                on: true,
-                bands: [
-                  { y: [568, 612], x: [130, 260] },
-                  { y: [710, 754] }
-                ]
+                on: true
               },
-              { screen: ozen("p3"), label: "3 · Earning", on: true, bands: [{ y: [478, 700], x: [322, 380] }] }
+              { screen: ozen("p3"), label: "3 · Earning", on: true }
             ]
           }
         },
@@ -549,21 +537,16 @@ export const caseStudies: CaseStudy[] = [
           visual: {
             kind: "row",
             label: "The Friends tab with the referral share to claim, the claim cooldown, and the invite sheet",
-            toggle: "Show claim and invite",
             note: "Claim your share, see when the next one comes, invite in two taps.",
             phones: [
               {
                 screen: ozen("t2"),
                 label: "1 · Claim share",
                 short: "1 · Claim",
-                on: true,
-                bands: [
-                  { y: [232, 266], x: [158, 232] },
-                  { y: [628, 682] }
-                ]
+                on: true
               },
-              { screen: ozen("t3"), label: "2 · Cooldown", on: true, bands: [{ y: [232, 266], x: [115, 275] }] },
-              { screen: ozen("t4"), label: "3 · Invite", on: true, bands: [{ y: [652, 756] }] }
+              { screen: ozen("t3"), label: "2 · Cooldown", on: true },
+              { screen: ozen("t4"), label: "3 · Invite", on: true }
             ]
           }
         },
@@ -602,13 +585,14 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Shoppers buying on credit were rejected bank by bank, retyping their details every time. Asking every partner bank at once turned online credit into Technodom’s top revenue stream, at more than $4M a month.",
     hero: {
-      src: "/work/technodom-credit/hero.webp",
-      alt: "Five Technodom screens: offers from every bank with their status, the credit checkout, a chosen offer, a credit limit with other banks below it, and offers sorted by term",
-      w: 1600,
-      h: 820
+      src: "/work/technodom-credit/showcase.webp",
+      alt: "Three Technodom screens on Android phones: the credit checkout, offers from every bank with their status, and a credit limit with other banks below it",
+      w: 1200,
+      h: 630
     },
     story: {
       palette: "bi",
+      device: "android",
       subtitle:
         "Shoppers buying on credit were rejected bank by bank, retyping their details every time. Asking every partner bank at once turned online credit into Technodom’s top revenue stream, at more than $4M a month.",
       heroScreens: [
@@ -686,34 +670,30 @@ export const caseStudies: CaseStudy[] = [
             label: "The checkout pulled apart into layers, with the new parts marked: term, every partner bank, and the ID number",
             screen: td("checkout"),
             parts: [
-              { y: [0, 87], name: "Header" },
-              { y: [87, 202], name: "Credit or instalments" },
-              { y: [202, 310], name: "Term first", mark: "new" },
-              { y: [310, 529], name: "Every bank", mark: "new" },
-              { y: [529, 739], name: "ID number, once", mark: "new" },
-              { y: [739, 844], name: "Continue" }
+              { y: [0, 80], name: "Header" },
+              { y: [80, 190], name: "Credit or instalments" },
+              { y: [190, 286], name: "Term first", mark: "new" },
+              { y: [286, 470], name: "Every bank", mark: "new" },
+              { y: [470, 662], name: "ID number, once", mark: "new" },
+              { y: [662, 800], name: "Continue" }
             ],
             note: "Blue: what changed. The shopper never picks a bank up front."
           }
         },
         {
-          title: "Verify once, consent once",
+          title: "One consent for every bank",
           body: [
-            "Banks need two things before they can score anyone: proof that the phone is yours, and your consent to a credit bureau check.",
-            "The first SMS confirms the phone. New shoppers set a password, so the application lives in their account. The second SMS is the consent, and **one consent covers every partner bank**: the full text lists each one, already ticked, so nobody signs five times."
+            "Before any bank can score a shopper, it needs their consent to a credit bureau check.",
+            "That consent is a single SMS code, and **one consent covers every partner bank**: the full text lists each one, already ticked, so nobody signs five times."
           ],
-          wide: true,
           visual: {
             kind: "row",
-            label: "Four screens: the SMS code, setting a password, the consent code, and the consent text listing every partner bank",
+            label: "Two screens: the consent code, and the consent text listing every partner bank",
             phones: [
-              { screen: td("sms-done"), on: true, label: "Phone", bands: [{ y: [266, 334], x: [61, 329] }] },
-              { screen: td("password"), on: true, label: "Password", bands: [{ y: [455, 663] }] },
-              { screen: td("consent-code"), on: true, label: "Consent", bands: [{ y: [338, 429] }] },
-              { screen: td("consent"), on: true, label: "Every bank", bands: [{ y: [547, 834] }] }
+              { screen: td("consent-code"), on: true, label: "Consent" },
+              { screen: td("consent"), on: true, label: "Every bank" }
             ],
-            toggle: "Show changes",
-            note: "Phone → password → consent → every bank on one consent."
+            note: "One code, one consent, every partner bank."
           }
         },
         {
@@ -727,11 +707,10 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: the offers list with approved, calculating and refused statuses, Halyk Bank chosen, and the hand-off to the bank",
             phones: [
-              { screen: td("offers-all"), on: true, label: "Statuses", bands: [{ y: [249, 734], x: [276, 381] }] },
-              { screen: td("offer-picked"), on: true, label: "Choice", bands: [{ y: [245, 323] }, { y: [500, 557] }] },
-              { screen: td("handoff"), on: true, label: "Hand-off to bank", short: "Hand-off", bands: [{ y: [157, 471], x: [152, 377] }] }
+              { screen: td("offers-all"), on: true, label: "Statuses" },
+              { screen: td("offer-picked"), on: true, label: "Choice" },
+              { screen: td("handoff"), on: true, label: "Hand-off to bank", short: "Hand-off" }
             ],
-            toggle: "Show changes",
             note: "Statuses → choice → hand-off to the bank."
           }
         },
@@ -746,11 +725,10 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: the term sheet at 3 months showing 6 offers, at 24 months showing 2, and the list with two offers at 5,123 tenge a month",
             phones: [
-              { screen: td("term-3"), on: true, label: "3 months", bands: [{ y: [704, 760] }] },
-              { screen: td("term-24"), on: true, label: "24 months", bands: [{ y: [635, 682] }, { y: [704, 760] }] },
-              { screen: td("sorted"), on: true, label: "2 offers", bands: [{ y: [247, 405] }] }
+              { screen: td("term-3"), on: true, label: "3 months" },
+              { screen: td("term-24"), on: true, label: "24 months" },
+              { screen: td("sorted"), on: true, label: "2 offers" }
             ],
-            toggle: "Show changes",
             note: "The count updates before you commit; the payment updates on the card."
           }
         },
@@ -765,22 +743,16 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: a credit limit lower than the price, a refusal with other banks’ offers below, and refusal reasons on each offer",
             phones: [
-              { screen: td("limit"), on: true, label: "Limit below the price", short: "Limit", bands: [{ y: [105, 320] }, { y: [338, 676] }] },
-              { screen: td("refused"), on: true, label: "Refused by the bank", short: "Refused", bands: [{ y: [252, 672] }, { y: [756, 795] }] },
+              { screen: td("limit"), on: true, label: "Limit below the price", short: "Limit" },
+              { screen: td("refused"), on: true, label: "Refused by the bank", short: "Refused" },
               {
                 screen: td("reasons"),
                 on: true,
                 label: "Reason for refusal",
-                short: "Reasons",
-                bands: [
-                  { y: [310, 401], x: [78, 368] },
-                  { y: [478, 535], x: [78, 368] },
-                  { y: [613, 654], x: [78, 368] }
-                ]
+                short: "Reasons"
               }
             ],
-            toggle: "Show next steps",
-            note: "Limit → refusal → reasons. Show next steps marks what the shopper can do on each."
+            note: "Limit → refusal → reasons, each with a next step."
           }
         },
         {
@@ -793,10 +765,9 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Two error states: a wrong SMS code with a link to resend, and a failed check with a retry button",
             phones: [
-              { screen: td("wrongcode"), on: true, label: "Wrong code", bands: [{ y: [379, 418] }] },
-              { screen: td("failed"), on: true, label: "Check failed", bands: [{ y: [379, 418] }] }
+              { screen: td("wrongcode"), on: true, label: "Wrong code" },
+              { screen: td("failed"), on: true, label: "Check failed" }
             ],
-            toggle: "Show next steps",
             note: "Wrong code and failed check, each with one way forward."
           }
         },

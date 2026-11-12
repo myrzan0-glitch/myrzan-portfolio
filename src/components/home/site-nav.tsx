@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { createPortal } from "react-dom"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ArrowUp, ArrowUpRight, Check, Copy } from "lucide-react"
@@ -16,40 +17,65 @@ const pages = [
   { href: "/projects", label: "Projects" }
 ]
 
-/** Top bar for the home, about and projects pages: the clock, a segmented control, the theme switch. */
+function PageLinks({ pathname, className = "", linkClassName = "" }: { pathname: string; className?: string; linkClassName?: string }) {
+  return (
+    // Equal segments sized to the longest label, labels centred: Home and About no longer look
+    // smaller than Projects.
+    <nav
+      aria-label="Pages"
+      className={`grid grid-cols-3 rounded-full bg-[var(--home-soft)] p-1 shadow-[inset_0_0_0_1px_var(--home-line)] ${className}`}
+    >
+      {pages.map((p) => {
+        const active = pathname === p.href
+        return (
+          <Link
+            key={p.href}
+            href={p.href}
+            aria-current={active ? "page" : undefined}
+            className={`home-label rounded-full text-center transition-colors ${linkClassName} ${
+              active
+                ? "bg-[var(--home-bg)] !text-[var(--home-fg)] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_0_0_1px_var(--home-line)]"
+                : "hover:!text-[var(--home-fg)]"
+            }`}
+          >
+            {p.label}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
+
+/**
+ * Top bar for the home, about and projects pages: the clock, a segmented control, the theme switch.
+ * On phones the segmented control is a tab bar floating at the bottom of the screen instead. It is
+ * rendered into <body>, so no section's stacking context (the home intro is `isolate`) can cover it.
+ */
 export function SiteNav({ className = "" }: { className?: string }) {
   const pathname = usePathname()
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
 
   return (
     <div className={`grid grid-cols-[1fr_auto_1fr] items-center gap-3 pt-5 sm:pt-7 ${className}`}>
       <span className="home-label max-sm:hidden">
         <LondonClock />
       </span>
-      <nav
-        aria-label="Pages"
-        className="flex rounded-full bg-[var(--home-soft)] p-1 shadow-[inset_0_0_0_1px_var(--home-line)] max-sm:col-span-2 max-sm:justify-self-start"
-      >
-        {pages.map((p) => {
-          const active = pathname === p.href
-          return (
-            <Link
-              key={p.href}
-              href={p.href}
-              aria-current={active ? "page" : undefined}
-              className={`home-label rounded-full px-3.5 py-1.5 transition-colors sm:px-4 ${
-                active
-                  ? "bg-[var(--home-bg)] !text-[var(--home-fg)] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_0_0_1px_var(--home-line)]"
-                  : "hover:!text-[var(--home-fg)]"
-              }`}
-            >
-              {p.label}
-            </Link>
-          )
-        })}
-      </nav>
-      <span className="justify-self-end">
+      <PageLinks pathname={pathname} className="max-sm:hidden" linkClassName="px-4 py-1.5" />
+      <span className="col-start-3 justify-self-end">
         <ThemeSwitch />
       </span>
+      {mounted &&
+        createPortal(
+          <div className="home-root !min-h-0 !bg-transparent sm:hidden">
+            <PageLinks
+              pathname={pathname}
+              className="fixed bottom-[max(16px,env(safe-area-inset-bottom))] left-1/2 z-40 w-max -translate-x-1/2 shadow-[inset_0_0_0_1px_var(--home-line),0_12px_32px_-10px_rgba(0,0,0,0.5)]"
+              linkClassName="px-4 py-2.5"
+            />
+          </div>,
+          document.body
+        )}
     </div>
   )
 }
@@ -145,7 +171,8 @@ export function SiteFooter() {
         </div>
       </div>
       <div className={grid}>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--home-line)] py-6">
+        {/* On phones the extra bottom space keeps this row clear of the floating tab bar. */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--home-line)] py-6 max-sm:pb-28">
           <span className="home-label">
             © {new Date().getFullYear()} Myrzan Izimbetov · Built with a lot of coffee
           </span>
