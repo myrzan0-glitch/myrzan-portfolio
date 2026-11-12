@@ -506,12 +506,11 @@ export const caseStudies: CaseStudy[] = [
           visual: {
             kind: "row",
             label: "The farming button in its three states: Start farming, a live progress fill, and Claim 480",
-            toggle: "Show the button",
             note: "One button, three states: start, a live count, then the claim.",
             phones: [
-              { screen: ozen("m1"), label: "1 · Start", on: true, bands: [{ y: [628, 682] }] },
-              { screen: ozen("m2"), label: "2 · Farming", on: true, bands: [{ y: [628, 682] }] },
-              { screen: ozen("m3"), label: "3 · Claim", on: true, bands: [{ y: [628, 682] }] }
+              { screen: ozen("m1"), label: "1 · Start", on: true },
+              { screen: ozen("m2"), label: "2 · Farming", on: true },
+              { screen: ozen("m3"), label: "3 · Claim", on: true }
             ]
           }
         },
@@ -525,20 +524,15 @@ export const caseStudies: CaseStudy[] = [
           visual: {
             kind: "row",
             label: "An empty collection that explains how it earns, the add sheet with its 1,000 coin price, and the collection earning coins",
-            toggle: "Show price and payback",
             note: "Explain first, show the price before the tap, then show what came back.",
             phones: [
-              { screen: ozen("p2"), label: "1 · Empty collection", short: "1 · Empty", on: true, bands: [{ y: [430, 465], x: [56, 140] }] },
+              { screen: ozen("p2"), label: "1 · Empty collection", short: "1 · Empty", on: true },
               {
                 screen: ozen("p4"),
                 label: "2 · Price",
-                on: true,
-                bands: [
-                  { y: [568, 612], x: [130, 260] },
-                  { y: [710, 754] }
-                ]
+                on: true
               },
-              { screen: ozen("p3"), label: "3 · Earning", on: true, bands: [{ y: [478, 700], x: [322, 380] }] }
+              { screen: ozen("p3"), label: "3 · Earning", on: true }
             ]
           }
         },
@@ -552,21 +546,16 @@ export const caseStudies: CaseStudy[] = [
           visual: {
             kind: "row",
             label: "The Friends tab with the referral share to claim, the claim cooldown, and the invite sheet",
-            toggle: "Show claim and invite",
             note: "Claim your share, see when the next one comes, invite in two taps.",
             phones: [
               {
                 screen: ozen("t2"),
                 label: "1 · Claim share",
                 short: "1 · Claim",
-                on: true,
-                bands: [
-                  { y: [232, 266], x: [158, 232] },
-                  { y: [628, 682] }
-                ]
+                on: true
               },
-              { screen: ozen("t3"), label: "2 · Cooldown", on: true, bands: [{ y: [232, 266], x: [115, 275] }] },
-              { screen: ozen("t4"), label: "3 · Invite", on: true, bands: [{ y: [652, 756] }] }
+              { screen: ozen("t3"), label: "2 · Cooldown", on: true },
+              { screen: ozen("t4"), label: "3 · Invite", on: true }
             ]
           }
         },
