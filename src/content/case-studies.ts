@@ -703,20 +703,19 @@ export const caseStudies: CaseStudy[] = [
           title: "Verify once, consent once",
           body: [
             "Banks need two things before they can score anyone: proof that the phone is yours, and your consent to a credit bureau check.",
-            "The first SMS confirms the phone. New shoppers set a password, so the application lives in their account. The second SMS is the consent, and **one consent covers every partner bank**: the full text lists each one, already ticked, so nobody signs five times."
+            "The first SMS confirms the phone. The second SMS is the consent, and **one consent covers every partner bank**: the full text lists each one, already ticked, so nobody signs five times."
           ],
           wide: true,
           visual: {
             kind: "row",
-            label: "Four screens: the SMS code, setting a password, the consent code, and the consent text listing every partner bank",
+            label: "Three screens: the SMS code, the consent code, and the consent text listing every partner bank",
             phones: [
               { screen: td("sms-done"), on: true, label: "Phone", bands: [{ y: [246, 306], x: [56, 304] }] },
-              { screen: td("password"), on: true, label: "Password", bands: [{ y: [395, 575] }] },
               { screen: td("consent-code"), on: true, label: "Consent", bands: [{ y: [362, 452] }] },
               { screen: td("consent"), on: true, label: "Every bank", bands: [{ y: [508, 800] }] }
             ],
             toggle: "Show changes",
-            note: "Phone → password → consent → every bank on one consent."
+            note: "Phone → consent → every bank on one consent."
           }
         },
         {
