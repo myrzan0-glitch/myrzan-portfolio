@@ -19,7 +19,12 @@ const pages = [
 
 function PageLinks({ pathname, className = "", linkClassName = "" }: { pathname: string; className?: string; linkClassName?: string }) {
   return (
-    <nav aria-label="Pages" className={`flex rounded-full bg-[var(--home-soft)] p-1 shadow-[inset_0_0_0_1px_var(--home-line)] ${className}`}>
+    // Equal segments sized to the longest label, labels centred: Home and About no longer look
+    // smaller than Projects.
+    <nav
+      aria-label="Pages"
+      className={`grid grid-cols-3 rounded-full bg-[var(--home-soft)] p-1 shadow-[inset_0_0_0_1px_var(--home-line)] ${className}`}
+    >
       {pages.map((p) => {
         const active = pathname === p.href
         return (
@@ -27,7 +32,7 @@ function PageLinks({ pathname, className = "", linkClassName = "" }: { pathname:
             key={p.href}
             href={p.href}
             aria-current={active ? "page" : undefined}
-            className={`home-label rounded-full transition-colors ${linkClassName} ${
+            className={`home-label rounded-full text-center transition-colors ${linkClassName} ${
               active
                 ? "bg-[var(--home-bg)] !text-[var(--home-fg)] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_0_0_1px_var(--home-line)]"
                 : "hover:!text-[var(--home-fg)]"
@@ -65,7 +70,7 @@ export function SiteNav({ className = "" }: { className?: string }) {
           <div className="home-root !min-h-0 !bg-transparent sm:hidden">
             <PageLinks
               pathname={pathname}
-              className="fixed bottom-[max(16px,env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 shadow-[inset_0_0_0_1px_var(--home-line),0_12px_32px_-10px_rgba(0,0,0,0.5)]"
+              className="fixed bottom-[max(16px,env(safe-area-inset-bottom))] left-1/2 z-40 w-max -translate-x-1/2 shadow-[inset_0_0_0_1px_var(--home-line),0_12px_32px_-10px_rgba(0,0,0,0.5)]"
               linkClassName="px-4 py-2.5"
             />
           </div>,
