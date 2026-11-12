@@ -350,22 +350,13 @@ export const caseStudies: CaseStudy[] = [
           visual: {
             kind: "row",
             label:
-              "Four new screens with their next step highlighted: quick filters and Map on home, Call on the map preview, Leave a request and Choose a property on the project page, and the heart on the listing",
-            toggle: "Show next steps",
-            note: "Home → map preview → project → listing. Show next steps marks the way forward on each.",
+              "Four new screens, each with a next step: quick filters and Map on home, Call on the map preview, Leave a request and Choose a property on the project page, and the heart on the listing",
+            note: "Home → map preview → project → listing, each with a way forward.",
             phones: [
-              { screen: bi("a-home"), label: "Home", on: true, bands: [{ y: [464, 492] }, { y: [509, 548], x: [259, 369] }] },
-              { screen: bi("a-mapcard"), label: "Map preview", on: true, bands: [{ y: [692, 733] }] },
-              {
-                screen: bi("a-project"),
-                label: "Project",
-                on: true,
-                bands: [
-                  { y: [351, 385], x: [21, 185] },
-                  { y: [584, 626], x: [21, 369] }
-                ]
-              },
-              { screen: bi("a-listing"), label: "Listing", on: true, bands: [{ y: [415, 450], x: [320, 362] }] }
+              { screen: bi("a-home"), label: "Home", on: true },
+              { screen: bi("a-mapcard"), label: "Map preview", on: true },
+              { screen: bi("a-project"), label: "Project", on: true },
+              { screen: bi("a-listing"), label: "Listing", on: true }
             ]
           }
         },
