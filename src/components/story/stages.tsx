@@ -222,7 +222,7 @@ export function LayersStage({ screen, parts, label, zoom }: { screen: string; pa
  * Still phones side by side with their labels. Highlights start hidden so the designs read clean;
  * the switch below the panel, named for what it shows, turns them on.
  */
-export function RowStage({ phones, label, toggle: toggleLabel, wide }: { phones: RowPhone[]; label: string; toggle: string; wide?: boolean }) {
+export function RowStage({ phones, label, toggle: toggleLabel, wide }: { phones: RowPhone[]; label: string; toggle?: string; wide?: boolean }) {
   const [marked, setMarked] = React.useState(false)
   const dc = useDeviceClass()
   return (
@@ -254,19 +254,21 @@ export function RowStage({ phones, label, toggle: toggleLabel, wide }: { phones:
         </div>
         <Zoom shots={phones.map((p) => ({ screen: p.screen, label: p.label }))} />
       </div>
-      <button
-        type="button"
-        aria-pressed={marked}
-        onClick={() => setMarked(!marked)}
-        className="mx-auto mt-3 flex items-center gap-2 rounded-full bg-[var(--home-bg)] py-1.5 pl-1.5 pr-3 text-[12px] font-medium shadow-[0_0_0_1px_var(--home-line)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-      >
-        <span aria-hidden="true" className={`relative h-4 w-[26px] rounded-full transition-colors ${marked ? "bg-[var(--story-mark)]" : "bg-[var(--home-line)]"}`}>
-          <span
-            className={`absolute left-0.5 top-0.5 h-3 w-3 rounded-full bg-[var(--home-bg)] shadow-[0_1px_2px_rgba(0,0,0,0.25)] transition-transform ${marked ? "translate-x-2.5" : ""}`}
-          />
-        </span>
-        {toggleLabel}
-      </button>
+      {toggleLabel && (
+        <button
+          type="button"
+          aria-pressed={marked}
+          onClick={() => setMarked(!marked)}
+          className="mx-auto mt-3 flex items-center gap-2 rounded-full bg-[var(--home-bg)] py-1.5 pl-1.5 pr-3 text-[12px] font-medium shadow-[0_0_0_1px_var(--home-line)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          <span aria-hidden="true" className={`relative h-4 w-[26px] rounded-full transition-colors ${marked ? "bg-[var(--story-mark)]" : "bg-[var(--home-line)]"}`}>
+            <span
+              className={`absolute left-0.5 top-0.5 h-3 w-3 rounded-full bg-[var(--home-bg)] shadow-[0_1px_2px_rgba(0,0,0,0.25)] transition-transform ${marked ? "translate-x-2.5" : ""}`}
+            />
+          </span>
+          {toggleLabel}
+        </button>
+      )}
     </>
   )
 }

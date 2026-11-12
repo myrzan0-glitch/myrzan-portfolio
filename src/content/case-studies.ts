@@ -90,7 +90,8 @@ export type Visual =
       kind: "row"
       label: string
       /** Names the switch that shows the highlights, after what they show. */
-      toggle: string
+      /** The switch that shows highlight bands; leave it out for screens with nothing to mark. */
+      toggle?: string
       note: string
       /** Phones side by side; bands mark areas in screen pixels, red where `problem` is set. */
       phones: RowPhone[]
@@ -710,11 +711,10 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: the SMS code, the consent code, and the consent text listing every partner bank",
             phones: [
-              { screen: td("sms-done"), on: true, label: "Phone", bands: [{ y: [246, 306], x: [56, 304] }] },
-              { screen: td("consent-code"), on: true, label: "Consent", bands: [{ y: [362, 452] }] },
-              { screen: td("consent"), on: true, label: "Every bank", bands: [{ y: [508, 800] }] }
+              { screen: td("sms-done"), on: true, label: "Phone" },
+              { screen: td("consent-code"), on: true, label: "Consent" },
+              { screen: td("consent"), on: true, label: "Every bank" }
             ],
-            toggle: "Show changes",
             note: "Phone → consent → every bank on one consent."
           }
         },
@@ -729,11 +729,10 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: the offers list with approved, calculating and refused statuses, Halyk Bank chosen, and the hand-off to the bank",
             phones: [
-              { screen: td("offers-all"), on: true, label: "Statuses", bands: [{ y: [230, 678], x: [245, 352] }] },
-              { screen: td("offer-picked"), on: true, label: "Choice", bands: [{ y: [226, 298] }, { y: [462, 514] }] },
-              { screen: td("handoff"), on: true, label: "Hand-off to bank", short: "Hand-off", bands: [{ y: [142, 436], x: [132, 346] }] }
+              { screen: td("offers-all"), on: true, label: "Statuses" },
+              { screen: td("offer-picked"), on: true, label: "Choice" },
+              { screen: td("handoff"), on: true, label: "Hand-off to bank", short: "Hand-off" }
             ],
-            toggle: "Show changes",
             note: "Statuses → choice → hand-off to the bank."
           }
         },
@@ -748,11 +747,10 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: the term sheet at 3 months showing 6 offers, at 24 months showing 2, and the list with two offers at 5,123 tenge a month",
             phones: [
-              { screen: td("term-3"), on: true, label: "3 months", bands: [{ y: [728, 782] }] },
-              { screen: td("term-24"), on: true, label: "24 months", bands: [{ y: [664, 708] }, { y: [728, 782] }] },
-              { screen: td("sorted"), on: true, label: "2 offers", bands: [{ y: [224, 380] }] }
+              { screen: td("term-3"), on: true, label: "3 months" },
+              { screen: td("term-24"), on: true, label: "24 months" },
+              { screen: td("sorted"), on: true, label: "2 offers" }
             ],
-            toggle: "Show changes",
             note: "The count updates before you commit; the payment updates on the card."
           }
         },
@@ -767,22 +765,16 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Three screens: a credit limit lower than the price, a refusal with other banks’ offers below, and refusal reasons on each offer",
             phones: [
-              { screen: td("limit"), on: true, label: "Limit below the price", short: "Limit", bands: [{ y: [96, 272] }, { y: [282, 602] }] },
-              { screen: td("refused"), on: true, label: "Refused by the bank", short: "Refused", bands: [{ y: [232, 612] }, { y: [700, 730] }] },
+              { screen: td("limit"), on: true, label: "Limit below the price", short: "Limit" },
+              { screen: td("refused"), on: true, label: "Refused by the bank", short: "Refused" },
               {
                 screen: td("reasons"),
                 on: true,
                 label: "Reason for refusal",
-                short: "Reasons",
-                bands: [
-                  { y: [286, 336], x: [72, 340] },
-                  { y: [408, 444], x: [72, 340] },
-                  { y: [512, 540], x: [72, 340] }
-                ]
+                short: "Reasons"
               }
             ],
-            toggle: "Show next steps",
-            note: "Limit → refusal → reasons. Show next steps marks what the shopper can do on each."
+            note: "Limit → refusal → reasons, each with a next step."
           }
         },
         {
@@ -795,10 +787,9 @@ export const caseStudies: CaseStudy[] = [
             kind: "row",
             label: "Two error states: a wrong SMS code with a link to resend, and a failed check with a retry button",
             phones: [
-              { screen: td("wrongcode"), on: true, label: "Wrong code", bands: [{ y: [348, 386] }] },
-              { screen: td("failed"), on: true, label: "Check failed", bands: [{ y: [348, 400] }] }
+              { screen: td("wrongcode"), on: true, label: "Wrong code" },
+              { screen: td("failed"), on: true, label: "Check failed" }
             ],
-            toggle: "Show next steps",
             note: "Wrong code and failed check, each with one way forward."
           }
         },
