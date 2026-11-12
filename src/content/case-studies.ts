@@ -421,10 +421,10 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Designing a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
     hero: {
-      src: "/work/ozen-telegram-music/hero.webp",
-      alt: "Five Ōzen screens: the farming claim, a collection that earns, the full player, tasks and the friends tab",
-      w: 1600,
-      h: 820
+      src: "/work/ozen-telegram-music/showcase.webp",
+      alt: "Three Ōzen screens on iPhones: referred friends, the top chart with Claim 480, and a collection that earns",
+      w: 1200,
+      h: 630
     },
     story: {
       subtitle:

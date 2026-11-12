@@ -1,35 +1,11 @@
 import Image from "next/image"
 
 /**
- * Home page covers for the selected case studies: one device on a flat ground, playing a short
- * loop of the case's real screens; the video consultation keeps its original banner. Laid out on
- * a 1280 × 1024 artboard and sized in `cqw`, so the whole cover scales with its card; the motion
- * lives in globals.css (`.cover-*`).
+ * Home page covers for the selected case studies: a still mockup of each case's real screens on
+ * the phone the case uses; the video consultation keeps its original banner. No motion.
  */
 
 export type CoverKind = "bi" | "ozen" | "technodom" | "video"
-
-const sizes = "(max-width: 640px) 70vw, 360px"
-
-function Phone({ cam, children }: { cam: string; children: React.ReactNode }) {
-  return (
-    <div className={`cover-cam cover-phone-cam ${cam}`}>
-      <div className="cover-phone">
-        <div className="cover-bezel">
-          <div className="cover-screen">{children}</div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function Screen({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
-  return <Image src={src} alt={alt} fill sizes={sizes} className={`object-cover ${className}`} />
-}
-
-function Tap({ className }: { className: string }) {
-  return <span aria-hidden="true" className={`cover-tap ${className}`} />
-}
 
 export function WorkCover({ kind }: { kind: CoverKind }) {
   switch (kind) {
@@ -48,13 +24,13 @@ export function WorkCover({ kind }: { kind: CoverKind }) {
     case "ozen":
       return (
         <div className="cover" style={{ background: "#2c2c2e" }}>
-          <Phone cam="cover-oz-cam">
-            <Screen src="/work/ozen-telegram-music/screens/m1.webp" alt="Ōzen player in Telegram with the Start farming button" />
-            <Screen src="/work/ozen-telegram-music/screens/m2.webp" alt="" className="cover-oz-farming" />
-            <Screen src="/work/ozen-telegram-music/screens/m3.webp" alt="" className="cover-oz-claim" />
-            <Tap className="cover-oz-tap1" />
-            <Tap className="cover-oz-tap2" />
-          </Phone>
+          <Image
+            src="/work/ozen-telegram-music/cover-mockup.webp"
+            alt="Ōzen player in Telegram with the top chart and the Start farming button, on an iPhone"
+            fill
+            unoptimized
+            className="object-cover"
+          />
         </div>
       )
     case "technodom":
