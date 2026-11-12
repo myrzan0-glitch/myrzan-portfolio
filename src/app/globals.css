@@ -347,7 +347,9 @@
   height: 100%;
   overflow: hidden;
   border-radius: 14% / 6.46%;
-  background: #fff;
+  /* Black, like the bezel: at the clipped rounded corner the image's anti-aliased edge blends
+     with this backing, and white showed as a light arc on dark screens. */
+  background: #000;
 }
 .still-island {
   position: absolute;
