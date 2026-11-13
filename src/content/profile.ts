@@ -3,7 +3,7 @@
 export const photos = [
   { src: "/personal/me-london.webp", alt: "Myrzan in London at Christmas", r: "-8deg", y: "14px", z: 1 },
   { src: "/personal/medina-park.webp", alt: "Medina in sunglasses in a London park", r: "4deg", y: "-8px", z: 2 },
-  { src: "/personal/wife-medina.webp", alt: "Myrzan's wife holding Medina in a café", r: "-2deg", y: "10px", z: 4 },
+  { src: "/personal/wife-medina.webp", alt: "Myrzan’s wife holding Medina in a café", r: "-2deg", y: "10px", z: 4 },
   { src: "/personal/me-medina.webp", alt: "Myrzan holding Medina", r: "6deg", y: "-6px", z: 3 },
   { src: "/personal/family-walk.webp", alt: "Family on a city walk, black and white", r: "-5deg", y: "12px", z: 2 }
 ]
@@ -23,14 +23,14 @@ export const jobs = [
     url: "https://nbu.uz",
     via: "via Expera",
     about: "Uzbekistan’s national bank, serving 3.3M individual clients.",
-    line: "Designing the bank’s unified front-office system for opening accounts, deposits and loans. I own the legal-entity branch, and help the design system team with AI-assisted prototyping through a Storybook MCP I built."
+    line: "Designing the bank’s unified front-office system for opening accounts, deposits and loans. I own the legal-entity branch and help the design system team with AI-assisted prototyping through a Storybook MCP I built."
   },
   {
     years: "2023 – 2026",
     role: "Product Designer",
     company: "BI Group",
     url: "https://bi.group",
-    about: "Property-tech developer ranked #1 by sales volume across the Middle East and CIS.",
+    about: "Property-tech developer ranked #1 by sales volume across the Middle East and the CIS.",
     line: "Owned search, the design system and AI prototyping for a platform with 2M+ monthly users."
   },
   {
@@ -38,15 +38,15 @@ export const jobs = [
     role: "Product Designer",
     company: "Beeline",
     url: "https://beeline.kz",
-    about: "Kazakhstan’s telecom operator, with an online shop for phones bundled with plans.",
-    line: "Lifted mobile checkout conversion 17.5% for a telecom with 11M+ subscribers."
+    about: "A telecom operator in Kazakhstan, with an online shop for phones bundled with plans.",
+    line: "Lifted mobile checkout conversion by 17.5% for a telecom with 11M+ subscribers."
   },
   {
     years: "2022",
     role: "Product Designer",
     company: "Petrel AI",
     about: "Enterprise software for a global uranium production company.",
-    line: "Cut manual work 40% in enterprise HSE and HR workflows. NDA."
+    line: "Cut manual work by 40% in enterprise HSE and HR workflows. NDA."
   },
   {
     years: "2020 – 2022",
@@ -80,7 +80,7 @@ export const petProjects = [
     name: "izipass.myrzan.com",
     href: "https://izipass.myrzan.com",
     title: "Paid events with real tickets, without the paperwork",
-    line: "Organisers set up an event in minutes. Guests pay them directly, receipts arrive in Telegram for one-tap approval, tickets go to Apple or Google Wallet, and check-in at the door works offline by scanning QR codes.",
+    line: "Organisers set up an event in minutes. Guests pay them directly, receipts arrive in Telegram for one-tap approval, tickets go to Apple or Google Wallet, and organisers check guests in at the door by scanning QR codes, even offline.",
     tags: ["Next.js", "Postgres", "Telegram bot"],
     img: "/side/izipass-app.webp",
     scene: "izipass" as const,

@@ -229,7 +229,7 @@ export function SideScene({ kind, poster, alt, sizes }: { kind: Kind; poster: st
         ))}
       {ready && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex flex-col justify-between p-2.5 sm:p-3">
-          <span className="max-w-full w-fit truncate whitespace-nowrap rounded-full border border-black/10 bg-white/90 px-2.5 py-1 text-[11px] font-medium leading-none text-neutral-900 shadow-sm backdrop-blur sm:text-xs">
+          <span className="max-w-full w-fit truncate whitespace-nowrap rounded-full border border-black/10 bg-white/90 px-2.5 py-1 t-label leading-none text-neutral-900 shadow-sm backdrop-blur">
             <span className="tabular-nums text-neutral-500">
               {step + 1}/{film.steps.length}
             </span>{" "}

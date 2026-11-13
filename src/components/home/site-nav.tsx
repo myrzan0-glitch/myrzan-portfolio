@@ -90,7 +90,7 @@ const elsewhere = [
 ]
 
 const footLink =
-  "group inline-flex items-center gap-1 text-[14px] text-[var(--home-fg)] underline-offset-4 transition-opacity hover:underline"
+  "group inline-flex items-center gap-1 t-body2 text-[var(--home-fg)] underline-offset-4 transition-opacity hover:underline"
 
 function CopyEmailLink() {
   const [copied, setCopied] = React.useState(false)
@@ -135,7 +135,7 @@ export function SiteFooter() {
     <footer className="mt-28 border-t border-[var(--home-line)] bg-[var(--home-soft)]">
       <div className={`${grid} grid gap-12 pb-12 pt-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20`}>
         <div>
-          <p className="m-0 max-w-[420px] text-[24px] font-medium leading-[1.2] tracking-[-0.02em] sm:text-[28px]">
+          <p className="t-h2 m-0 max-w-[420px]">
             Let&rsquo;s work together.
           </p>
           <p className="home-label mt-4">

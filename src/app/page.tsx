@@ -14,7 +14,7 @@ const featured: { slug: string; client: string; year: string; title: string; sum
     slug: "bi-mobile-search",
     client: "BI Group",
     year: "2025",
-    title: "Redesigned mobile search to a 54% conversion rate in six weeks",
+    title: "Took mobile search to a 54% conversion rate in six weeks",
     summary: "Three filters for 2M+ monthly buyers, split-tested before code",
     cover: "bi",
     light: true
@@ -71,17 +71,17 @@ export default function HomePage() {
           <FadeIn>
             <div className={`${column} pb-4 pt-16 sm:pt-24`}>
               <div className="max-w-[640px]">
-                <h1 className="m-0 text-[17px] font-medium">Myrzan Izimbetov</h1>
-                <p className="home-muted mt-0.5 text-[15px]">Product Designer · London</p>
-                <p className="mt-7 text-[19px] leading-[1.5] sm:text-[21px]">
+                <h1 className="t-body1 m-0 font-medium">Myrzan Izimbetov</h1>
+                <p className="t-body1 home-muted mt-0.5">Product Designer · London</p>
+                <p className="t-h2 mt-7">
                   I own problems end to end, from discovery to shipped code.
                 </p>
-                <p className="home-muted mt-2.5 text-[16px] leading-[1.55] sm:text-[21px] sm:leading-[1.5]">
+                <p className="t-body1 home-muted mt-5">
                   For six years I&apos;ve led mobile, fintech and e-commerce products used by millions of people every day. I
                   start with context: where the business is going and why customers choose us. Then I research, design and
                   prototype in production until the metric moves.
                 </p>
-                <p className="home-muted mt-4 text-[15px] leading-[1.55]">
+                <p className="t-body1 home-muted mt-4">
                   Now designing the front-office system of the{" "}
                   <a
                     href="https://nbu.uz"
@@ -97,7 +97,7 @@ export default function HomePage() {
                   <CvButton />
                   <CopyEmail />
                 </div>
-                <p className="mt-7 inline-flex items-center gap-2 text-sm">
+                <p className="t-body2 mt-7 inline-flex items-center gap-2">
                   <span className="h-[7px] w-[7px] rounded-full bg-[var(--home-green)] shadow-[0_0_0_4px_var(--home-green-soft)]" />
                   <span className="home-muted">Open to product design roles in Big Tech</span>
                 </p>
@@ -113,7 +113,7 @@ export default function HomePage() {
           </div>
           <div className="mt-6 grid gap-x-4 gap-y-12 sm:grid-cols-2">
             {featured.map((w) => (
-              <Link key={w.slug} href={`/work/${w.slug}`} className="group flex flex-col gap-2.5">
+              <Link key={w.slug} href={`/work/${w.slug}`} className="group row-span-4 grid grid-rows-subgrid gap-y-2.5">
                 <div className="relative">
                   <WorkCover kind={w.cover} />
                   <span
@@ -128,10 +128,10 @@ export default function HomePage() {
                 <span className="home-label mt-2">
                   Case study · {w.year} · {w.client}
                 </span>
-                <h2 className="m-0 text-[20px] font-medium leading-[1.25] tracking-[-0.01em] underline-offset-4 group-hover:underline sm:text-[22px]">
+                <h2 className="t-h2 m-0 underline-offset-4 [text-wrap:balance] group-hover:underline sm:max-w-[82%]">
                   {w.title}
                 </h2>
-                <p className="home-muted m-0 font-[family-name:var(--font-mono)] text-[13px] leading-[1.5]">{w.summary}</p>
+                <p className="t-body2 home-muted m-0 font-[family-name:var(--font-mono)]">{w.summary}</p>
               </Link>
             ))}
           </div>
@@ -148,10 +148,10 @@ export default function HomePage() {
               className="group flex items-baseline justify-between gap-4 border-b border-[var(--home-line)] py-4"
             >
               <span className="flex flex-col gap-0.5">
-                <span className="text-[15px] underline-offset-4 group-hover:underline">{m.title}</span>
-                <span className="home-muted text-[13px]">{m.where}</span>
+                <span className="t-body1 underline-offset-4 group-hover:underline">{m.title}</span>
+                <span className="t-body2 home-muted">{m.where}</span>
               </span>
-              <span className="home-muted inline-flex shrink-0 items-center gap-1.5 font-[family-name:var(--font-mono)] text-xs">
+              <span className="t-label home-muted inline-flex shrink-0 items-center gap-1.5">
                 {m.metric}
                 <ArrowUpRight
                   className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"

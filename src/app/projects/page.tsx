@@ -20,8 +20,8 @@ export default function ProjectsPage() {
         <SiteNav className={wrap} />
 
         <header className={`${wrap} pt-14 sm:pt-20`}>
-          <h1 className="m-0 text-[34px] font-medium leading-[1.1] tracking-[-0.025em] sm:text-[40px]">Pet projects</h1>
-          <p className="home-muted m-0 mt-4 max-w-[560px] text-[15px] leading-[1.65] sm:text-base">
+          <h1 className="t-h1 m-0">Pet projects</h1>
+          <p className="t-body1 home-muted m-0 mt-4 max-w-[560px]">
             Products I designed and built myself, from the first sketch to production.
           </p>
         </header>
@@ -30,7 +30,7 @@ export default function ProjectsPage() {
         <section className={`${wrap} pt-12 sm:pt-16`}>
           <div className="grid gap-x-4 gap-y-14 sm:grid-cols-2">
             {petProjects.map((p) => (
-              <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" className="group flex flex-col gap-2.5">
+              <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" className="group row-span-5 grid grid-rows-subgrid gap-y-2.5">
                 <div className="relative aspect-[16/9] overflow-hidden rounded-[14px] bg-[var(--home-soft)]">
                   <SideScene kind={p.scene} poster={p.img} alt={p.alt} sizes="(max-width: 640px) 100vw, 620px" />
                   <span
@@ -41,10 +41,10 @@ export default function ProjectsPage() {
                   </span>
                 </div>
                 <span className="home-label mt-2">{p.name}</span>
-                <h2 className="m-0 text-[20px] font-medium leading-[1.25] tracking-[-0.01em] underline-offset-4 group-hover:underline sm:text-[22px]">
+                <h2 className="t-h2 m-0 underline-offset-4 [text-wrap:balance] group-hover:underline sm:max-w-[82%]">
                   {p.title}
                 </h2>
-                <p className="home-muted m-0 text-[14px] leading-[1.6]">{p.line}</p>
+                <p className="t-body2 home-muted m-0">{p.line}</p>
                 <div className="mt-1 flex flex-wrap gap-1.5">
                   {p.tags.map((t) => (
                     <span key={t} className="home-chip">

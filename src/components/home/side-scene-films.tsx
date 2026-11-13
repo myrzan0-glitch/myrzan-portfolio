@@ -544,10 +544,10 @@ const IZIPASS: Film = {
   accent: UI.chart1,
   steps: [
     { at: 0, text: "Guests register on the event page" },
-    { at: 2.7, text: "Pay the organizer, upload the receipt" },
-    { at: 5.8, text: "The organizer approves in Telegram" },
-    { at: 8.7, text: "Ticket lands in Apple or Google Wallet" },
-    { at: 11.0, text: "Check-in at the door with one scan" }
+    { at: 2.7, text: "Pay the organiser, upload the receipt" },
+    { at: 5.8, text: "The organiser approves in Telegram" },
+    { at: 8.7, text: "The ticket lands in Apple or Google Wallet" },
+    { at: 11.0, text: "Check in at the door with one scan" }
   ],
   actors: [
     // 0 · the event's registration card

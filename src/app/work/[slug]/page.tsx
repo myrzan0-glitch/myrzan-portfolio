@@ -49,7 +49,7 @@ function Figure({ image, priority }: { image: CaseImage; priority?: boolean }) {
           />
         )}
       </div>
-      {image.caption && <figcaption className="home-muted mt-3 text-[13px] leading-[1.5]">{image.caption}</figcaption>}
+      {image.caption && <figcaption className="t-body2 home-muted mt-3">{image.caption}</figcaption>}
     </figure>
   )
 }
@@ -85,14 +85,14 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               </span>
               <span className="home-label">{study.year}</span>
             </div>
-            <h1 className="mt-4 text-[28px] font-medium leading-[1.15] sm:text-[36px]">{study.title}</h1>
-            <p className="home-muted mt-4 text-[16px] leading-[1.6] sm:text-[18px]">{study.summary}</p>
+            <h1 className="t-h1 mt-4">{study.title}</h1>
+            <p className="t-body1 home-muted mt-4">{study.summary}</p>
 
             <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-[var(--home-line)] pt-6 sm:grid-cols-[1.7fr_1fr_1fr_1fr]">
               {study.meta.map((m) => (
                 <div key={m.label}>
                   <dt className="home-label">{m.label}</dt>
-                  <dd className="m-0 mt-1.5 text-[14px] leading-[1.45]">{m.value}</dd>
+                  <dd className="t-body2 m-0 mt-1.5">{m.value}</dd>
                 </div>
               ))}
             </dl>
@@ -107,8 +107,8 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-[var(--home-line)] bg-[var(--home-line)] sm:grid-cols-4">
             {study.outcomes.map((o) => (
               <div key={o.label} className="bg-[var(--home-bg)] p-4">
-                <div className="text-[22px] font-medium leading-none tracking-[-0.02em] sm:text-[24px]">{o.value}</div>
-                <div className="home-muted mt-2 text-[12px] leading-[1.4]">{o.label}</div>
+                <div className="t-h2 leading-none">{o.value}</div>
+                <div className="t-body2 home-muted mt-2">{o.label}</div>
               </div>
             ))}
           </div>
@@ -121,16 +121,16 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                 <div className="home-rule">
                   <span className="home-label">{s.label}</span>
                 </div>
-                <h2 className="mt-5 text-[21px] font-medium leading-[1.3] sm:text-[24px]">{s.title}</h2>
+                <h2 className="t-h2 mt-5">{s.title}</h2>
                 {s.body.map((p) => (
-                  <p key={p.slice(0, 32)} className="home-muted mt-4 text-[16px] leading-[1.65]">
+                  <p key={p.slice(0, 32)} className="t-body1 home-muted mt-4">
                     {p}
                   </p>
                 ))}
                 {s.points && (
                   <ul className="mt-5 flex list-none flex-col gap-2.5 p-0">
                     {s.points.map((pt) => (
-                      <li key={pt} className="flex gap-3 text-[15px] leading-[1.55]">
+                      <li key={pt} className="t-body1 flex gap-3">
                         <span className="mt-[9px] h-[5px] w-[5px] shrink-0 rounded-full bg-[var(--home-faint)]" />
                         {pt}
                       </li>
@@ -148,7 +148,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         ))}
 
         <section className={`${column} mt-16 sm:mt-20`}>
-          <blockquote className="m-0 border-l-2 border-[var(--home-fg)] pl-5 text-[19px] leading-[1.5] sm:text-[21px]">
+          <blockquote className="t-h2 m-0 border-l-2 border-[var(--home-fg)] pl-5">
             {study.takeaway}
           </blockquote>
         </section>
@@ -160,7 +160,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           >
             <span className="flex flex-col gap-1.5">
               <span className="home-label">Next · {next.company}</span>
-              <span className="text-[17px] font-medium leading-[1.35] sm:text-[19px]">{next.title}</span>
+              <span className="t-h2">{next.title}</span>
             </span>
             <ArrowRight
               className="h-[18px] w-[18px] shrink-0 transition-transform group-hover:translate-x-1"

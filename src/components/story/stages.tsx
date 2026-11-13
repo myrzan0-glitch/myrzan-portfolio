@@ -37,7 +37,7 @@ function Lightbox({ shots, onClose }: { shots: Shot[]; onClose: () => void }) {
           ref={close}
           type="button"
           onClick={onClose}
-          className="rounded-full bg-[var(--home-panel)] px-3.5 py-2 text-[13px] font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="rounded-full bg-[var(--home-panel)] px-3.5 py-2 t-body2 font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           Close
         </button>
@@ -89,7 +89,7 @@ function Zoom({ shots }: { shots: Shot[] }) {
 }
 
 const panel = "group relative overflow-hidden rounded-[14px] bg-[var(--home-panel)]"
-const tag = "absolute left-0 top-0 whitespace-nowrap rounded-full px-2 py-[3px] font-[family-name:var(--font-mono)] text-[9.5px] tracking-[0.03em] sm:text-[10.5px]"
+const tag = "absolute left-0 top-0 whitespace-nowrap rounded-full px-2 py-[3px] t-label tracking-[0.03em]"
 
 /** The hero: three still iPhones side by side, front-facing; the magnifier opens the screens. */
 export function HeroStage({ screens, label }: { screens: Shot[]; label: string }) {
@@ -259,7 +259,7 @@ export function RowStage({ phones, label, toggle: toggleLabel, wide }: { phones:
           type="button"
           aria-pressed={marked}
           onClick={() => setMarked(!marked)}
-          className="mx-auto mt-3 flex items-center gap-2 rounded-full bg-[var(--home-bg)] py-1.5 pl-1.5 pr-3 text-[12px] font-medium shadow-[0_0_0_1px_var(--home-line)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="mx-auto mt-3 flex items-center gap-2 rounded-full bg-[var(--home-bg)] py-1.5 pl-1.5 pr-3 t-body2 font-medium shadow-[0_0_0_1px_var(--home-line)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           <span aria-hidden="true" className={`relative h-4 w-[26px] rounded-full transition-colors ${marked ? "bg-[var(--story-mark)]" : "bg-[var(--home-line)]"}`}>
             <span
