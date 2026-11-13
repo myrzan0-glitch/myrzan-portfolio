@@ -103,7 +103,7 @@
   }
 
   .skip-link {
-    @apply absolute left-4 top-4 z-50 -translate-y-16 rounded-full bg-foreground px-4 py-2 text-xs font-semibold uppercase tracking-widest text-background shadow-md transition-transform focus:translate-y-0;
+    @apply absolute left-4 top-4 z-50 -translate-y-16 rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background shadow-md transition-transform focus:translate-y-0;
   }
 }
 
@@ -175,13 +175,50 @@
     transition: background-color 400ms ease, color 400ms ease;
   }
 
-  .home-root h1,
-  .home-root h2,
-  .home-root h3,
-  .home-display {
+  /* Type scale. Every piece of site text uses one of these five styles:
+     two headings, two body sizes, and the small mono label. */
+  .t-h1,
+  .t-h2 {
     font-family: var(--font-display), ui-serif, Georgia, serif;
     font-weight: 400;
     letter-spacing: -0.005em;
+  }
+  .t-h1 {
+    font-size: 40px;
+    line-height: 1.04;
+  }
+  .t-h2 {
+    font-size: 27px;
+    line-height: 1.12;
+  }
+  .t-body1,
+  .t-body2 {
+    font-family: var(--font-body), ui-sans-serif, system-ui;
+    letter-spacing: 0;
+  }
+  .t-body1 {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .t-body2 {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .t-label {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  @media (min-width: 640px) {
+    .t-h1 {
+      font-size: 54px;
+    }
+    .t-h2 {
+      font-size: 32px;
+    }
+    .t-body1 {
+      font-size: 17px;
+    }
   }
 
   .home-label {
@@ -215,7 +252,7 @@
     background: var(--home-soft);
     color: var(--home-fg);
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   /* Work fan: tilted cards that straighten when you hover the group */
@@ -497,6 +534,16 @@
   top: 50% !important;
   right: calc(100% + 12px);
   transform: translateY(-50%);
+}
+/* On phones the long tags wrap instead of running off the left edge. */
+@media (max-width: 639px) {
+  .still-tag {
+    width: max-content;
+    max-width: 130px;
+    white-space: normal;
+    text-align: right;
+    border-radius: 8px;
+  }
 }
 /* The hero row has no labels above its phones. */
 .still-hero {

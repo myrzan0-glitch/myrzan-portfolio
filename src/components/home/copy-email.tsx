@@ -31,7 +31,7 @@ export function CopyEmail() {
   }, [copy])
 
   return (
-    <span className="home-muted inline-flex items-center gap-1.5 text-sm" aria-live="polite">
+    <span className="t-body2 home-muted inline-flex items-center gap-1.5" aria-live="polite">
       {copied ? (
         <span className="text-[var(--home-green)]">Email copied</span>
       ) : (

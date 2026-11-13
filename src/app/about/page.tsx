@@ -23,8 +23,8 @@ export default function AboutPage() {
         {/* Who I am on the left, in view while the photos, the book and what I'm doing now scroll by. */}
         <section className={`${wrap} grid gap-10 pt-14 sm:pt-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12`}>
           <div className="max-w-[560px] lg:sticky lg:top-8 lg:self-start">
-            <h1 className="m-0 text-[41px] leading-[1.05] sm:text-[49px]">Hey, I&rsquo;m Myrzan!</h1>
-            <div className="home-muted mt-6 flex flex-col gap-4 text-[15px] leading-[1.65] sm:text-base">
+            <h1 className="t-h1 m-0">Hey, I&rsquo;m Myrzan!</h1>
+            <div className="t-body1 home-muted mt-6 flex flex-col gap-4">
               <p className="m-0">
                 I&rsquo;m a product designer who owns problems end to end, from discovery to shipped code. For six years
                 I&rsquo;ve led mobile, fintech and e-commerce products used by millions of people every day.
@@ -86,9 +86,9 @@ export default function AboutPage() {
                 height={360}
                 className="mx-auto my-6 h-[168px] w-[111px] rounded-[4px] object-cover shadow-[0_18px_30px_-12px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:-rotate-2"
               />
-              <span className="text-[15px]">Competing Against Luck</span>
-              <span className="home-label mt-1 !text-[10px]">Clayton M. Christensen</span>
-              <span className="home-muted mt-2 text-[13px] leading-[1.5]">
+              <span className="t-body1">Competing Against Luck</span>
+              <span className="home-label mt-1">Clayton M. Christensen</span>
+              <span className="t-body2 home-muted mt-2">
                 People don&rsquo;t buy products, they hire them to make progress. It&rsquo;s why I start every project with
                 the customer&rsquo;s job, not the feature list.
               </span>
@@ -96,7 +96,7 @@ export default function AboutPage() {
 
             <div className={`${card} flex flex-col`}>
               <span className="home-label">Now</span>
-              <p className="m-0 mt-6 text-[15px] leading-[1.5]">
+              <p className="t-body1 m-0 mt-6">
                 Designing the front-office system of the{" "}
                 <a
                   href="https://nbu.uz"
@@ -108,11 +108,11 @@ export default function AboutPage() {
                 </a>
                 .
               </p>
-              <p className="home-muted m-0 mt-3 text-[13px] leading-[1.5]">
+              <p className="t-body2 home-muted m-0 mt-3">
                 Senior Product Designer, via Expera. Prototyping with AI through a Storybook MCP I built.
               </p>
               <div className="mt-auto flex flex-col gap-2 pt-8">
-                <span className="inline-flex items-center gap-2 text-[13px]">
+                <span className="t-body2 inline-flex items-center gap-2">
                   <span className="h-[7px] w-[7px] rounded-full bg-[var(--home-green)] shadow-[0_0_0_4px_var(--home-green-soft)]" />
                   <span className="home-muted">Open to product design roles in Big Tech</span>
                 </span>
@@ -132,8 +132,8 @@ export default function AboutPage() {
               <div key={r.n} className="grid grid-cols-[32px_1fr] gap-3 py-4">
                 <span className="home-label pt-[3px]">{r.n}</span>
                 <div>
-                  <p className="m-0 text-[15px]">{r.t}</p>
-                  <p className="home-muted mt-1 text-[13px] leading-[1.55]">{r.b}</p>
+                  <p className="t-body1 m-0">{r.t}</p>
+                  <p className="t-body2 home-muted mt-1">{r.b}</p>
                 </div>
               </div>
             ))}
@@ -146,7 +146,7 @@ export default function AboutPage() {
             </div>
             {jobs.map((j) => (
               <div key={j.company} className="border-b border-[var(--home-line)] py-5">
-                <div className="flex items-baseline justify-between gap-4 font-[family-name:var(--font-mono)] text-[13px]">
+                <div className="t-body2 flex items-baseline justify-between gap-4 font-[family-name:var(--font-mono)]">
                   <span>
                     {j.url ? (
                       <a
@@ -166,8 +166,8 @@ export default function AboutPage() {
                   </span>
                   <span className="shrink-0 text-[var(--home-faint)]">{j.years}</span>
                 </div>
-                <p className="m-0 mt-2 text-[13px] leading-[1.5] text-[var(--home-faint)]">{j.about}</p>
-                <p className="home-muted m-0 mt-1.5 text-[14px] leading-[1.55]">{j.line}</p>
+                <p className="t-body2 m-0 mt-2 text-[var(--home-faint)]">{j.about}</p>
+                <p className="t-body2 home-muted m-0 mt-1.5">{j.line}</p>
               </div>
             ))}
           </div>

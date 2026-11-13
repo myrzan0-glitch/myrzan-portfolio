@@ -20,8 +20,8 @@ export default function ProjectsPage() {
         <SiteNav className={wrap} />
 
         <header className={`${wrap} pt-14 sm:pt-20`}>
-          <h1 className="m-0 text-[41px] leading-[1.05] sm:text-[49px]">Pet projects</h1>
-          <p className="home-muted m-0 mt-4 max-w-[560px] text-[15px] leading-[1.65] sm:text-base">
+          <h1 className="t-h1 m-0">Pet projects</h1>
+          <p className="t-body1 home-muted m-0 mt-4 max-w-[560px]">
             Products I designed and built myself, from the first sketch to production.
           </p>
         </header>
@@ -41,10 +41,10 @@ export default function ProjectsPage() {
                   </span>
                 </div>
                 <span className="home-label mt-2">{p.name}</span>
-                <h2 className="m-0 text-[24px] leading-[1.15] underline-offset-4 group-hover:underline sm:text-[27px]">
+                <h2 className="t-h2 m-0 underline-offset-4 group-hover:underline">
                   {p.title}
                 </h2>
-                <p className="home-muted m-0 text-[14px] leading-[1.6]">{p.line}</p>
+                <p className="t-body2 home-muted m-0">{p.line}</p>
                 <div className="mt-1 flex flex-wrap gap-1.5">
                   {p.tags.map((t) => (
                     <span key={t} className="home-chip">

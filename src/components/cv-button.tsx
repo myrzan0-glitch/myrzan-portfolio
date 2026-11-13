@@ -26,7 +26,7 @@ export function CvButton({ className = "" }: { className?: string }) {
       onPointerLeave={() => setWarp(false)}
       onFocus={() => setWarp(true)}
       onBlur={() => setWarp(false)}
-      className={`cv-spark relative inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[var(--home-fg)] px-5 text-sm font-medium text-[var(--home-bg)] transition-[transform,box-shadow] duration-300 hover:-translate-y-px hover:shadow-[0_0_0_4px_var(--home-ring),0_10px_30px_-10px_var(--home-glow)] focus-visible:outline-none focus-visible:shadow-[0_0_0_4px_var(--home-ring)] ${className}`}
+      className={`cv-spark relative inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[var(--home-fg)] px-5 t-body2 font-medium text-[var(--home-bg)] transition-[transform,box-shadow] duration-300 hover:-translate-y-px hover:shadow-[0_0_0_4px_var(--home-ring),0_10px_30px_-10px_var(--home-glow)] focus-visible:outline-none focus-visible:shadow-[0_0_0_4px_var(--home-ring)] ${className}`}
     >
       {SPARKS.map((spark, i) => (
         <span
