@@ -53,6 +53,7 @@ function Lightbox({ shots, onClose }: { shots: Shot[]; onClose: () => void }) {
             <img
               src={s.screen}
               alt={s.label ?? ""}
+              data-screen
               className="h-[calc(100%-30px)] max-h-[844px] w-auto shadow-[0_0_0_1px_var(--home-line),0_20px_50px_-20px_rgba(0,0,0,0.4)] [border-radius:11.8%/5.45%]"
             />
             {s.label && <figcaption className="home-label">{s.label}</figcaption>}
