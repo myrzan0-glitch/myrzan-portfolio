@@ -297,7 +297,7 @@ export const caseStudies: CaseStudy[] = [
         {
           title: "A project page that asks for the next step",
           body: [
-            "The old project page was a brochure: photos, a description and a floating phone icon. The new one puts the facts buyers ask first right under the name: completion date, address and the walk to the nearest landmark.",
+            "The old project page was a brochure: photos, a description and a floating phone icon. The new one puts the facts buyers ask about first right under the name: completion date, address and the walk to the nearest landmark.",
             "Then it gives two ways forward. **Leave a request** sits on the photo, for buyers ready to talk to sales. **Choose a property** opens this project’s listings, for buyers who want to keep looking."
           ],
           visual: {
@@ -322,14 +322,14 @@ export const caseStudies: CaseStudy[] = [
         {
           title: "A listing that tells you where you are",
           body: [
-            "The old listing put every filter behind one button and switched views with unlabelled icons. The new one shows how many layouts match, **32,221**, uses the same chips as the home screen, and names its views: cards, list, and a floor-by-floor grid.",
+            "The old listing put every filter behind one button and switched views with unlabelled icons. The new one shows how many layouts match, **32,221**, uses the same chips as the home screen, and names its views: cards, list and a floor-by-floor grid.",
             "Price, Project and Rooms come first, the listing filters people used most. The pattern is the same as on the home screen, so buyers learn it once."
           ],
           visual: {
             kind: "row",
             label: "The old listing next to the new one, with the match count, chips and labelled views highlighted",
             toggle: "Show changes",
-            note: "Same chips as home, a match count, and views with names.",
+            note: "Same chips as home, a match count and views with names.",
             phones: [
               { screen: bi("b-listing"), label: "Before", bands: [{ y: [185, 227], problem: true }] },
               {
@@ -410,7 +410,7 @@ export const caseStudies: CaseStudy[] = [
     year: "2025",
     title: "Ōzen: a Web3 music player that feels like Telegram",
     summary:
-      "Designing a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
+      "I designed a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
     hero: {
       src: "/work/ozen-telegram-music/showcase.webp",
       alt: "Three Ōzen screens on iPhones: referred friends, the top chart with Claim 480, and a collection that earns",
@@ -419,7 +419,7 @@ export const caseStudies: CaseStudy[] = [
     },
     story: {
       subtitle:
-        "Designing a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
+        "I designed a listen-to-earn music Mini App that reached 5,000 active users in its first week, without a single tutorial screen.",
       heroScreens: [
         { screen: ozen("t2"), label: "Friends" },
         { screen: ozen("m3"), label: "Claim" },
@@ -440,7 +440,7 @@ export const caseStudies: CaseStudy[] = [
           title: "Earning had to be as easy as pressing play",
           body: [
             "Ōzen distributes music and video. Its founders watched tap-to-earn games like Hamster Kombat pull millions of people into crypto through Telegram, and wanted that pull for music: you earn coins for listening, then back the tracks you believe in.",
-            "Most of the people Ōzen wanted had never held a token. So the real brief wasn’t “build a crypto app”. It was **make a new money habit feel like something they already do every day.**"
+            "Most of the people Ōzen wanted had never held a token. So the real brief wasn’t “build a crypto app”. It was **to make a new money habit feel like something they already do every day.**"
           ],
           visual: {
             kind: "economy",
@@ -466,7 +466,7 @@ export const caseStudies: CaseStudy[] = [
         {
           title: "Copy habits, not features",
           body: [
-            "I went through the Mini Apps that had gone viral and the big music apps, Spotify, Apple Music and Yandex Music. The viral ones had nothing clever in their UI. They looked and behaved exactly like Telegram, so nobody had to learn anything before the fun part.",
+            "I went through the Mini Apps that had gone viral and the big music apps: Spotify, Apple Music and Yandex Music. The viral ones had nothing clever in their UI. They looked and behaved exactly like Telegram, so nobody had to learn anything before the fun part.",
             "That became the rule for the beta: **if Telegram has a component for it, use Telegram’s.** Header, search, list cells, buttons and tabs all come straight from the Mini Apps kit. Only three things are new: the coin balance, the farming button and the mini player. That’s everything a first-time user has to learn."
           ],
           visual: {
@@ -514,7 +514,7 @@ export const caseStudies: CaseStudy[] = [
           wide: true,
           visual: {
             kind: "row",
-            label: "An empty collection that explains how it earns, the add sheet with its 1,000 coin price, and the collection earning coins",
+            label: "An empty collection that explains how it earns, the add sheet with its 1,000-coin price, and the collection earning coins",
             note: "Explain first, show the price before the tap, then show what came back.",
             phones: [
               { screen: ozen("p2"), label: "1 · Empty collection", short: "1 · Empty", on: true },
@@ -615,7 +615,7 @@ export const caseStudies: CaseStudy[] = [
           title: "A loop that punished people for applying",
           body: [
             "Technodom is Kazakhstan’s largest electronics retailer, and a big share of what it sells is bought on credit or in instalments, right at checkout. That flow sits directly on the revenue line.",
-            "It worked one bank at a time. Pick a bank, type your details, get sent to the bank, wait, get rejected, start again with the next one. **Every attempt cost the shopper their details again, and nobody could tell them which bank would say yes.** Many gave up at the very last step of the purchase."
+            "It worked one bank at a time. Pick a bank, type your details, get sent to the bank, wait, get rejected, start again with the next one. **Every attempt meant typing their details again, and nobody could tell them which bank would say yes.** Many gave up at the very last step of the purchase."
           ],
           visual: {
             kind: "attempts",
@@ -700,7 +700,7 @@ export const caseStudies: CaseStudy[] = [
           title: "Every bank answers on one screen",
           body: [
             "Offers arrive as each bank responds, and each one wears its status: **Approved**, **Calculating** or **Refused**. Nobody stares at a spinner wondering if anything is happening.",
-            "Every card shows the same three facts, the bank, the product and the monthly payment, so offers compare at a glance. Pick one, tap Continue, and the shopper is handed to that bank to finish."
+            "Every card shows the same three facts: the bank, the product and the monthly payment. Offers compare at a glance. Pick one, tap Continue, and the shopper is handed to that bank to finish."
           ],
           wide: true,
           visual: {
@@ -736,7 +736,7 @@ export const caseStudies: CaseStudy[] = [
           title: "A “no” is never a dead end",
           body: [
             "In the old flow a rejection ended the purchase. Now every refusal says what happened and what to do next, on the same screen.",
-            "If a bank can only lend part of the price, the screen says how much. If it refuses, **the other banks’ approved offers are right below it**, with “Back to cart” as the fallback. And when the bank sends a reason, the shopper sees it in plain words: an overdue debt, the age limit, or a request to try a smaller amount."
+            "If a bank can only lend part of the price, the screen says how much. If it refuses, **the other banks’ approved offers are right below it**, with “Back to cart” as the fallback. And when the bank sends a reason, the shopper sees it in plain words: an overdue debt, the age limit or a request to try a smaller amount."
           ],
           wide: true,
           visual: {
@@ -838,7 +838,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Constraints",
         title: "No engineers, one sales manager, existing tools only",
         body: [
-          "The sales office lent us one manager for the experiment, who already had a corporate Microsoft Teams account. That set the shape of the solution: we didn’t need to build calling, only a way for buyers to book it.",
+          "The sales office lent us one manager for the experiment, and they already had a corporate Microsoft Teams account. That set the shape of the solution: we didn’t need to build calling, only a way for buyers to book it.",
           "I compared booking tools and chose Calendly because it integrates with Teams out of the box, so every booking created a call link automatically."
         ]
       },
@@ -860,14 +860,14 @@ export const caseStudies: CaseStudy[] = [
         title: "$100K from a $500 experiment",
         body: [
           "The PM and I launched it in one week and measured after a month. Four buyers requested a video call, and one of them bought an apartment for about 50 million KZT, roughly $100,000. The only cost was the sales manager’s monthly salary, 250,000 KZT or about $500.",
-          "That sale did what a slide deck couldn’t. The business and the product team saw the value, took video consultations into development, and assigned a team to build it properly."
+          "That sale did what a slide deck couldn’t. The business and the product team saw the value, took video consultations into development and assigned a team to build it properly."
         ]
       },
       {
         label: "Reflection",
         title: "What I’d do differently",
         body: [
-          "Four requests is a small sample, and one sale proves potential, not a rate. With more time I would have run the pilot longer, tracked requests by entry point, and compared against phone-call conversion, so the product team could size the opportunity rather than just believe in it."
+          "Four requests is a small sample, and one sale proves potential, not a rate. With more time I would have run the pilot longer, tracked requests by entry point and compared it with phone-call conversion, so the product team could size the opportunity rather than just believe in it."
         ]
       }
     ],
@@ -949,7 +949,7 @@ export const caseStudies: CaseStudy[] = [
     year: "2025",
     title: "Rebuilt the design system around QA failures and cut design-related QA cycles by 83%",
     summary:
-      "The product had outgrown its components. I rebuilt a studio-made UI kit into a design system of 30+ components on semantic tokens, starting with the 12 patterns causing the most QA tickets, made it WCAG 2.2 compliant, and shipped dark mode as a first-class theme.",
+      "The product had outgrown its components. I rebuilt a studio-made UI kit into a design system of 30+ components on semantic tokens, starting with the 12 patterns causing the most QA tickets, made it WCAG 2.2 compliant and shipped dark mode as a first-class theme.",
     meta: [
       { label: "My role", value: "Led the rebuild: audit, tokens, components, dark mode" },
       { label: "Team", value: "Designers, front-end engineers, QA" },
@@ -982,7 +982,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Approach",
         title: "Prioritise by QA pain, not by what looks messy",
         body: [
-          "I audited the full component library and ranked components by QA ticket volume. The 12 highest-friction patterns went first, then the rest of the 30+ components. I rebuilt them with semantic tokens, documented every state, and checked contrast against WCAG 2.2.",
+          "I audited the full component library and ranked components by QA ticket volume. The 12 highest-friction patterns went first, then the rest of the 30+ components. I rebuilt them with semantic tokens, documented every state and checked contrast against WCAG 2.2.",
           "Dark mode wasn’t a skin. I designed the token architecture so light and dark are both first-class modes, which meant the whole product could switch without new QA work."
         ],
         points: [
@@ -996,7 +996,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Outcome",
         title: "Fewer defects, faster releases",
         body: [
-          "Design-related engineering QA cycles dropped 83%. A whole category of recurring visual bugs disappeared, and dark mode shipped product-wide without extra QA overhead."
+          "Design-related engineering QA cycles dropped by 83%. A whole category of recurring visual bugs disappeared, and dark mode shipped product-wide without extra QA overhead."
         ]
       }
     ],
@@ -1008,7 +1008,7 @@ export const caseStudies: CaseStudy[] = [
     year: "2026",
     title: "Designed and demoed an AI-personalised re-engagement campaign in a single day",
     summary:
-      "BI Group needed to bring dormant users back with something that felt personal, not generic. I designed a scratch card where each reward is generated from the user’s preferences and browsing, prototyped it, and demoed it to business owners that afternoon.",
+      "BI Group needed to bring dormant users back with something that felt personal, not generic. I designed a scratch card where each reward is generated from the user’s preferences and browsing, prototyped it and demoed it to business owners that afternoon.",
     meta: [
       { label: "My role", value: "Designer and builder: mechanic, AI personalisation, prototype, demo" },
       { label: "Team", value: "My initiative, presented to business owners" },
@@ -1144,7 +1144,7 @@ export const caseStudies: CaseStudy[] = [
         }
       }
     ],
-    takeaway: "Research earns its keep when it finds the problem nobody was testing for. We came to reorder steps and left fixing a button."
+    takeaway: "Research earns its keep when it finds the problem nobody was testing for. We came to reorder steps and left with a button to fix."
   },
   {
     slug: "beeline-design-system",
@@ -1176,7 +1176,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Problem",
         title: "Design porridge",
         body: [
-          "Main page, listings, checkout: everything was in a single Figma file with no hierarchy, no reusable elements and no layout logic. Designers couldn’t find files, and developers couldn’t get specs."
+          "Main page, listings, checkout: everything was in a single Figma file with no hierarchy, no reusable elements and no layout logic. Designers couldn’t find screens, and developers couldn’t get specs."
         ],
         image: {
           src: "/work/beeline-design-system/before-file.webp",

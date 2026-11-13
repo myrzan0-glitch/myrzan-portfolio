@@ -8,7 +8,7 @@ import { jobs, photos, rules } from "@/content/profile"
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Product designer in London: how I work, where I’ve worked, and life outside work."
+  description: "Product designer in London: how I work, where I’ve worked and life outside work."
 }
 
 const wrap = grid
@@ -89,7 +89,7 @@ export default function AboutPage() {
               <span className="t-body1">Competing Against Luck</span>
               <span className="home-label mt-1">Clayton M. Christensen</span>
               <span className="t-body2 home-muted mt-2">
-                People don&rsquo;t buy products, they hire them to make progress. It&rsquo;s why I start every project with
+                People don&rsquo;t buy products; they hire them to make progress. It&rsquo;s why I start every project with
                 the customer&rsquo;s job, not the feature list.
               </span>
             </a>

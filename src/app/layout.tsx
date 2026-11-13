@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: "%s | Myrzan Izimbetov"
   },
   description:
-    "Results-driven Product Designer focused on UX and UI. +$4M in MRR impact and +37% pageview growth across mobile, desktop, and web platforms.",
+    "Results-driven Product Designer focused on UX and UI. +$4M in MRR impact and +37% pageview growth across mobile, desktop and web platforms.",
   openGraph: {
     title: "Myrzan Izimbetov — Product Designer",
     description:
