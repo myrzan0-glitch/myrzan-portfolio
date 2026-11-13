@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Instrument_Serif, Inter, Geist_Mono } from "next/font/google"
+import { Instrument_Serif, Geist, Geist_Mono } from "next/font/google"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 
@@ -13,7 +13,7 @@ const display = Instrument_Serif({
   variable: "--font-display"
 })
 
-const body = Inter({
+const body = Geist({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-body"
