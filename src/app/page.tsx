@@ -14,7 +14,7 @@ const featured: { slug: string; client: string; year: string; title: string; sum
     slug: "bi-mobile-search",
     client: "BI Group",
     year: "2025",
-    title: "Redesigned mobile search to a 54% conversion rate in six weeks",
+    title: "Took mobile search to a 54% conversion rate in six weeks",
     summary: "Three filters for 2M+ monthly buyers, split-tested before code",
     cover: "bi",
     light: true
@@ -73,7 +73,7 @@ export default function HomePage() {
               <div className="max-w-[640px]">
                 <h1 className="t-body1 m-0 font-medium">Myrzan Izimbetov</h1>
                 <p className="t-body1 home-muted mt-0.5">Product Designer · London</p>
-                <p className="t-h1 mt-7">
+                <p className="t-h2 mt-7">
                   I own problems end to end, from discovery to shipped code.
                 </p>
                 <p className="t-body1 home-muted mt-5">

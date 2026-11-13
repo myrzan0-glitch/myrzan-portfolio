@@ -1074,7 +1074,7 @@ export const caseStudies: CaseStudy[] = [
       { label: "Platform", value: "Shop Beeline, mobile checkout" }
     ],
     outcomes: [
-      { value: "86%", label: "preferred choosing the offer first" },
+      { value: "87%", label: "preferred choosing the offer first" },
       { value: "17 of 23", label: "didn’t understand how to finish a step" },
       { value: "2:43 → 1:37", label: "average time with step-specific buttons" },
       { value: "5", label: "competitor checkouts benchmarked" }
@@ -1107,7 +1107,7 @@ export const caseStudies: CaseStudy[] = [
         label: "Finding 1",
         title: "Buyers want to pick the offer first",
         body: [
-          "20 of 23 people, 86%, preferred choosing the payment offer before delivery. Only one preferred delivery first. As one respondent put it: “Suddenly I won’t find anything suitable, and then I won’t need delivery.”",
+          "20 of 23 people, 87%, preferred choosing the payment offer before delivery. Only one preferred delivery first. As one respondent put it: “Suddenly I won’t find anything suitable, and then I won’t need delivery.”",
           "Recommendation: put offer selection before the delivery method."
         ]
       },
