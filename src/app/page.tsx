@@ -71,12 +71,12 @@ export default function HomePage() {
           <FadeIn>
             <div className={`${column} pb-4 pt-16 sm:pt-24`}>
               <div className="max-w-[640px]">
-                <h1 className="m-0 text-[17px] font-medium">Myrzan Izimbetov</h1>
+                <h1 className="m-0 text-[21px] leading-[1.1] sm:text-[24px]">Myrzan Izimbetov</h1>
                 <p className="home-muted mt-0.5 text-[15px]">Product Designer · London</p>
-                <p className="mt-7 text-[19px] leading-[1.5] sm:text-[21px]">
+                <p className="home-display mt-7 text-[28px] leading-[1.12] sm:text-[38px] sm:leading-[1.08]">
                   I own problems end to end, from discovery to shipped code.
                 </p>
-                <p className="home-muted mt-2.5 text-[16px] leading-[1.55] sm:text-[21px] sm:leading-[1.5]">
+                <p className="home-muted mt-4 text-[16px] leading-[1.55] sm:text-[21px] sm:leading-[1.5]">
                   For six years I&apos;ve led mobile, fintech and e-commerce products used by millions of people every day. I
                   start with context: where the business is going and why customers choose us. Then I research, design and
                   prototype in production until the metric moves.
@@ -128,7 +128,7 @@ export default function HomePage() {
                 <span className="home-label mt-2">
                   Case study · {w.year} · {w.client}
                 </span>
-                <h2 className="m-0 text-[20px] font-medium leading-[1.25] tracking-[-0.01em] underline-offset-4 group-hover:underline sm:text-[22px]">
+                <h2 className="m-0 text-[24px] leading-[1.15] underline-offset-4 group-hover:underline sm:text-[27px]">
                   {w.title}
                 </h2>
                 <p className="home-muted m-0 font-[family-name:var(--font-mono)] text-[13px] leading-[1.5]">{w.summary}</p>

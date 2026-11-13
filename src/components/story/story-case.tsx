@@ -45,7 +45,7 @@ function Text({ n, chapter, wide }: { n: number; chapter: Chapter; wide?: boolea
   return (
     <div className={`min-w-0 ${wide ? "max-w-[620px]" : "md:sticky md:top-8"}`}>
       <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--home-faint)]">({n})</span>
-      <h2 className="mt-2 text-[24px] font-medium leading-[1.15] tracking-[-0.02em] [text-wrap:balance] sm:text-[30px]">{chapter.title}</h2>
+      <h2 className="mt-2 text-[29px] leading-[1.05] [text-wrap:balance] sm:text-[37px]">{chapter.title}</h2>
       {chapter.body.map((p) => (
         <p key={p.slice(0, 32)} className="home-muted mt-3.5 text-[15px] leading-[1.6]">
           <Rich text={p} />
@@ -308,7 +308,7 @@ export function StoryCase({ study, next }: { study: Study; next: CaseStudy }) {
           <span className="home-label">
             {study.company} · {study.year}
           </span>
-          <h1 className="mx-auto mt-4 max-w-[760px] text-[32px] font-medium leading-[1.08] tracking-[-0.02em] [text-wrap:balance] sm:text-[48px]">
+          <h1 className="mx-auto mt-4 max-w-[760px] text-[39px] leading-[1.02] [text-wrap:balance] sm:text-[58px]">
             {study.title}
           </h1>
           <p className="home-muted mx-auto mt-4 max-w-[520px] text-[16px] leading-[1.6]">{story.subtitle}</p>

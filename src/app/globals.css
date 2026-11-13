@@ -76,7 +76,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.005em;
   }
 
   ::selection {
@@ -177,9 +177,11 @@
 
   .home-root h1,
   .home-root h2,
-  .home-root h3 {
-    font-family: var(--font-body), ui-sans-serif, system-ui;
-    letter-spacing: -0.015em;
+  .home-root h3,
+  .home-display {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.005em;
   }
 
   .home-label {

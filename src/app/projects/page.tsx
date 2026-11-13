@@ -20,7 +20,7 @@ export default function ProjectsPage() {
         <SiteNav className={wrap} />
 
         <header className={`${wrap} pt-14 sm:pt-20`}>
-          <h1 className="m-0 text-[34px] font-medium leading-[1.1] tracking-[-0.025em] sm:text-[40px]">Pet projects</h1>
+          <h1 className="m-0 text-[41px] leading-[1.05] sm:text-[49px]">Pet projects</h1>
           <p className="home-muted m-0 mt-4 max-w-[560px] text-[15px] leading-[1.65] sm:text-base">
             Products I designed and built myself, from the first sketch to production.
           </p>
@@ -41,7 +41,7 @@ export default function ProjectsPage() {
                   </span>
                 </div>
                 <span className="home-label mt-2">{p.name}</span>
-                <h2 className="m-0 text-[20px] font-medium leading-[1.25] tracking-[-0.01em] underline-offset-4 group-hover:underline sm:text-[22px]">
+                <h2 className="m-0 text-[24px] leading-[1.15] underline-offset-4 group-hover:underline sm:text-[27px]">
                   {p.title}
                 </h2>
                 <p className="home-muted m-0 text-[14px] leading-[1.6]">{p.line}</p>

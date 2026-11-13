@@ -85,7 +85,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               </span>
               <span className="home-label">{study.year}</span>
             </div>
-            <h1 className="mt-4 text-[28px] font-medium leading-[1.15] sm:text-[36px]">{study.title}</h1>
+            <h1 className="mt-4 text-[34px] leading-[1.05] sm:text-[44px]">{study.title}</h1>
             <p className="home-muted mt-4 text-[16px] leading-[1.6] sm:text-[18px]">{study.summary}</p>
 
             <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-[var(--home-line)] pt-6 sm:grid-cols-[1.7fr_1fr_1fr_1fr]">
@@ -121,7 +121,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                 <div className="home-rule">
                   <span className="home-label">{s.label}</span>
                 </div>
-                <h2 className="mt-5 text-[21px] font-medium leading-[1.3] sm:text-[24px]">{s.title}</h2>
+                <h2 className="mt-5 text-[26px] leading-[1.15] sm:text-[29px]">{s.title}</h2>
                 {s.body.map((p) => (
                   <p key={p.slice(0, 32)} className="home-muted mt-4 text-[16px] leading-[1.65]">
                     {p}
