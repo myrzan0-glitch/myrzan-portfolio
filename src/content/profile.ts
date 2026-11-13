@@ -80,7 +80,7 @@ export const petProjects = [
     name: "izipass.myrzan.com",
     href: "https://izipass.myrzan.com",
     title: "Paid events with real tickets, without the paperwork",
-    line: "Organisers set up an event in minutes. Guests pay them directly, receipts arrive in Telegram for one-tap approval, tickets go to Apple or Google Wallet, and check-in at the door works offline by scanning QR codes.",
+    line: "Organisers set up an event in minutes. Guests pay them directly, receipts arrive in Telegram for one-tap approval, tickets go to Apple or Google Wallet, and organisers check guests in at the door by scanning QR codes, even offline.",
     tags: ["Next.js", "Postgres", "Telegram bot"],
     img: "/side/izipass-app.webp",
     scene: "izipass" as const,

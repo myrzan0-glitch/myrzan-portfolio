@@ -30,7 +30,7 @@ export default function ProjectsPage() {
         <section className={`${wrap} pt-12 sm:pt-16`}>
           <div className="grid gap-x-4 gap-y-14 sm:grid-cols-2">
             {petProjects.map((p) => (
-              <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" className="group flex flex-col gap-2.5">
+              <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" className="group row-span-5 grid grid-rows-subgrid gap-y-2.5">
                 <div className="relative aspect-[16/9] overflow-hidden rounded-[14px] bg-[var(--home-soft)]">
                   <SideScene kind={p.scene} poster={p.img} alt={p.alt} sizes="(max-width: 640px) 100vw, 620px" />
                   <span
@@ -41,7 +41,7 @@ export default function ProjectsPage() {
                   </span>
                 </div>
                 <span className="home-label mt-2">{p.name}</span>
-                <h2 className="t-h2 m-0 underline-offset-4 group-hover:underline">
+                <h2 className="t-h2 m-0 underline-offset-4 [text-wrap:balance] group-hover:underline sm:max-w-[82%]">
                   {p.title}
                 </h2>
                 <p className="t-body2 home-muted m-0">{p.line}</p>
