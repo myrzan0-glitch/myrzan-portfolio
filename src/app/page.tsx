@@ -113,7 +113,7 @@ export default function HomePage() {
           </div>
           <div className="mt-6 grid gap-x-4 gap-y-12 sm:grid-cols-2">
             {featured.map((w) => (
-              <Link key={w.slug} href={`/work/${w.slug}`} className="group flex flex-col gap-2.5">
+              <Link key={w.slug} href={`/work/${w.slug}`} className="group row-span-4 grid grid-rows-subgrid gap-y-2.5">
                 <div className="relative">
                   <WorkCover kind={w.cover} />
                   <span
@@ -128,7 +128,7 @@ export default function HomePage() {
                 <span className="home-label mt-2">
                   Case study · {w.year} · {w.client}
                 </span>
-                <h2 className="t-h2 m-0 underline-offset-4 group-hover:underline">
+                <h2 className="t-h2 m-0 underline-offset-4 [text-wrap:balance] group-hover:underline sm:max-w-[82%]">
                   {w.title}
                 </h2>
                 <p className="t-body2 home-muted m-0 font-[family-name:var(--font-mono)]">{w.summary}</p>
