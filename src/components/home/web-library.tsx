@@ -22,8 +22,8 @@ const productOf = (i: number) => webProducts.find((p) => p.id === webScreens[i].
 // Deck geometry. Distance is in cards from the front: 0 is the front card, 1 the one behind it.
 // Like a drawer of folders seen from the front: cards stand almost upright, each one showing the
 // top strip of its screen above the card in front, the strips thinning toward the top of the screen.
-const TILT = 14 // how far each card leans back, in degrees
-const DECAY = 0.9 // each strip is this much shorter than the one in front of it
+const TILT = 16 // how far each card leans back, in degrees
+const DECAY = 0.86 // each strip is this much shorter than the one in front of it
 const VISIBLE = 10 // cards shown behind the front one
 const SCROLL_PER_CARD = 0.32 // viewport heights of scrolling per card
 const LAST_FRONT = N // one full turn of the deck: every card comes to the front once
@@ -39,18 +39,18 @@ const depth = (index: number, f: number) => {
 
 /** Card width for the stage: about two fifths of a desktop, nearly the full width of a phone. */
 const cardWidth = (box: { w: number; h: number }) =>
-  box.w < 640 ? box.w * 0.88 : Math.min(box.w * 0.42, (box.h * 0.6 * 16) / 10, 680)
+  box.w < 640 ? box.w * 0.9 : Math.min(box.w * 0.55, (box.h * 0.82 * 16) / 10, 940)
 
 /** Where a card's top edge sits and how big it is, `d` cards behind the front. */
 function place(d: number, box: { w: number; h: number }) {
   const phone = box.w < 640
-  const strip = box.h * (phone ? 0.08 : 0.115)
-  const frontTop = box.h * (phone ? 0.68 : 0.84)
+  const strip = box.h * (phone ? 0.115 : 0.16)
+  const frontTop = box.h * (phone ? 0.72 : 0.8)
   if (d < 0) {
     // Cards in front of the deck drop away below the screen.
     return { top: frontTop - d * box.h * 0.45, scale: 1 - d * 0.03 }
   }
-  return { top: frontTop - (strip * (1 - DECAY ** d)) / (1 - DECAY), scale: Math.max(0.6, 1 - d * 0.03) }
+  return { top: frontTop - (strip * (1 - DECAY ** d)) / (1 - DECAY), scale: Math.max(0.7, 1 - d * 0.024) }
 }
 
 function useBox(ref: React.RefObject<HTMLElement>) {
@@ -136,14 +136,14 @@ function Card({
           onBlur={() => onHover(null)}
           onClick={() => onOpen(index)}
           data-screen
-          className="web-card pointer-events-auto relative block h-full w-full overflow-hidden rounded-[8px] bg-[var(--home-soft)] shadow-[0_0_0_1px_var(--home-line),0_-12px_32px_-12px_rgba(0,0,0,0.35)] outline-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:ring-2 focus-visible:ring-[var(--home-fg)]"
-          style={{ transform: `perspective(900px) rotateX(${open ? 0 : TILT}deg)`, transformOrigin: "50% 100%" }}
+          className="web-card pointer-events-auto relative block h-full w-full overflow-hidden rounded-[3px] bg-[var(--home-soft)] shadow-[0_-14px_36px_-4px_rgba(0,0,0,0.55)] outline-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:ring-2 focus-visible:ring-[var(--home-fg)]"
+          style={{ transform: `perspective(3000px) rotateX(${open ? 0 : TILT}deg)`, transformOrigin: "50% 100%" }}
         >
           <Image
             src={s.src}
             alt=""
             fill
-            sizes="(max-width: 640px) 88vw, 680px"
+            sizes="(max-width: 640px) 90vw, 940px"
             className="object-cover object-top"
             draggable={false}
           />
