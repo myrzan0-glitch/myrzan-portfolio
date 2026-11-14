@@ -3,153 +3,86 @@
 import * as React from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
-import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion"
-import { ArrowLeft, ArrowRight, Search, X, ZoomIn, ZoomOut } from "lucide-react"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { ArrowLeft, ArrowRight, Maximize2, X, ZoomIn, ZoomOut } from "lucide-react"
 
 import { grid } from "@/components/home/grid"
 import { webProducts, webScreens } from "@/content/web-library"
 
 /**
- * Web library: the desktop screens from the web and enterprise products as a deck of cards, tipped
- * back and receding into the page. Scrolling moves through the deck: front cards drop away and
- * new ones come forward from the back. Hovering a card turns it to face you and parts the cards
- * around it; clicking opens it full size in a viewer that zooms in.
+ * Web library: the web and enterprise products as a carousel of MacBooks. The current project
+ * faces you in the middle; its neighbours stand turned away on either side, dimmed and cut by the
+ * edges of the page. Arrows, a swipe or the arrow keys roll it round, endlessly, in either
+ * direction. The middle screen opens full size in a viewer that zooms.
  */
 
 const N = webScreens.length
 const productOf = (i: number) => webProducts.find((p) => p.id === webScreens[i].product)!
 
-// Deck geometry. Distance is in cards from the front: 0 is the front card, 1 the one behind it.
-// Like a drawer of folders seen from the front: cards stand almost upright, each one showing the
-// top strip of its screen above the card in front, the strips thinning toward the top of the screen.
-const TILT = 16 // how far each card leans back, in degrees
-const DECAY = 0.86 // each strip is this much shorter than the one in front of it
-const VISIBLE = 10 // cards shown behind the front one
-const SCROLL_PER_CARD = 0.32 // viewport heights of scrolling per card
-const LAST_FRONT = N // one full turn of the deck: every card comes to the front once
+const projects = webProducts.map((p) => ({ ...p, first: webScreens.findIndex((s) => s.product === p.id) }))
+const P = projects.length
+const HALF = Math.floor(P / 2)
+
+const mod = (a: number, n: number) => ((a % n) + n) % n
 
 /**
- * How far a card sits behind the front for scroll position `f`. The deck goes round: a card that
- * drops off the front, out of sight below the screen, rejoins the back, so the stack stays full.
+ * Each project's place relative to the middle, `active` being the project in the middle. Moving on
+ * (`dir` 1) keeps the spare places on the left, so the project leaving slides out left and the one
+ * arriving comes in from the right; moving back mirrors that.
  */
-const depth = (index: number, f: number) => {
-  const d = (((index - f) % N) + N) % N
-  return d > N - 1.6 ? d - N : d
+function offsets(active: number, dir: 1 | -1) {
+  const low = dir === 1 ? -HALF : -(P - 1 - HALF)
+  return projects.map((_, i) => mod(i - active - low, P) + low)
 }
 
-/** Card width for the stage: about two fifths of a desktop, nearly the full width of a phone. */
-const cardWidth = (box: { w: number; h: number }) =>
-  box.w < 640 ? box.w * 0.9 : Math.min(box.w * 0.55, (box.h * 0.82 * 16) / 10, 940)
-
-/** Where a card's top edge sits and how big it is, `d` cards behind the front. */
-function place(d: number, box: { w: number; h: number }) {
-  const phone = box.w < 640
-  const strip = box.h * (phone ? 0.115 : 0.16)
-  const frontTop = box.h * (phone ? 0.72 : 0.8)
-  if (d < 0) {
-    // Cards in front of the deck drop away below the screen.
-    return { top: frontTop - d * box.h * 0.45, scale: 1 - d * 0.03 }
-  }
-  return { top: frontTop - (strip * (1 - DECAY ** d)) / (1 - DECAY), scale: Math.max(0.7, 1 - d * 0.024) }
+/** Where a MacBook stands for its place: the middle faces you, the neighbours turn away and recede. */
+function pose(o: number, w: number, phone: boolean) {
+  const a = Math.abs(o)
+  const s = Math.sign(o)
+  if (a === 0) return { x: 0, z: 0, rotateY: 0, opacity: 1, shade: 0 }
+  if (a === 1)
+    return { x: s * w * (phone ? 0.9 : 0.86), z: -w * 0.42, rotateY: -s * (phone ? 50 : 42), opacity: 1, shade: 0.55 }
+  return { x: s * w * 1.5, z: -w * 0.95, rotateY: -s * 58, opacity: 0, shade: 0.8 }
 }
 
-function useBox(ref: React.RefObject<HTMLElement>) {
-  const [box, setBox] = React.useState({ w: 1200, h: 800 })
+function useWidth(ref: React.RefObject<HTMLElement>) {
+  const [w, setW] = React.useState(1200)
   React.useEffect(() => {
     const el = ref.current
     if (!el) return
-    const ro = new ResizeObserver(([e]) => setBox({ w: e.contentRect.width, h: e.contentRect.height }))
+    const ro = new ResizeObserver(([e]) => setW(e.contentRect.width))
     ro.observe(el)
     return () => ro.disconnect()
   }, [ref])
-  return box
+  return w
 }
 
-function Card({
-  index,
-  front,
-  box,
-  hovered,
-  onHover,
-  onOpen,
-  onFocusCard
-}: {
-  index: number
-  front: MotionValue<number>
-  box: { w: number; h: number }
-  hovered: number | null
-  onHover: (i: number | null) => void
-  onOpen: (i: number) => void
-  onFocusCard: (i: number) => void
-}) {
-  const s = webScreens[index]
-  const cw = cardWidth(box)
-  const ch = (cw * 10) / 16
-
-  const transform = useTransform(front, (f) => {
-    const { top, scale } = place(depth(index, f), box)
-    return `translate(-50%, ${Math.round(top * 100) / 100}px) scale(${Math.round(scale * 1e4) / 1e4})`
-  })
-  const opacity = useTransform(front, (f) => {
-    const d = depth(index, f)
-    if (d < -1.4) return 0
-    if (d > VISIBLE - 1) return Math.max(0, VISIBLE - d)
-    return 1
-  })
-
-  // While a card is open it faces you at full height. The cards in front of it drop to just below
-  // it, the ones behind close up a little, and the whole deck shifts if needed so the open card
-  // fits on the screen.
-  const zIndex = useTransform(front, (f) => Math.round(200 - depth(index, f) * 10))
-
-  const open = hovered === index
-  let push = 0
-  if (hovered !== null) {
-    const f = front.get()
-    const dh = depth(hovered, f)
-    const d = depth(index, f)
-    const h = place(dh, box)
-    const bottom = h.top + ch * h.scale
-    let shift = 0
-    if (bottom > box.h * 0.94) shift = box.h * 0.94 - bottom
-    if (h.top + shift < box.h * 0.06) shift = box.h * 0.06 - h.top
-    if (d < dh) push = shift + Math.max(0, bottom + 14 - place(dh - 1, box).top)
-    else if (d > dh) push = shift - box.h * 0.015
-    else push = shift
-  }
-
+/**
+ * A MacBook Pro drawn in CSS: a black glass bezel with the notch, the screen, a glass highlight,
+ * and the aluminium base with its thumb groove. Sizes are in percent so it scales with its width.
+ */
+function MacBook({ src, alt, eager }: { src: string; alt: string; eager?: boolean }) {
   return (
-    <motion.div
-      style={{ transform, opacity, zIndex, width: cw, height: ch }}
-      className="pointer-events-none absolute left-1/2 top-0 origin-top will-change-transform"
-    >
-      <div
-        className="h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
-        style={{ transform: `translateY(${push}px)` }}
-      >
-        <button
-          type="button"
-          aria-label={`${productOf(index).name}: ${s.title}. Open full size`}
-          onPointerEnter={(e) => e.pointerType === "mouse" && onHover(index)}
-          onPointerLeave={(e) => e.pointerType === "mouse" && onHover(null)}
-          onFocus={() => onFocusCard(index)}
-          onBlur={() => onHover(null)}
-          onClick={() => onOpen(index)}
-          data-screen
-          className="web-card pointer-events-auto relative block h-full w-full overflow-hidden rounded-[3px] bg-[var(--home-soft)] shadow-[0_-14px_36px_-4px_rgba(0,0,0,0.55)] outline-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:ring-2 focus-visible:ring-[var(--home-fg)]"
-          style={{ transform: `perspective(3000px) rotateX(${open ? 0 : TILT}deg)`, transformOrigin: "50% 100%" }}
-        >
+    <div className="mbp">
+      <div className="mbp-lid">
+        <div className="mbp-screen" data-screen>
           <Image
-            src={s.src}
-            alt=""
+            src={src}
+            alt={alt}
             fill
-            sizes="(max-width: 640px) 90vw, 940px"
+            sizes="(max-width: 640px) 84vw, 760px"
+            loading={eager ? "eager" : "lazy"}
             className="object-cover object-top"
             draggable={false}
           />
-        </button>
+          <span className="mbp-glare" aria-hidden="true" />
+        </div>
+        <span className="mbp-notch" aria-hidden="true" />
       </div>
-    </motion.div>
+      <div className="mbp-base" aria-hidden="true">
+        <span className="mbp-groove" />
+      </div>
+    </div>
   )
 }
 
@@ -260,134 +193,176 @@ function Viewer({ start, onClose }: { start: number; onClose: () => void }) {
   )
 }
 
+
 export function WebLibrary() {
-  const sectionRef = React.useRef<HTMLElement>(null)
   const stageRef = React.useRef<HTMLDivElement>(null)
-  const box = useBox(stageRef)
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] })
-  const front = useTransform(scrollYProgress, [0, 1], [0, LAST_FRONT])
+  const stageW = useWidth(stageRef)
+  const phone = stageW < 640
+  const w = phone ? stageW * 0.8 : Math.min(stageW * 0.5, 760)
+  const still = useReducedMotion() ?? false
 
-  const [hovered, setHovered] = React.useState<number | null>(null)
+  const [active, setActive] = React.useState(0)
+  const [dir, setDir] = React.useState<1 | -1>(1)
+  // Places as shown. A project that wraps round from one side to the other first jumps, unseen, to
+  // the far place on the side it enters from, then slides in on the next frame.
+  const [shown, setShown] = React.useState(() => offsets(0, 1).map((o) => ({ o, jump: false })))
   const [open, setOpen] = React.useState<number | null>(null)
-  const [frontIndex, setFrontIndex] = React.useState(0)
-  useMotionValueEvent(front, "change", (f) => setFrontIndex(Math.round(f) % N))
 
-  // The round "Zoom" button that follows the cursor over a card.
-  const [cursor, setCursor] = React.useState({ x: 0, y: 0 })
-  const onMove = (e: React.MouseEvent) => {
-    const r = stageRef.current?.getBoundingClientRect()
-    if (r) setCursor({ x: e.clientX - r.left, y: e.clientY - r.top })
+  const go = React.useCallback(
+    (d: 1 | -1) => {
+      const next = active + d
+      const target = offsets(next, d)
+      setActive(next)
+      setDir(d)
+      setShown((prev) => {
+        const wraps = target.map((o, i) => Math.abs(o - prev[i].o) > 1.5)
+        if (!wraps.some(Boolean)) return target.map((o) => ({ o, jump: false }))
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => setShown(target.map((o) => ({ o, jump: false }))))
+        )
+        return target.map((o, i) => (wraps[i] ? { o: o + d, jump: true } : { o: prev[i].o, jump: false }))
+      })
+    },
+    [active]
+  )
+
+  // Swipe on touch screens.
+  const swipe = React.useRef<number | null>(null)
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") swipe.current = e.clientX
+  }
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (swipe.current === null) return
+    const dx = e.clientX - swipe.current
+    swipe.current = null
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1)
   }
 
-  // Tabbing to a card out of view scrolls the deck to it.
-  const focusCard = (i: number) => {
-    setHovered(i)
-    const el = sectionRef.current
-    if (!el) return
-    const f = front.get()
-    const d = depth(i, f)
-    if (d >= 0 && d <= VISIBLE - 3) return
-    const target = i / LAST_FRONT
-    const top = el.getBoundingClientRect().top + window.scrollY
-    window.scrollTo({ top: top + target * (el.offsetHeight - window.innerHeight) })
-  }
-
-  const label = hovered ?? frontIndex
-  const product = productOf(label)
+  const current = projects[mod(active, P)]
+  const spring = still ? { duration: 0 } : { type: "spring" as const, stiffness: 90, damping: 18, mass: 1 }
+  const arrow =
+    "grid h-12 w-12 place-items-center rounded-full bg-[var(--home-soft)] text-[var(--home-fg)] shadow-[inset_0_0_0_1px_var(--home-line)] transition-transform hover:scale-105 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--home-fg)]"
 
   return (
-    <>
-      <div className={`${grid} pt-16 sm:pt-[72px]`}>
+    <section id="web" aria-roledescription="carousel" aria-label="Web and enterprise projects" className="pt-16 sm:pt-[72px]">
+      <div className={grid}>
         <div className="home-rule">
           <span className="home-label">Web &amp; enterprise</span>
-          <span className="home-label">{webProducts.length} products</span>
+          <span className="home-label">{P} products</span>
         </div>
         <p className="t-h2 mt-6 max-w-[640px] [text-wrap:balance]">Dense, data-heavy systems people work in all day.</p>
       </div>
 
-      <section
-        ref={sectionRef}
-        id="web"
-        aria-label="Web and enterprise screens"
-        style={{ height: `${100 + LAST_FRONT * SCROLL_PER_CARD * 100}vh` }}
-        className="relative"
+      <div
+        ref={stageRef}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight") go(1)
+          if (e.key === "ArrowLeft") go(-1)
+        }}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        className="relative mt-10 touch-pan-y select-none overflow-hidden outline-none"
+        style={{ height: w * 0.72 + 56, perspective: phone ? 1100 : 1800 }}
       >
-        <div className="sticky top-0 isolate h-[100svh] overflow-hidden">
-          <div ref={stageRef} className="absolute inset-0" onMouseMove={onMove}>
-            {webScreens.map((_, i) => (
-              <Card
-                key={i}
-                index={i}
-                front={front}
-                box={box}
-                hovered={hovered}
-                onHover={setHovered}
-                onOpen={setOpen}
-                onFocusCard={focusCard}
-              />
-            ))}
-
-            <div
-              aria-hidden="true"
-              className={`pointer-events-none absolute left-0 top-0 z-[300] grid h-[84px] w-[84px] place-items-center rounded-full bg-[var(--story-accent)] text-white transition-[opacity,transform] duration-200 max-sm:hidden ${
-                hovered === null ? "scale-50 opacity-0" : "scale-100 opacity-100"
-              }`}
-              style={{ translate: `${cursor.x + 18}px ${cursor.y - 42}px` }}
+        {projects.map((p, i) => {
+          const { o, jump } = shown[i]
+          const t = pose(o, w, phone)
+          const middle = o === 0
+          return (
+            <motion.div
+              key={p.id}
+              initial={false}
+              animate={{ x: t.x, z: t.z, rotateY: t.rotateY, opacity: t.opacity }}
+              transition={jump ? { duration: 0 } : spring}
+              className="absolute left-1/2 top-5"
+              style={{ width: w, marginLeft: -w / 2, zIndex: 10 - Math.abs(o), transformStyle: "preserve-3d" }}
+              aria-hidden={!middle}
             >
-              <span className="flex flex-col items-center gap-1 text-center">
-                <Search className="h-4 w-4" />
-                <span className="t-label uppercase tracking-[0.06em]">Zoom</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Labels on the sides of the deck, like a filing drawer: the project in view, and the count. */}
-          <div className={`${grid} pointer-events-none relative z-[300] flex h-full flex-col justify-between py-6 max-sm:pb-28`}>
-            <span />
-            <div className="flex items-start justify-between gap-6 max-sm:hidden">
-              <div className="min-w-0 max-w-[200px]">
-                <p className="home-label m-0 tabular-nums">
-                  {label + 1}/{N} · {product.name}
-                </p>
-                <p className="t-body1 m-0">{webScreens[label].title}</p>
-                <p className="t-body2 home-muted m-0 mt-1">
-                  {product.title} · {product.years}
-                </p>
-              </div>
-              <p className="t-body1 m-0 shrink-0">{N} screens</p>
-            </div>
-            <div className="flex items-end justify-between gap-6 max-sm:hidden">
-              <p className="home-label m-0 max-w-[220px]">Filed by product. Hover to lift, click to zoom.</p>
               <button
                 type="button"
-                onClick={() => setOpen(0)}
-                className="home-chip pointer-events-auto shrink-0 transition-opacity hover:opacity-80"
+                tabIndex={middle ? 0 : -1}
+                aria-label={middle ? `Open ${p.name} screens full size` : `Show ${p.name}`}
+                onClick={() => (middle ? setOpen(p.first) : go(o > 0 ? 1 : -1))}
+                className={`relative block w-full ${middle ? "cursor-zoom-in" : "cursor-pointer"} ${
+                  Math.abs(o) > 1 ? "pointer-events-none" : ""
+                }`}
               >
-                View all screens
+                <MacBook src={webScreens[p.first].src} alt={`${p.name}: ${webScreens[p.first].title}`} eager={i === 0} />
+                {/* Neighbours are dimmed, like the cards beside the one in focus. */}
+                <motion.span
+                  aria-hidden="true"
+                  initial={false}
+                  animate={{ opacity: t.shade }}
+                  transition={jump ? { duration: 0 } : spring}
+                  className="pointer-events-none absolute inset-0 rounded-[2%] bg-[var(--home-bg)]"
+                />
               </button>
-            </div>
-          </div>
+            </motion.div>
+          )
+        })}
 
-          {/* On phones the labels sit above the deck instead. */}
-          <div className={`${grid} pointer-events-none absolute inset-x-0 top-5 z-[300] flex justify-between gap-4 sm:hidden`}>
-            <div className="min-w-0">
-              <p className="home-label m-0 tabular-nums">
-                  {label + 1}/{N} · {product.name}
-                </p>
-              <p className="t-body2 m-0">{webScreens[label].title}</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setOpen(0)}
-              className="home-chip pointer-events-auto shrink-0 self-start"
-            >
-              View all {N}
-            </button>
-          </div>
+        {/* Arrows on both sides, over the neighbours. */}
+        <div className={`${grid} pointer-events-none absolute inset-x-0 top-5 z-20 flex items-center justify-between max-sm:hidden`} style={{ height: w * 0.63 }}>
+          <button type="button" aria-label="Previous project" onClick={() => go(-1)} className={`${arrow} pointer-events-auto`}>
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <button type="button" aria-label="Next project" onClick={() => go(1)} className={`${arrow} pointer-events-auto`}>
+            <ArrowRight className="h-5 w-5" />
+          </button>
         </div>
-      </section>
+      </div>
+
+      <div className={`${grid} mt-2 flex flex-col items-center text-center`}>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={current.id}
+            initial={{ opacity: 0, x: dir * 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: dir * -24 }}
+            transition={{ duration: still ? 0 : 0.3 }}
+            className="flex max-w-[520px] flex-col items-center gap-1.5"
+            aria-live="polite"
+          >
+            <span className="home-label tabular-nums">
+              {String(mod(active, P) + 1).padStart(2, "0")} / {String(P).padStart(2, "0")} · {current.years}
+            </span>
+            <h3 className="t-h2 m-0">{current.name}</h3>
+            <p className="t-body1 m-0">{current.title}</p>
+            <p className="t-body2 home-muted m-0">{current.line}</p>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="mt-6 flex items-center gap-3">
+          <button type="button" aria-label="Previous project" onClick={() => go(-1)} className={`${arrow} sm:hidden`}>
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen(current.first)}
+            className="home-chip !h-12 gap-2 rounded-full !px-5 text-[12px] transition-opacity hover:opacity-80"
+          >
+            <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
+            View screens
+          </button>
+          <button type="button" aria-label="Next project" onClick={() => go(1)} className={`${arrow} sm:hidden`}>
+            <ArrowRight className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="mt-5 flex gap-1.5" aria-hidden="true">
+          {projects.map((p, i) => (
+            <span
+              key={p.id}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === mod(active, P) ? "w-5 bg-[var(--home-fg)]" : "w-1.5 bg-[var(--home-line)]"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
 
       {open !== null && <Viewer start={open} onClose={() => setOpen(null)} />}
-    </>
+    </section>
   )
 }
