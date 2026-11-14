@@ -61,20 +61,12 @@ function useWidth(ref: React.RefObject<HTMLElement>) {
  * A MacBook Pro drawn in CSS: a black glass bezel with the notch, the screen, a glass highlight,
  * and the aluminium base with its thumb groove. Sizes are in percent so it scales with its width.
  */
-function MacBook({ src, alt, eager }: { src: string; alt: string; eager?: boolean }) {
+function MacBook({ children }: { children: React.ReactNode }) {
   return (
     <div className="mbp">
       <div className="mbp-lid">
         <div className="mbp-screen" data-screen>
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            sizes="(max-width: 640px) 84vw, 760px"
-            loading={eager ? "eager" : "lazy"}
-            className="object-cover object-top"
-            draggable={false}
-          />
+          {children}
           <span className="mbp-glare" aria-hidden="true" />
         </div>
         <span className="mbp-notch" aria-hidden="true" />
@@ -85,6 +77,11 @@ function MacBook({ src, alt, eager }: { src: string; alt: string; eager?: boolea
     </div>
   )
 }
+
+/** The MacBook's screen size, as a share of its width (the lid less its bezel). */
+const SCREEN_W = 0.962
+const SCREEN_H = 0.61
+const SCREEN_TOP = 0.019
 
 function Viewer({ start, onClose }: { start: number; onClose: () => void }) {
   const [i, setI] = React.useState(start)
@@ -265,45 +262,95 @@ export function WebLibrary() {
         className="relative mt-10 touch-pan-y select-none overflow-hidden outline-none"
         style={{ height: w * 0.72 + 56, perspective: phone ? 1100 : 1800 }}
       >
+        {/* The screens roll behind the MacBook: the neighbours stand turned away on either side,
+            and the one in the middle sits right behind the MacBook's own screen. */}
         {projects.map((p, i) => {
           const { o, jump } = shown[i]
           const t = pose(o, w, phone)
-          const middle = o === 0
+          const side = Math.abs(o) === 1
           return (
-            <motion.div
+            <motion.button
               key={p.id}
+              type="button"
+              tabIndex={-1}
+              aria-hidden="true"
+              onClick={() => side && go(o > 0 ? 1 : -1)}
               initial={false}
               animate={{ x: t.x, z: t.z, rotateY: t.rotateY, opacity: t.opacity }}
               transition={jump ? { duration: 0 } : spring}
-              className="absolute left-1/2 top-5"
-              style={{ width: w, marginLeft: -w / 2, zIndex: 10 - Math.abs(o), transformStyle: "preserve-3d" }}
-              aria-hidden={!middle}
+              className={`absolute left-1/2 overflow-hidden rounded-[10px] bg-[var(--home-soft)] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)] ${
+                side ? "cursor-pointer" : "pointer-events-none"
+              }`}
+              style={{
+                top: 20 + w * SCREEN_TOP,
+                width: w * SCREEN_W,
+                height: w * SCREEN_H,
+                marginLeft: (-w * SCREEN_W) / 2,
+                zIndex: 10 - Math.abs(o)
+              }}
+              data-screen
             >
-              <button
-                type="button"
-                tabIndex={middle ? 0 : -1}
-                aria-label={middle ? `Open ${p.name} screens full size` : `Show ${p.name}`}
-                onClick={() => (middle ? setOpen(p.first) : go(o > 0 ? 1 : -1))}
-                className={`relative block w-full ${middle ? "cursor-zoom-in" : "cursor-pointer"} ${
-                  Math.abs(o) > 1 ? "pointer-events-none" : ""
-                }`}
-              >
-                <MacBook src={webScreens[p.first].src} alt={`${p.name}: ${webScreens[p.first].title}`} eager={i === 0} />
-                {/* Neighbours are dimmed, like the cards beside the one in focus. */}
-                <motion.span
-                  aria-hidden="true"
-                  initial={false}
-                  animate={{ opacity: t.shade }}
-                  transition={jump ? { duration: 0 } : spring}
-                  className="pointer-events-none absolute inset-0 rounded-[2%] bg-[var(--home-bg)]"
-                />
-              </button>
-            </motion.div>
+              <Image
+                src={webScreens[p.first].src}
+                alt=""
+                fill
+                sizes="(max-width: 640px) 80vw, 740px"
+                className="object-cover object-top"
+                draggable={false}
+              />
+              {/* Neighbours are dimmed, like the cards beside the one in focus. */}
+              <motion.span
+                aria-hidden="true"
+                initial={false}
+                animate={{ opacity: t.shade }}
+                transition={jump ? { duration: 0 } : spring}
+                className="pointer-events-none absolute inset-0 bg-[var(--home-bg)]"
+              />
+            </motion.button>
           )
         })}
 
+        {/* The MacBook stays put; only the page on its screen changes, sliding in from the side
+            the next project comes from. */}
+        <button
+          type="button"
+          aria-label={`Open ${current.name} screens full size`}
+          onClick={() => setOpen(current.first)}
+          className="absolute left-1/2 top-5 z-20 block cursor-zoom-in"
+          style={{ width: w, marginLeft: -w / 2 }}
+        >
+          <MacBook>
+            <AnimatePresence initial={false} custom={dir}>
+              <motion.div
+                key={current.id}
+                custom={dir}
+                variants={{
+                  enter: (d: number) => ({ x: `${d * 100}%`, scale: 1 }),
+                  center: { x: "0%", scale: 1 },
+                  exit: (d: number) => ({ x: `${d * -100}%`, scale: 0.96 })
+                }}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={still ? { duration: 0 } : { duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={webScreens[current.first].src}
+                  alt={`${current.name}: ${webScreens[current.first].title}`}
+                  fill
+                  sizes="(max-width: 640px) 80vw, 740px"
+                  loading="eager"
+                  className="object-cover object-top"
+                  draggable={false}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </MacBook>
+        </button>
+
         {/* Arrows on both sides, over the neighbours. */}
-        <div className={`${grid} pointer-events-none absolute inset-x-0 top-5 z-20 flex items-center justify-between max-sm:hidden`} style={{ height: w * 0.63 }}>
+        <div className={`${grid} pointer-events-none absolute inset-x-0 top-5 z-30 flex items-center justify-between max-sm:hidden`} style={{ height: w * 0.63 }}>
           <button type="button" aria-label="Previous project" onClick={() => go(-1)} className={`${arrow} pointer-events-auto`}>
             <ArrowLeft className="h-5 w-5" />
           </button>
