@@ -20,23 +20,37 @@ const N = webScreens.length
 const productOf = (i: number) => webProducts.find((p) => p.id === webScreens[i].product)!
 
 // Deck geometry. Distance is in cards from the front: 0 is the front card, 1 the one behind it.
-const DEPTH = 1400 // perspective distance, in px
-const STEP = 135 // how far back each card sits, in px
-const TILT = 30 // how far each card leans back, in degrees
+// Like a drawer of folders seen from the front: cards stand almost upright, each one showing the
+// top strip of its screen above the card in front, the strips thinning toward the top of the screen.
+const TILT = 14 // how far each card leans back, in degrees
+const DECAY = 0.9 // each strip is this much shorter than the one in front of it
 const VISIBLE = 10 // cards shown behind the front one
-const SCROLL_PER_CARD = 0.45 // viewport heights of scrolling per card
-const LAST_FRONT = N - 6 // the deck stops with this card at the front, so the back stays full
+const SCROLL_PER_CARD = 0.32 // viewport heights of scrolling per card
+const LAST_FRONT = N // one full turn of the deck: every card comes to the front once
 
-/** Where a card's bottom edge sits and how big it is, `d` cards behind the front. */
+/**
+ * How far a card sits behind the front for scroll position `f`. The deck goes round: a card that
+ * drops off the front, out of sight below the screen, rejoins the back, so the stack stays full.
+ */
+const depth = (index: number, f: number) => {
+  const d = (((index - f) % N) + N) % N
+  return d > N - 1.6 ? d - N : d
+}
+
+/** Card width for the stage: about two fifths of a desktop, nearly the full width of a phone. */
+const cardWidth = (box: { w: number; h: number }) =>
+  box.w < 640 ? box.w * 0.88 : Math.min(box.w * 0.42, (box.h * 0.6 * 16) / 10, 680)
+
+/** Where a card's top edge sits and how big it is, `d` cards behind the front. */
 function place(d: number, box: { w: number; h: number }) {
   const phone = box.w < 640
-  const horizon = box.h * (phone ? -0.05 : -0.3)
-  const base = box.h * (phone ? 0.78 : 1.02)
-  const dd = Math.max(d, -1.2)
-  const scale = DEPTH / (DEPTH + dd * STEP)
-  // Cards in front of the deck drop away below the screen.
-  const bottom = horizon + (base - horizon) * scale + (d < 0 ? -d * box.h * 0.5 : 0)
-  return { scale, bottom }
+  const strip = box.h * (phone ? 0.08 : 0.115)
+  const frontTop = box.h * (phone ? 0.68 : 0.84)
+  if (d < 0) {
+    // Cards in front of the deck drop away below the screen.
+    return { top: frontTop - d * box.h * 0.45, scale: 1 - d * 0.03 }
+  }
+  return { top: frontTop - (strip * (1 - DECAY ** d)) / (1 - DECAY), scale: Math.max(0.6, 1 - d * 0.03) }
 }
 
 function useBox(ref: React.RefObject<HTMLElement>) {
@@ -69,38 +83,45 @@ function Card({
   onFocusCard: (i: number) => void
 }) {
   const s = webScreens[index]
-  const phone = box.w < 640
-  const cw = Math.min(phone ? box.w * 0.86 : box.w * 0.56, 820)
+  const cw = cardWidth(box)
   const ch = (cw * 10) / 16
 
-  // Where the card sits for the current scroll: real perspective, so far cards shrink and bunch up.
   const transform = useTransform(front, (f) => {
-    const { scale, bottom } = place(index - f, box)
-    return `translate(-50%, ${bottom - ch}px) scale(${scale})`
+    const { top, scale } = place(depth(index, f), box)
+    return `translate(-50%, ${Math.round(top * 100) / 100}px) scale(${Math.round(scale * 1e4) / 1e4})`
   })
   const opacity = useTransform(front, (f) => {
-    const d = index - f
-    if (d < 0) return Math.max(0, 1 + d)
-    if (d > VISIBLE) return Math.max(0, 1 - (d - VISIBLE) / 1.5)
+    const d = depth(index, f)
+    if (d < -1.4) return 0
+    if (d > VISIBLE - 1) return Math.max(0, VISIBLE - d)
     return 1
   })
 
-  // While a card is open it faces you: the cards in front of it drop to uncover it, the ones
-  // behind lift a little, and if it sits low on the screen the whole lot rises so it fits.
+  // While a card is open it faces you at full height. The cards in front of it drop to just below
+  // it, the ones behind close up a little, and the whole deck shifts if needed so the open card
+  // fits on the screen.
+  const zIndex = useTransform(front, (f) => Math.round(200 - depth(index, f) * 10))
+
   const open = hovered === index
   let push = 0
   if (hovered !== null) {
-    const h = place(hovered - front.get(), box)
-    const lift = Math.max(0, h.bottom - box.h * 0.95)
-    if (index < hovered) push = ch * h.scale * 0.9 - lift
-    else if (index > hovered) push = -ch * h.scale * 0.12 - lift
-    else push = -lift
+    const f = front.get()
+    const dh = depth(hovered, f)
+    const d = depth(index, f)
+    const h = place(dh, box)
+    const bottom = h.top + ch * h.scale
+    let shift = 0
+    if (bottom > box.h * 0.94) shift = box.h * 0.94 - bottom
+    if (h.top + shift < box.h * 0.06) shift = box.h * 0.06 - h.top
+    if (d < dh) push = shift + Math.max(0, bottom + 14 - place(dh - 1, box).top)
+    else if (d > dh) push = shift - box.h * 0.015
+    else push = shift
   }
 
   return (
     <motion.div
-      style={{ transform, opacity, zIndex: open ? N + 5 : N - index, width: cw, height: ch }}
-      className="pointer-events-none absolute left-1/2 top-0 origin-bottom will-change-transform"
+      style={{ transform, opacity, zIndex, width: cw, height: ch }}
+      className="pointer-events-none absolute left-1/2 top-0 origin-top will-change-transform"
     >
       <div
         className="h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
@@ -115,14 +136,14 @@ function Card({
           onBlur={() => onHover(null)}
           onClick={() => onOpen(index)}
           data-screen
-          className="web-card pointer-events-auto block h-full w-full overflow-hidden rounded-[8px] bg-[var(--home-soft)] shadow-[0_0_0_1px_var(--home-line),0_-12px_32px_-12px_rgba(0,0,0,0.35)] outline-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:ring-2 focus-visible:ring-[var(--home-fg)]"
-          style={{ transform: `perspective(${DEPTH}px) rotateX(${open ? 0 : TILT}deg)`, transformOrigin: "50% 100%" }}
+          className="web-card pointer-events-auto relative block h-full w-full overflow-hidden rounded-[8px] bg-[var(--home-soft)] shadow-[0_0_0_1px_var(--home-line),0_-12px_32px_-12px_rgba(0,0,0,0.35)] outline-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:ring-2 focus-visible:ring-[var(--home-fg)]"
+          style={{ transform: `perspective(900px) rotateX(${open ? 0 : TILT}deg)`, transformOrigin: "50% 100%" }}
         >
           <Image
             src={s.src}
             alt=""
             fill
-            sizes="(max-width: 640px) 86vw, 820px"
+            sizes="(max-width: 640px) 88vw, 680px"
             className="object-cover object-top"
             draggable={false}
           />
@@ -249,7 +270,7 @@ export function WebLibrary() {
   const [hovered, setHovered] = React.useState<number | null>(null)
   const [open, setOpen] = React.useState<number | null>(null)
   const [frontIndex, setFrontIndex] = React.useState(0)
-  useMotionValueEvent(front, "change", (f) => setFrontIndex(Math.min(N - 1, Math.max(0, Math.round(f)))))
+  useMotionValueEvent(front, "change", (f) => setFrontIndex(Math.round(f) % N))
 
   // The round "Zoom" button that follows the cursor over a card.
   const [cursor, setCursor] = React.useState({ x: 0, y: 0 })
@@ -264,8 +285,9 @@ export function WebLibrary() {
     const el = sectionRef.current
     if (!el) return
     const f = front.get()
-    if (i >= f && i <= f + VISIBLE - 2) return
-    const target = Math.min(i, LAST_FRONT) / LAST_FRONT
+    const d = depth(i, f)
+    if (d >= 0 && d <= VISIBLE - 3) return
+    const target = i / LAST_FRONT
     const top = el.getBoundingClientRect().top + window.scrollY
     window.scrollTo({ top: top + target * (el.offsetHeight - window.innerHeight) })
   }
@@ -290,7 +312,7 @@ export function WebLibrary() {
         style={{ height: `${100 + LAST_FRONT * SCROLL_PER_CARD * 100}vh` }}
         className="relative"
       >
-        <div className="sticky top-0 h-[100svh] overflow-hidden">
+        <div className="sticky top-0 isolate h-[100svh] overflow-hidden">
           <div ref={stageRef} className="absolute inset-0" onMouseMove={onMove}>
             {webScreens.map((_, i) => (
               <Card
@@ -307,7 +329,7 @@ export function WebLibrary() {
 
             <div
               aria-hidden="true"
-              className={`pointer-events-none absolute left-0 top-0 z-[60] grid h-[84px] w-[84px] place-items-center rounded-full bg-[var(--story-accent)] text-white transition-[opacity,transform] duration-200 max-sm:hidden ${
+              className={`pointer-events-none absolute left-0 top-0 z-[300] grid h-[84px] w-[84px] place-items-center rounded-full bg-[var(--story-accent)] text-white transition-[opacity,transform] duration-200 max-sm:hidden ${
                 hovered === null ? "scale-50 opacity-0" : "scale-100 opacity-100"
               }`}
               style={{ translate: `${cursor.x + 18}px ${cursor.y - 42}px` }}
@@ -320,11 +342,13 @@ export function WebLibrary() {
           </div>
 
           {/* Labels on the sides of the deck, like a filing drawer: the project in view, and the count. */}
-          <div className={`${grid} pointer-events-none relative z-[70] flex h-full flex-col justify-between py-6 max-sm:pb-28`}>
+          <div className={`${grid} pointer-events-none relative z-[300] flex h-full flex-col justify-between py-6 max-sm:pb-28`}>
             <span />
             <div className="flex items-start justify-between gap-6 max-sm:hidden">
               <div className="min-w-0 max-w-[200px]">
-                <p className="home-label m-0">{product.name}</p>
+                <p className="home-label m-0 tabular-nums">
+                  {label + 1}/{N} · {product.name}
+                </p>
                 <p className="t-body1 m-0">{webScreens[label].title}</p>
                 <p className="t-body2 home-muted m-0 mt-1">
                   {product.title} · {product.years}
@@ -332,8 +356,8 @@ export function WebLibrary() {
               </div>
               <p className="t-body1 m-0 shrink-0">{N} screens</p>
             </div>
-            <div className="flex items-end justify-between gap-6">
-              <p className="home-label m-0 max-w-[220px] max-sm:invisible">Filed by product. Hover to lift, click to zoom.</p>
+            <div className="flex items-end justify-between gap-6 max-sm:hidden">
+              <p className="home-label m-0 max-w-[220px]">Filed by product. Hover to lift, click to zoom.</p>
               <button
                 type="button"
                 onClick={() => setOpen(0)}
@@ -345,12 +369,20 @@ export function WebLibrary() {
           </div>
 
           {/* On phones the labels sit above the deck instead. */}
-          <div className={`${grid} pointer-events-none absolute inset-x-0 top-5 z-[70] flex justify-between gap-4 sm:hidden`}>
+          <div className={`${grid} pointer-events-none absolute inset-x-0 top-5 z-[300] flex justify-between gap-4 sm:hidden`}>
             <div className="min-w-0">
-              <p className="home-label m-0">{product.name}</p>
+              <p className="home-label m-0 tabular-nums">
+                  {label + 1}/{N} · {product.name}
+                </p>
               <p className="t-body2 m-0">{webScreens[label].title}</p>
             </div>
-            <p className="t-body2 m-0 shrink-0">{N} screens</p>
+            <button
+              type="button"
+              onClick={() => setOpen(0)}
+              className="home-chip pointer-events-auto shrink-0 self-start"
+            >
+              View all {N}
+            </button>
           </div>
         </div>
       </section>
