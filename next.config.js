@@ -2,8 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    // 90 is for the ERP screens on the home page, where small UI text must stay sharp.
-    qualities: [75, 90],
     remotePatterns: [
       { protocol: "https", hostname: "*.notion.so" },
       { protocol: "https", hostname: "secure.notion-static.com" },

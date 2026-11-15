@@ -302,7 +302,7 @@ export function WebLibrary() {
                 alt=""
                 fill
                 sizes="(max-width: 640px) 80vw, 760px"
-                quality={90}
+                unoptimized
                 className="object-cover object-top"
                 draggable={false}
               />
@@ -348,7 +348,7 @@ export function WebLibrary() {
                   alt={`${product.name}: ${current.name}`}
                   fill
                   sizes="(max-width: 640px) 80vw, 760px"
-                  quality={90}
+                  unoptimized
                   loading="eager"
                   className="object-cover object-top"
                   draggable={false}
