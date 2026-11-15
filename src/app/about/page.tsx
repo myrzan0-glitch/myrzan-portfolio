@@ -8,7 +8,7 @@ import { jobs, photos, rules } from "@/content/profile"
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Product designer in London: how I work, where I’ve worked and life outside work."
+  description: "Product designer in Abu Dhabi: how I work, where I’ve worked and life outside work."
 }
 
 const wrap = grid
@@ -34,7 +34,7 @@ export default function AboutPage() {
                 and prototype in production until the metric moves.
               </p>
               <p className="m-0">
-                Born in Nukus, moved to Kazakhstan in 2008, now in London with my wife and our daughter Medina. Moving
+                Born in Nukus, moved to Kazakhstan in 2008, now in Abu Dhabi with my wife and our daughter Medina. Moving
                 countries taught me to join any team fast. As a kid I wanted to build things. I still do.
               </p>
             </div>
@@ -116,7 +116,7 @@ export default function AboutPage() {
                   <span className="h-[7px] w-[7px] rounded-full bg-[var(--home-green)] shadow-[0_0_0_4px_var(--home-green-soft)]" />
                   <span className="home-muted">Open to product design roles in Big Tech</span>
                 </span>
-                <span className="home-label">London, UK</span>
+                <span className="home-label">Abu Dhabi, UAE</span>
               </div>
             </div>
           </div>

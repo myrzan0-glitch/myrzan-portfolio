@@ -73,7 +73,7 @@ export default function HomePage() {
             <div className={`${column} pb-4 pt-16 sm:pt-24`}>
               <div className="max-w-[640px]">
                 <h1 className="t-body1 m-0 font-medium">Myrzan Izimbetov</h1>
-                <p className="t-body1 home-muted mt-0.5">Product Designer · London</p>
+                <p className="t-body1 home-muted mt-0.5">Product Designer · Abu Dhabi</p>
                 <p className="t-h2 mt-7">
                   I own problems end to end, from discovery to shipped code.
                 </p>
