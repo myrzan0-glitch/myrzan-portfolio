@@ -254,7 +254,7 @@ export function WebLibrary() {
           <span className="home-label">Web &amp; enterprise</span>
           <span className="home-label">{P} screens</span>
         </div>
-        <p className="t-h2 mt-6 max-w-[640px] [text-wrap:balance]">Dense, data-heavy systems people work in all day.</p>
+        <p className="t-h2 mt-6 max-w-[640px] [text-wrap:balance]">Beyond mobile: the desktop tools behind safety and operations.</p>
       </div>
 
       <div
