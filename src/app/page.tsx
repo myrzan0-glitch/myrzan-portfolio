@@ -6,6 +6,7 @@ import { HeroBackground } from "@/components/hero-background"
 import { CopyEmail } from "@/components/home/copy-email"
 import { grid } from "@/components/home/grid"
 import { SiteFooter, SiteNav } from "@/components/home/site-nav"
+import { WebLibrary } from "@/components/home/web-library"
 import { WorkCover, type CoverKind } from "@/components/home/work-cover"
 import { FadeIn } from "@/components/motion"
 
@@ -136,6 +137,8 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+        <WebLibrary />
 
         <section className={`${column} pt-16 sm:pt-[72px]`}>
           <div className="home-rule">

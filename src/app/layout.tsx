@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Instrument_Serif, Geist, Geist_Mono } from "next/font/google"
+import localFont from "next/font/local"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 
@@ -7,21 +7,24 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 
-const display = Instrument_Serif({
-  subsets: ["latin"],
+// The fonts live in the repo (src/app/fonts, SIL Open Font License) rather than coming from
+// Google Fonts at build time: a failed download there broke Vercel builds.
+const display = localFont({
+  src: "./fonts/InstrumentSerif-Regular.woff2",
   weight: "400",
+  style: "normal",
   variable: "--font-display"
 })
 
-const body = Geist({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const body = localFont({
+  src: "./fonts/Geist-Variable.woff2",
+  weight: "100 900",
   variable: "--font-body"
 })
 
-const mono = Geist_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
+const mono = localFont({
+  src: "./fonts/GeistMono-Variable.woff2",
+  weight: "100 900",
   variable: "--font-mono"
 })
 
