@@ -8,7 +8,7 @@ import { ArrowUp, ArrowUpRight, Check, Copy } from "lucide-react"
 
 import { EMAIL } from "@/components/home/copy-email"
 import { grid } from "@/components/home/grid"
-import { LondonClock } from "@/components/home/london-clock"
+import { LocalClock } from "@/components/home/local-clock"
 import { ThemeSwitch } from "@/components/home/theme-switch"
 
 const pages = [
@@ -59,7 +59,7 @@ export function SiteNav({ className = "" }: { className?: string }) {
   return (
     <div className={`grid grid-cols-[1fr_auto_1fr] items-center gap-3 pt-5 sm:pt-7 ${className}`}>
       <span className="home-label max-sm:hidden">
-        <LondonClock />
+        <LocalClock />
       </span>
       <PageLinks pathname={pathname} className="max-sm:hidden" linkClassName="px-4 py-1.5" />
       <span className="col-start-3 justify-self-end">
@@ -129,7 +129,7 @@ function Column({ title, className = "", children }: { title: string; className?
   )
 }
 
-/** Site-wide footer: an invitation and the time in London, then pages, ways to reach me, and elsewhere. */
+/** Site-wide footer: an invitation and the time in Abu Dhabi, then pages, ways to reach me, and elsewhere. */
 export function SiteFooter() {
   return (
     <footer className="mt-28 border-t border-[var(--home-line)] bg-[var(--home-soft)]">
@@ -139,7 +139,7 @@ export function SiteFooter() {
             Let&rsquo;s work together.
           </p>
           <p className="home-label mt-4">
-            <LondonClock />
+            <LocalClock />
           </p>
         </div>
         <div className="grid grid-cols-2 gap-x-12 gap-y-10 sm:grid-cols-[auto_auto_auto]">
