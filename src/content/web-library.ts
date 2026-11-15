@@ -1,9 +1,10 @@
 /**
  * Web and enterprise work for the screen library on the home page.
  *
- * The screens are placeholders for now. To swap one, drop the real export (1440 × 900, or any
- * 16:10 desktop frame, as .webp) over the file at the same path. To add or remove a screen, edit
- * `webScreens`; the wall and the viewer pick it up from here.
+ * Petrel AI shows its real screens, translated to English with the client's logo blurred; the
+ * others are still placeholders. To swap one, drop the real export (1440 px wide, as .webp) over
+ * the file at the same path. To add or remove a screen, edit `webScreens`; the carousel shows each
+ * product's first screen and the viewer shows them all.
  */
 
 export type WebProductId = "nbu" | "petrel" | "technodom" | "vlife"
@@ -21,7 +22,7 @@ export const webProducts: { id: WebProductId; name: string; years: string; title
     name: "Petrel AI",
     years: "2022",
     title: "HSE and HR platform",
-    line: "Incidents, work permits and training for a global uranium producer. NDA."
+    line: "Tasks, inspections, road safety and a business-process builder for a global uranium producer. NDA."
   },
   {
     id: "technodom",
@@ -39,13 +40,16 @@ export const webProducts: { id: WebProductId; name: string; years: string; title
   }
 ]
 
-export const webScreens: { src: string; product: WebProductId; title: string }[] = [
+/** Screens are 1440 px wide; `h` is the height when it isn't 900 (long pages scroll in the viewer). */
+export const webScreens: { src: string; product: WebProductId; title: string; h?: number }[] = [
   { src: "/work/web/nbu/01.webp", product: "nbu", title: "Client list" },
   { src: "/work/web/nbu/02.webp", product: "nbu", title: "Opening a current account" },
   { src: "/work/web/nbu/03.webp", product: "nbu", title: "Branch overview" },
-  { src: "/work/web/petrel/01.webp", product: "petrel", title: "Safety overview" },
-  { src: "/work/web/petrel/02.webp", product: "petrel", title: "Incidents" },
-  { src: "/work/web/petrel/03.webp", product: "petrel", title: "New work permit" },
+  { src: "/work/web/petrel/tasks.webp", product: "petrel", title: "Tasks assigned to me", h: 1024 },
+  { src: "/work/web/petrel/road-traffic.webp", product: "petrel", title: "Road traffic and weather", h: 1845 },
+  { src: "/work/web/petrel/inspection.webp", product: "petrel", title: "New inspection results", h: 1644 },
+  { src: "/work/web/petrel/process-builder.webp", product: "petrel", title: "Business process builder", h: 1024 },
+  { src: "/work/web/petrel/explanatory-note.webp", product: "petrel", title: "Explanatory note", h: 1024 },
   { src: "/work/web/technodom/01.webp", product: "technodom", title: "Inventory" },
   { src: "/work/web/technodom/02.webp", product: "technodom", title: "Shift overview" },
   { src: "/work/web/technodom/03.webp", product: "technodom", title: "Creating a shipment" },

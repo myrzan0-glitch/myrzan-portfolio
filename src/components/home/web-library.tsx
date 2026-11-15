@@ -165,7 +165,7 @@ function Viewer({ start, onClose }: { start: number; onClose: () => void }) {
             src={s.src}
             alt={`${p.name}: ${s.title}`}
             width={1440}
-            height={900}
+            height={s.h ?? 900}
             unoptimized
             data-screen
             onClick={toggleZoom}
