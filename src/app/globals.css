@@ -609,7 +609,7 @@
 
 /*
  * MacBook Pro for the web library (components/home/web-library.tsx), drawn in CSS and sized in
- * percent of its width: a black glass bezel with the notch, the screen, a glass highlight, the
+ * percent of its width: a black glass bezel, the screen, a glass highlight, the
  * aluminium base with its thumb groove.
  */
 .mbp {
@@ -643,16 +643,6 @@
     radial-gradient(ellipse 60% 40% at 18% 0%, rgba(255, 255, 255, 0.14), transparent 70%),
     linear-gradient(115deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 32%, transparent 46%);
   mix-blend-mode: screen;
-}
-.mbp-notch {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 10.5%;
-  height: 3.7%;
-  transform: translateX(-50%);
-  border-radius: 0 0 22% 22% / 0 0 60% 60%;
-  background: #0a0a0c;
 }
 .mbp-base {
   position: relative;

@@ -19,7 +19,15 @@ import { webProducts, webScreens } from "@/content/web-library"
 const N = webScreens.length
 const productOf = (i: number) => webProducts.find((p) => p.id === webScreens[i].product)!
 
-const projects = webProducts.map((p) => ({ ...p, first: webScreens.findIndex((s) => s.product === p.id) }))
+// The carousel rolls through one product's screens; the MacBook shows one screen at a time.
+const product = webProducts[0]
+const projects = webScreens.map((s, i) => ({
+  id: s.src,
+  first: i,
+  name: s.title,
+  title: `${product.name} · ${product.title}`,
+  line: product.line
+}))
 const P = projects.length
 const HALF = Math.floor(P / 2)
 
@@ -58,7 +66,7 @@ function useWidth(ref: React.RefObject<HTMLElement>) {
 }
 
 /**
- * A MacBook Pro drawn in CSS: a black glass bezel with the notch, the screen, a glass highlight,
+ * A MacBook Pro drawn in CSS: a black glass bezel, the screen, a glass highlight,
  * and the aluminium base with its thumb groove. Sizes are in percent so it scales with its width.
  */
 function MacBook({ children }: { children: React.ReactNode }) {
@@ -69,7 +77,6 @@ function MacBook({ children }: { children: React.ReactNode }) {
           {children}
           <span className="mbp-glare" aria-hidden="true" />
         </div>
-        <span className="mbp-notch" aria-hidden="true" />
       </div>
       <div className="mbp-base" aria-hidden="true">
         <span className="mbp-groove" />
@@ -241,11 +248,11 @@ export function WebLibrary() {
     "grid h-12 w-12 place-items-center rounded-full bg-[var(--home-soft)] text-[var(--home-fg)] shadow-[inset_0_0_0_1px_var(--home-line)] transition-transform hover:scale-105 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--home-fg)]"
 
   return (
-    <section id="web" aria-roledescription="carousel" aria-label="Web and enterprise projects" className="pt-16 sm:pt-[72px]">
+    <section id="web" aria-roledescription="carousel" aria-label={`${product.name} screens`} className="pt-16 sm:pt-[72px]">
       <div className={grid}>
         <div className="home-rule">
           <span className="home-label">Web &amp; enterprise</span>
-          <span className="home-label">{P} products</span>
+          <span className="home-label">{P} screens</span>
         </div>
         <p className="t-h2 mt-6 max-w-[640px] [text-wrap:balance]">Dense, data-heavy systems people work in all day.</p>
       </div>
@@ -314,7 +321,7 @@ export function WebLibrary() {
             the next project comes from. */}
         <button
           type="button"
-          aria-label={`Open ${current.name} screens full size`}
+          aria-label={`Open ${current.name} full size`}
           onClick={() => setOpen(current.first)}
           className="absolute left-1/2 top-5 z-20 block cursor-zoom-in"
           style={{ width: w, marginLeft: -w / 2 }}
@@ -337,7 +344,7 @@ export function WebLibrary() {
               >
                 <Image
                   src={webScreens[current.first].src}
-                  alt={`${current.name}: ${webScreens[current.first].title}`}
+                  alt={`${product.name}: ${current.name}`}
                   fill
                   sizes="(max-width: 640px) 80vw, 740px"
                   loading="eager"
@@ -351,10 +358,10 @@ export function WebLibrary() {
 
         {/* Arrows on both sides, over the neighbours. */}
         <div className={`${grid} pointer-events-none absolute inset-x-0 top-5 z-30 flex items-center justify-between max-sm:hidden`} style={{ height: w * 0.63 }}>
-          <button type="button" aria-label="Previous project" onClick={() => go(-1)} className={`${arrow} pointer-events-auto`}>
+          <button type="button" aria-label="Previous screen" onClick={() => go(-1)} className={`${arrow} pointer-events-auto`}>
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <button type="button" aria-label="Next project" onClick={() => go(1)} className={`${arrow} pointer-events-auto`}>
+          <button type="button" aria-label="Next screen" onClick={() => go(1)} className={`${arrow} pointer-events-auto`}>
             <ArrowRight className="h-5 w-5" />
           </button>
         </div>
@@ -378,7 +385,7 @@ export function WebLibrary() {
         </AnimatePresence>
 
         <div className="mt-6 flex items-center gap-3">
-          <button type="button" aria-label="Previous project" onClick={() => go(-1)} className={`${arrow} sm:hidden`}>
+          <button type="button" aria-label="Previous screen" onClick={() => go(-1)} className={`${arrow} sm:hidden`}>
             <ArrowLeft className="h-5 w-5" />
           </button>
           <button
@@ -389,7 +396,7 @@ export function WebLibrary() {
             <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
             View screens
           </button>
-          <button type="button" aria-label="Next project" onClick={() => go(1)} className={`${arrow} sm:hidden`}>
+          <button type="button" aria-label="Next screen" onClick={() => go(1)} className={`${arrow} sm:hidden`}>
             <ArrowRight className="h-5 w-5" />
           </button>
         </div>
