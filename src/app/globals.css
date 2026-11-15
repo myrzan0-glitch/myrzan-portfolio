@@ -610,23 +610,10 @@
 /*
  * MacBook Pro for the web library (components/home/web-library.tsx), drawn in CSS and sized in
  * percent of its width: a black glass bezel with the notch, the screen, a glass highlight, the
- * aluminium base with its thumb groove, a soft shadow on the floor and a faint reflection.
+ * aluminium base with its thumb groove.
  */
 .mbp {
   position: relative;
-  -webkit-box-reflect: below 6px linear-gradient(rgba(0, 0, 0, 0.2), transparent 26%);
-}
-.mbp::after {
-  content: "";
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  bottom: -3%;
-  height: 6%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45), transparent 70%);
-  filter: blur(6px);
-  z-index: -1;
 }
 .mbp-lid {
   position: relative;

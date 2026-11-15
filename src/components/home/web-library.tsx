@@ -260,7 +260,7 @@ export function WebLibrary() {
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         className="relative mt-10 touch-pan-y select-none overflow-hidden outline-none"
-        style={{ height: w * 0.72 + 56, perspective: phone ? 1100 : 1800 }}
+        style={{ height: w * 0.72 + 32, perspective: phone ? 1100 : 1800 }}
       >
         {/* The screens roll behind the MacBook: the neighbours stand turned away on either side,
             and the one in the middle sits right behind the MacBook's own screen. */}
@@ -371,9 +371,6 @@ export function WebLibrary() {
             className="flex max-w-[520px] flex-col items-center gap-1.5"
             aria-live="polite"
           >
-            <span className="home-label tabular-nums">
-              {String(mod(active, P) + 1).padStart(2, "0")} / {String(P).padStart(2, "0")} · {current.years}
-            </span>
             <h3 className="t-h2 m-0">{current.name}</h3>
             <p className="t-body1 m-0">{current.title}</p>
             <p className="t-body2 home-muted m-0">{current.line}</p>
