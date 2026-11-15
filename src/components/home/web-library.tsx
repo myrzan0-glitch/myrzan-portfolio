@@ -301,7 +301,8 @@ export function WebLibrary() {
                 src={webScreens[p.first].src}
                 alt=""
                 fill
-                sizes="(max-width: 640px) 80vw, 740px"
+                sizes="(max-width: 640px) 80vw, 760px"
+                quality={90}
                 className="object-cover object-top"
                 draggable={false}
               />
@@ -346,7 +347,8 @@ export function WebLibrary() {
                   src={webScreens[current.first].src}
                   alt={`${product.name}: ${current.name}`}
                   fill
-                  sizes="(max-width: 640px) 80vw, 740px"
+                  sizes="(max-width: 640px) 80vw, 760px"
+                  quality={90}
                   loading="eager"
                   className="object-cover object-top"
                   draggable={false}
