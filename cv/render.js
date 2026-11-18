@@ -1,4 +1,4 @@
-// Renders a CV page to PDF: node cv/render.js "$PWD/cv/general.html" "$PWD/public/cv-myrzan-izimbetov.pdf"
+// Renders a CV page to PDF, e.g. node cv/render.js "$PWD/cv/general.html" "$PWD/public/cv-myrzan-izimbetov.pdf"
 const { chromium } = require('playwright');
 (async () => {
   const b = await chromium.launch();
